@@ -1,0 +1,73 @@
+\documentclass[11pt,a4paper,oneside]{book}
+\input{preamble.tex}
+
+
+\begin{document}
+
+
+% ---- TITLE PAGE ----
+\includepdf{frontmatter/titlepage.pdf}
+\input{frontmatter/declarations.tex}
+
+
+% ---- FRONTMATTER ----
+\frontmatter
+
+% acknowledgements
+\input{frontmatter/acknowledgements.tex}
+
+% abstract
+\input{frontmatter/abstract.tex}
+
+% extended abstract
+\input{frontmatter/extended_abstract.tex}
+
+% table of contents
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Contents}
+\tableofcontents
+
+% list of figures
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{List of Figures}
+\listoffigures
+
+% list of tables
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{List of Tables}
+\listoftables
+
+% symbols and notations
+\input{frontmatter/symbols_and_notations.tex}
+
+
+% ---- MAIN CONTENT ----
+\mainmatter
+
+\input{chapters/01_todo.tex}
+
+\part{TITLE OF PART 1}
+\input{chapters/part1/02_todo.tex}
+\input{chapters/part1/03_todo.tex}
+
+\part{TITLE OF PART 2}
+\input{chapters/part2/04_todo.tex}
+\input{chapters/part2/05_todo.tex}
+
+
+% ---- APPENDICES ----
+\appendix
+\part{Appendices}
+\input{annex/A_todo.tex}
+\input{annex/B_todo.tex}
+
+
+% ---- REFERENCES ----
+\backmatter
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

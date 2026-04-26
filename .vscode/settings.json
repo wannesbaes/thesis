@@ -1,0 +1,24 @@
+{
+  "latex-workshop.latex.outDir": "./out",
+  "latex-workshop.latex.tools": [
+    {
+      "name": "latexmk-split",
+      "command": "latexmk",
+      "args": [
+        "-pdf",
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "-auxdir=build",
+        "-outdir=out",
+        "%DOC%"
+      ]
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "latexmk-split",
+      "tools": ["latexmk-split"]
+    }
+  ]
+}
