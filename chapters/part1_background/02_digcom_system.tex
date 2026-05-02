@@ -1,0 +1,43 @@
+\chapter{System Models}
+
+
+\section{Digital Communication System}
+
+A general digital communication system transfers information from a source to a destination over a physical transmission medium, referred to as the channel~\cite{syllabus_communicatietheorie}. The corresponding block diagram is shown in Fig.~\ref{fig:digcom_system_block_diagram}.
+
+\begin{figure}[hb]
+    \centering
+    \makebox[\textwidth][c]{\resizebox{1.05\textwidth}{!}{\includestandalone{figures/part1_background/digcom_system_block_diagram}}}
+    \caption{Block diagram of a general digital communication system.}
+    \label{fig:digcom_system_block_diagram}
+\end{figure}
+
+At the \ac{TX}, the information sequence is first processed by a source encoder to remove redundancy, followed by a channel encoder that introduces controlled redundancy to enable error correction.
+The resulting coded bit sequence is partitioned into blocks of $m_c$ bits, each of which is mapped onto a complex-valued symbol drawn from a constellation $\mathcal{X}$ of size $2^{m_c}$.
+The modulator then converts the symbol sequence into a baseband signal suitable for transmission.
+
+During transmission, the channel distorts the signal due to attenuation, multipath propagation, and additive noise, such that the received signal differs from the transmitted signal.
+
+At the \ac{RX}, the demodulator converts the received signal into a sequence of decision variables.
+These are processed by the detector to obtain estimates of the originally transmitted symbols, which are then mapped back to coded bits.
+Finally, the channel and source decoders reconstruct the original information sequence.
+
+In this work, we consider a simplified version of this general architecture in order to focus on the aspects most relevant to our study.
+Source coding and decoding are omitted, and the information is assumed to be available as a sequence of \ac{i.i.d.} bits without prior compression or digitization.
+Channel coding and decoding are also not considered, such that the analysis is restricted to uncoded transmission.
+
+The transmission medium is assumed to be a wireless channel affected by fading and additive noise. Furthermore, the channel is considered to be frequency-flat, meaning that its response remains constant over the entire signal bandwidth. The specific channel models used in this work are introduced in the relevant chapters.
+
+
+\section{MIMO}
+
+\subsection{SU-MIMO}
+
+A point-to-point communication system that consists of a \ac{TX} equipped with $N_T$ antennas communicating with a single \ac{RX} equipped with $N_R$ antennas, is called a \ac{SU} \ac{MIMO} system.
+A block diagram of such a system is shown in Fig.%~\ref{fig:SU_MIMO_block_diagram}.
+
+Compared to a single-antenna link, the additional spatial degrees of freedom provided by multiple antennas can be exploited to increase data throughput, improve data reliability, or achieve a trade-off between both.
+Spatial multiplexing techniques enable significant capacity gains by transmitting multiple independent data streams simultaneously over different antennas, as exemplified by architectures such as BLAST~\cite{foschini_1998}.
+Alternatively, spatial diversity can be achieved through space-time coding schemes, which distribute symbols across both space and time to improve robustness against fading. A well-known example is the Alamouti scheme~\cite{alamouti_1998}.
+In the future of this work, we focus on spatial multiplexing and in particular on how the we can transmit the data streams simultaneously over different antennas most efficiently.
+

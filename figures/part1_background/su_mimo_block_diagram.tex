@@ -8,7 +8,7 @@
 %   LAYOUT PARAMETERS
 % ======================
 
-\newcommand{\InOutBitsLength}{2.5cm}    % length of input/output bits arrows
+\newcommand{\InOutBitsLength}{1.5cm}    % length of input/output bits arrows
 
 
 \newcommand{\BlockWidth}{2.5cm}         % width of a TX/RX block
@@ -109,7 +109,7 @@
 \node[block] (tx) {Transmitter};
 
 % Input bits.
-\draw[arrow] ([xshift=-\InOutBitsLength]tx.west) -- node[above]{input\\bitstreams} (tx.west);
+\draw[arrow] ([xshift=-\InOutBitsLength]tx.west) -- node[above]{input\\bits} (tx.west);
 
 % Transmit antenna 1.
 \coordinate (txa1) at ($(tx.north east) + (\BlockToAntennaGap,-0.5*\AntennaArraySep)$);
@@ -141,7 +141,7 @@
 \node[block, right=\TXRXGap of tx] (rx) {Receiver};
 
 % Output bits
-\draw[arrow] (rx.east) -- node[above]{output\\bitstreams} ([xshift=\InOutBitsLength]rx.east);
+\draw[arrow] (rx.east) -- node[above]{output\\bits} ([xshift=\InOutBitsLength]rx.east);
 
 % Receive antenna 1.
 \coordinate (rxa1) at ($(rx.north west) + (-\BlockToAntennaGap,-0.5*\AntennaArraySep)$);

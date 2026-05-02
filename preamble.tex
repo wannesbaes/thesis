@@ -14,10 +14,10 @@
 
 % Page layout
 \usepackage[margin=2.5cm]{geometry}
-
-% Line spacing
+\usepackage{parskip}
 \usepackage{setspace}
 \onehalfspacing
+\let\cleardoublepage\clearpage
 
 % Language & encoding
 \usepackage[T1]{fontenc}
@@ -43,6 +43,9 @@
 % Tables
 \usepackage{booktabs}
 
+% Enumeration item options
+\usepackage{enumitem}
+
 % Links
 \usepackage[hidelinks]{hyperref}
 
@@ -52,11 +55,10 @@
 % Bibliography
 \usepackage[numbers]{natbib}
 
-% Abbreviations
-\usepackage{acronym}
-
 % Better typography
 \usepackage{microtype}
 
-% Book class settings
-\let\cleardoublepage\clearpage
+% Standalone TikZ files for figures
+\usepackage{standalone}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, fit, calc}

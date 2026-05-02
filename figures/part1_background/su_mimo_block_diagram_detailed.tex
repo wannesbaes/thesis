@@ -269,12 +269,6 @@
 \draw[faint_propagation_link] (start_pl_tx_antennaNt) -- ($(start_pl_tx_antennaNt)!0.35!(rxadots)$);
 
 
-% BOUNDING BOX
-\path[use as bounding box]
-    ([xshift=-\InOutBitsLength]tx_box.west |- tx_box.north)
-    rectangle
-    ([xshift=\InOutBitsLength]rx_box.east |- rx_box.south);
-
 \end{tikzpicture}
 
 \end{document}

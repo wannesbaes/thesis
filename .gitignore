@@ -1,4 +1,4 @@
 
 # LaTeX build files
-/build/
-/frontmatter/extended_abstract/build/
+build/
+*.synctex.gz
