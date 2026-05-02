@@ -1,0 +1,96 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, fit, calc}
+
+\begin{document}
+
+% ===================
+%  Layout Parameters
+% ===================
+
+\def\blockWidth{2.2cm}          % width of each component block
+\def\blockHeight{0.9cm}         % height of each component block
+\def\nodeDistance{2.1cm}        % distance between nodes (length of arrows)
+\def\vGapTXChannel{1.7cm}       % vertical gap between TX row and Channel
+\def\vGapChannelRX{1.7cm}       % vertical gap between Channel and RX row
+\def\boxPadding{0.5cm}          % extra space inside TX/RX dashed boxes
+
+% ===================
+
+\begin{tikzpicture}[
+    block/.style = {
+        draw, 
+        rectangle,
+        minimum height=\blockHeight,
+        minimum width=\blockWidth,
+        align=center
+    },
+    arrow/.style = {
+        ->, 
+        thick
+    },
+    node distance=\nodeDistance,
+    every node/.style = {
+        font=\small, 
+        align=center
+    }
+]
+
+
+% TRANSMITTER (TX)
+
+% TX components
+\node[minimum width=\blockWidth*0.8] (source) {Source};
+\node[block, right=of source] (srcenc) {Source\\Encoder};
+\node[block, right=of srcenc] (chanenc) {Channel\\Encoder};
+\node[block, right=of chanenc] (mapper) {Mapper};
+\node[block, right=of mapper] (mod) {Modulator};
+
+% TX box
+\coordinate (tx_top) at ([yshift=\boxPadding]chanenc.north);
+\node[draw, dashed, fit=(source)(mod)(tx_top), label=above:\textbf{TX}] (TX_box) {};
+
+
+% CHANNEL
+\node[block] (channel) at ($(TX_box.south |- source) + (0,-\vGapTXChannel)$) {Channel};
+
+
+% RECEIVER (RX)
+
+% RX components
+\node[block] (demod) at ($(source |- channel.south) + (0,-\vGapChannelRX)$) {Demodulator};
+\node[block, right=of demod] (detector) {Detector};
+\node[block, right=of detector] (chandec) {Channel\\Decoder};
+\node[block, right=of chandec] (srcdec) {Source\\Decoder};
+\node[minimum width=\blockWidth*0.8, right=of srcdec] (sink) {Sink};
+
+% RX box
+\coordinate (rx_top) at ([yshift=\boxPadding]detector.north);
+\node[draw, dashed, fit=(demod)(sink)(rx_top), label=below:\textbf{RX}] (rxbox) {};
+
+
+% DATA FLOWs
+
+% TX data flows
+\draw[arrow] (source) -- node[above]{information} (srcenc);
+\draw[arrow] (srcenc) -- node[above]{info bits} (chanenc);
+\draw[arrow] (chanenc) -- node[above]{coded bits} (mapper);
+\draw[arrow] (mapper) -- node[above]{data\\symbols} (mod);
+
+% TX - CH (transmitted signal)
+\path (TX_box.south) -- (channel.north) coordinate[midway] (mid_TX_CH);
+\draw[arrow] (mod.south) -- (mod |- mid_TX_CH) -- node[below]{transmitted signal} (channel |- mid_TX_CH) -- (channel.north);
+
+% CH - RX (received signal)
+\path (channel.south) -- (rxbox.north) coordinate[midway] (mid_RX_CH);
+\draw[arrow] (channel.south) -- (channel |- mid_RX_CH) -- node[above]{received signal} (demod |- mid_RX_CH) -- (demod.north);
+
+% RX data flows
+\draw[arrow] (demod) -- node[above]{decision\\variables} (detector);
+\draw[arrow] (detector) -- node[above]{reconstructed\\coded bits} (chandec);
+\draw[arrow] (chandec) -- node[above]{reconstructed\\info bits} (srcdec);
+\draw[arrow] (srcdec) -- node[above]{reconstructed\\information} (sink);
+
+\end{tikzpicture}
+
+\end{document}
