@@ -1,0 +1,348 @@
+\documentclass[border=3pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, fit, calc}
+
+\begin{document}
+
+% ======================
+%   LAYOUT PARAMETERS
+% ======================
+
+% Arrow lengths
+\newcommand{\InOutBitsLength}{2.5cm}
+\newcommand{\BSUTGap}{11cm}
+
+
+% BS block parameters
+\newcommand{\NodeDistance}{0.3cm}
+\newcommand{\BSBlockWidth}{1.3cm}
+\newcommand{\BSBlockHeight}{4cm}
+
+\pgfmathsetlengthmacro{\SingleStreamBSBlockWidth}{\BSBlockWidth}
+\pgfmathsetlengthmacro{\SingleStreamBSBlockHeight}{\BSBlockHeight / 4.5}
+\pgfmathsetlengthmacro{\yShiftSingleStreamFirstBlockBS}{0.5*\BSBlockHeight - 0.5*\SingleStreamBSBlockHeight}
+\pgfmathsetlengthmacro{\BoxGap}{\BSBlockHeight / 100}
+
+\pgfmathsetlengthmacro{\BSWidth}{3*\BSBlockWidth + 2*\NodeDistance + 2*\BoxGap}
+\pgfmathsetlengthmacro{\BSHeight}{\BSBlockHeight + 2*\BoxGap}
+
+% UT block parameters
+\newcommand{\UTBlockWidth}{1.5cm}
+\newcommand{\UTBlockHeight}{2.2cm}
+\newcommand{\UTGapHeight}{1.60}
+\newcommand{\UTGapWidth}{0.2}
+
+\pgfmathsetlengthmacro{\SingleStreamUTBlockWidth}{\UTBlockWidth}
+\pgfmathsetlengthmacro{\SingleStreamUTBlockHeight}{\UTBlockHeight / 4.5}
+\pgfmathsetlengthmacro{\yShiftSingleStreamFirstBlockUT}{0.5*\UTBlockHeight - 0.5*\SingleStreamUTBlockHeight}
+
+\pgfmathsetlengthmacro{\UTWidth}{3*\UTBlockWidth + 2*\NodeDistance + 2*\BoxGap}
+\pgfmathsetlengthmacro{\UTHeight}{\UTBlockHeight + 2*\BoxGap}
+
+
+% Antenna array parameters
+\newcommand{\AntennaPoleHeight}{0.5cm}
+\newcommand{\AntennaArmLength}{0.4cm}
+\newcommand{\AntennaArmAngle}{45}
+
+\newcommand{\AntennaLabelGapX}{2mm}
+\newcommand{\AntennaLabelGapY}{1.5mm}
+\newcommand{\AntennaPropagationGap}{2mm}
+
+\pgfmathsetlengthmacro{\BSAntennaArraySep}{\BSBlockHeight/4}
+\pgfmathsetlengthmacro{\UTAntennaArraySep}{\UTBlockHeight/3}
+
+\pgfmathsetlengthmacro{\BSToAntennaGap}{\BSWidth/10}
+\pgfmathsetlengthmacro{\UTToAntennaGap}{\UTWidth/10}
+
+\pgfmathsetlengthmacro{\AntennaHeight}{\AntennaPoleHeight + \AntennaArmLength*sin(\AntennaArmAngle)}
+\pgfmathsetlengthmacro{\AntennaWidth}{\AntennaArmLength*cos(\AntennaArmAngle)}
+
+% ======================
+\begin{tikzpicture}
+
+
+% ======================
+%   STYLE DEFINITIONS
+% ======================
+
+% node style
+\tikzset{
+    node distance=\NodeDistance,
+    every node/.style = {
+        font=\small, 
+        align=center
+    }
+}
+
+% array style
+\tikzset{
+    arrow/.style = {
+        ->,
+    }
+}
+
+% BS and UT block style 
+\tikzset{
+    bs_block/.style = {
+        draw,
+        rectangle,
+        minimum height=\BSBlockHeight,
+        minimum width=\BSBlockWidth,
+        align=center
+    },
+    bs_block_single_stream/.style = {
+        draw,
+        rectangle,
+        minimum height=\SingleStreamBSBlockHeight,
+        minimum width=\SingleStreamBSBlockWidth,
+        align=center
+    },
+    ut_block/.style = {
+        draw,
+        rectangle,
+        minimum height=\UTBlockHeight,
+        minimum width=\UTBlockWidth,
+        align=center
+    },
+    ut_block_single_stream/.style = {
+        draw,
+        rectangle,
+        minimum height=\SingleStreamUTBlockHeight,
+        minimum width=\SingleStreamUTBlockWidth,
+        align=center
+    }
+}
+
+% propagation links styles
+\tikzset{
+    propagation_link/.style = {
+        -Stealth,
+    },
+    faint_propagation_link/.style = {
+        -Stealth,
+        dashed
+    }
+}
+
+% antenna symbol style
+\tikzset{
+    antenna symbol/.pic = {
+        % mast
+        \draw[thick] (0,0) -- ++(0,\AntennaPoleHeight);
+
+        % arms
+        \draw[thick] (0,\AntennaPoleHeight) -- ++(\AntennaArmAngle:\AntennaArmLength);
+        \draw[thick] (0,\AntennaPoleHeight) -- ++({180-\AntennaArmAngle}:\AntennaArmLength);
+
+        % base
+        %\draw[thick] (-0.18cm,0) -- (0.18cm,0);
+
+        % radiation arcs
+        \draw[thin] (0,\AntennaPoleHeight+0.05cm) ++(55:0.18cm) arc[start angle=55,end angle=125,radius=0.18cm];
+        \draw[thin] (0,\AntennaPoleHeight+0.05cm) ++(55:0.30cm) arc[start angle=55,end angle=125,radius=0.30cm];
+    }
+}
+
+
+
+% ======================
+%     FIGURE CONTENT
+% ======================
+
+
+% Base Station
+% ============
+
+% Bit loader
+\node[bs_block] (bit_loader) {Bit\\Loader};
+
+% Mapper blocks
+\node[bs_block_single_stream, right=of bit_loader, yshift=\yShiftSingleStreamFirstBlockBS] (mapper1) {Mapper};
+\node[bs_block_single_stream, below=of mapper1] (mapper2) {Mapper};
+\node[bs_block_single_stream, right=of bit_loader, yshift=-\yShiftSingleStreamFirstBlockBS] (mapperNt) {Mapper};
+\node (mapper_dots) at ($(mapper2.south)!0.5!(mapperNt.north)$) {\vdots};
+
+% Precoder block
+\node[bs_block, right=of mapper1, yshift=-\yShiftSingleStreamFirstBlockBS] (precoder) {Precoder};
+
+% BS box
+\coordinate (bs_northwest) at ([xshift=-\BoxGap, yshift=\BoxGap]bit_loader.north west);
+\coordinate (bs_southwest) at ([xshift=-\BoxGap, yshift=-\BoxGap]bit_loader.south west);
+\coordinate (bs_northeast) at ([xshift=\BoxGap, yshift=\BoxGap]precoder.north east);
+\coordinate (bs_southeast) at ([xshift=\BoxGap, yshift=-\BoxGap]precoder.south east);
+\node[draw, thick, fit=(bs_northwest)(bs_southwest)(bs_northeast)(bs_southeast), label=above:\textbf{BS}] (bs_box) {};
+
+
+% Transmit antenna 1.
+\coordinate (bs_antenna1) at ($(bs_box.east |- mapper1) + (\BoxGap,0) + (\BSToAntennaGap,0)$);
+\pic at (bs_antenna1) {antenna symbol};
+\node[xshift=\AntennaLabelGapX, yshift=\AntennaLabelGapY] at (bs_antenna1) {$1$};
+\draw[thick] (bs_box.east |- bs_antenna1) -- (bs_antenna1);
+
+% Transmit antenna 2.
+\coordinate (bs_antenna2) at ($(bs_box.east |- mapper2) + (\BoxGap,0) + (\BSToAntennaGap,0)$);
+\pic at (bs_antenna2) {antenna symbol};
+\node[xshift=\AntennaLabelGapX, yshift=\AntennaLabelGapY] at (bs_antenna2) {$2$};
+\draw[thick] (bs_box.east |- bs_antenna2) -- (bs_antenna2);
+
+% Transmit antenna Nt.
+\coordinate (bs_antennaNt) at ($(bs_box.east |- mapperNt) + (\BoxGap,0) + (\BSToAntennaGap,0)$);
+\pic at (bs_antennaNt) {antenna symbol};
+\node[xshift=\AntennaLabelGapX, yshift=\AntennaLabelGapY] at ($(bs_antennaNt) + (0.15,0)$) {$N_T$};
+\draw[thick] (bs_box.east |- bs_antennaNt) -- (bs_antennaNt);
+
+% Faint transmit antennas.
+\coordinate (bs_antenna_dots) at ($0.5*(bs_antenna2) + 0.5*(bs_antennaNt) + 0.5*(0,\AntennaHeight)$);
+\node at (bs_antenna_dots) {\vdots};
+
+
+% Data flow arrows inside TX
+\draw[arrow] (bit_loader.east |- mapper1.west) -- (mapper1.west);
+\draw[arrow] (bit_loader.east |- mapper2.west) -- (mapper2.west);
+\draw[arrow] (bit_loader.east |- mapperNt.west) -- (mapperNt.west);
+\draw[arrow] (mapper1.east) -- (precoder.west |- mapper1.east);
+\draw[arrow] (mapper2.east) -- (precoder.west |- mapper2.east);
+\draw[arrow] (mapperNt.east) -- (precoder.west |- mapperNt.east);
+\draw[arrow] (precoder.east |- bs_antenna1.west) -- (bs_box.east |- bs_antenna1.west);
+\draw[arrow] (precoder.east |- bs_antenna2.west) -- (bs_box.east |- bs_antenna2.west);
+\draw[arrow] (precoder.east |- bs_antennaNt.west) -- (bs_box.east |- bs_antennaNt.west);
+
+
+
+% USER TERMINALS
+% ==============
+
+\newcommand{\drawUT}[2]{
+    % #1 = number
+    % #2 = position
+
+    % Combiner block
+    \node[ut_block]  (ut#1_combiner) at (#2) {Combiner};
+
+    % Demapper blocks
+    \node[ut_block_single_stream, right=of ut#1_combiner, yshift=\yShiftSingleStreamFirstBlockUT] (ut#1_demapper1) {Demapper};
+    \node[ut_block_single_stream, right=of ut#1_combiner, yshift=-\yShiftSingleStreamFirstBlockUT] (ut#1_demapperNt) {Demapper};
+    \node (ut#1_demapperdots) at ($(ut#1_demapper1)!0.5!(ut#1_demapperNt)$) {\vdots};
+
+    % Bit collector
+    \node[ut_block, right=of ut#1_demapper1, yshift=-\yShiftSingleStreamFirstBlockUT] (ut#1_bit_collector) {Bit\\Collector};
+
+    % UT box
+    \coordinate (ut#1_northwest) at ([xshift=-\BoxGap, yshift=\BoxGap]ut#1_combiner.north west);
+    \coordinate (ut#1_southwest) at ([xshift=-\BoxGap, yshift=-\BoxGap]ut#1_combiner.south west);
+    \coordinate (ut#1_northeast) at ([xshift=\BoxGap, yshift=\BoxGap]ut#1_bit_collector.north east);
+    \coordinate (ut#1_southeast) at ([xshift=\BoxGap, yshift=-\BoxGap]ut#1_bit_collector.south east);
+    \node[draw, thick, fit=(ut#1_northwest)(ut#1_southwest)(ut#1_northeast)(ut#1_southeast), label=above right:\textbf{UT}\textsubscript{\textbf{#1}}] (ut#1_box) {};
+
+    
+    % Antenna 1
+    \coordinate (ut#1_antenna1) at ($(ut#1_box.west |- ut#1_demapper1) + (-\BoxGap,0) + (-\UTToAntennaGap,0)$);
+    \pic at (ut#1_antenna1) {antenna symbol};
+    \node[xshift=-\AntennaLabelGapX, yshift=\AntennaLabelGapY] at (ut#1_antenna1) {$1$};
+    \draw[thick] (ut#1_box.west |- ut#1_antenna1) -- (ut#1_antenna1);
+
+    % Antenna Nr
+    \coordinate (ut#1_antennaNr) at ($(ut#1_box.west |- ut#1_demapperNt) + (-\BoxGap,0) + (-\UTToAntennaGap,0)$);
+    \pic at (ut#1_antennaNr) {antenna symbol};
+    \node[xshift=-\AntennaLabelGapX, yshift=\AntennaLabelGapY] at ($(ut#1_antennaNr) + (-0.15,0)$) {$N_R$};
+    \draw[thick] (ut#1_box.west |- ut#1_antennaNr) -- (ut#1_antennaNr);
+
+    % Faint antennas.
+    \coordinate (ut#1_antenna_dots) at ($0.5*(ut#1_antenna1) + 0.5*(ut#1_antennaNr) + 0.5*(0,\AntennaHeight)$);
+    \node at (ut#1_antenna_dots) {\vdots};
+
+
+    % Data flow arrows inside UT
+    \draw[arrow] (ut#1_box.west |- ut#1_antenna1.east) -- (ut#1_combiner.west |- ut#1_antenna1.east);
+    \draw[arrow] (ut#1_box.west |- ut#1_antennaNr.east) -- (ut#1_combiner.west |- ut#1_antennaNr.east);
+    \draw[arrow] (ut#1_combiner.east |- ut#1_demapper1.west) -- (ut#1_demapper1.west);
+    \draw[arrow] (ut#1_combiner.east |- ut#1_demapperNt.west) -- (ut#1_demapperNt.west);
+    \draw[arrow] (ut#1_demapper1.east) -- (ut#1_bit_collector.west |- ut#1_demapper1.east);
+    \draw[arrow] (ut#1_demapperNt.east) -- (ut#1_bit_collector.west |- ut#1_demapperNt.east);
+
+}
+
+% user terminal 1
+\coordinate (pos_ut1) at ($(bs_box.east) + (\BSUTGap,0) - 2*\UTGapWidth*(\UTWidth,0) + \UTGapHeight*(0,\UTHeight)$);
+\drawUT{1}{pos_ut1}
+
+% user terminal k
+\coordinate (pos_utk) at ($(bs_box.east) + (\BSUTGap,0)$);
+\drawUT{k}{pos_utk}
+
+% user terminal K
+\coordinate (pos_utK) at ($(bs_box.east) + (\BSUTGap,0) - \UTGapWidth*(\UTWidth,0) - \UTGapHeight*(0,\UTHeight)$);
+\drawUT{K}{pos_utK}
+
+% faint user terminals
+\coordinate (ut1_utk_dots) at ($(ut1_box.south)!0.5!(utk_box.north)$);
+\node at (ut1_utk_dots) {\dots};
+\coordinate (utk_utK_dots) at ($(utk_box.south)!0.5!(utK_box.north)$);
+\node at (utk_utK_dots) {\dots};
+
+
+
+% CHANNEL
+% =======
+
+% Channel component
+% \node (channel) at ($(bs_box.south east)!0.5!(utk.south west)$) {Channel};
+
+% Start and end points of propagation links.
+\coordinate (start_pl_bs_antenna1) at ($(bs_antenna1) + (\AntennaWidth,\AntennaHeight) + (\AntennaPropagationGap,0)$);
+\coordinate (start_pl_bs_antenna2) at ($(bs_antenna2) + (\AntennaWidth,\AntennaHeight) + (\AntennaPropagationGap,0)$);
+\coordinate (start_pl_bs_antennaNt) at ($(bs_antennaNt) + (\AntennaWidth,\AntennaHeight) + (\AntennaPropagationGap,0)$);
+
+\coordinate (end_pl_ut1_antenna1) at ($(ut1_antenna1) + (-\AntennaWidth,\AntennaHeight) + (-\AntennaPropagationGap,0)$);
+\coordinate (end_pl_ut1_antennaNr) at ($(ut1_antennaNr) + (-\AntennaWidth,\AntennaHeight) + (-\AntennaPropagationGap,0)$);
+
+\coordinate (end_pl_utk_antenna1) at ($(utk_antenna1) + (-\AntennaWidth,\AntennaHeight) + (-\AntennaPropagationGap,0)$);
+\coordinate (end_pl_utk_antennaNr) at ($(utk_antennaNr) + (-\AntennaWidth,\AntennaHeight) + (-\AntennaPropagationGap,0)$);
+
+\coordinate (end_pl_utK_antenna1) at ($(utK_antenna1) + (-\AntennaWidth,\AntennaHeight) + (-\AntennaPropagationGap,0)$);
+\coordinate (end_pl_utK_antennaNr) at ($(utK_antennaNr) + (-\AntennaWidth,\AntennaHeight) + (-\AntennaPropagationGap,0)$);
+
+
+% BS -> UT k
+\draw[propagation_link] (start_pl_bs_antenna1) -- node[pos=0.75, fill=white, inner sep=1.5pt, sloped] {$h_{k,\,1 1}$} ($(start_pl_bs_antenna1)!0.90!(end_pl_utk_antenna1)$);
+\draw[faint_propagation_link] (start_pl_bs_antenna1) -- ($(start_pl_bs_antenna1)!0.40!(utk_antenna_dots)$);
+\draw[propagation_link] (start_pl_bs_antenna1) -- node[pos=0.85, fill=white, inner sep=1.5pt, sloped] {$h_{k,\,N_R 1}$} ($(start_pl_bs_antenna1)!0.90!(end_pl_utk_antennaNr)$);
+
+\draw[propagation_link] (start_pl_bs_antenna2) -- node[pos=0.80, fill=white, inner sep=1.5pt, sloped] {$h_{k,\,1 2}$} ($(start_pl_bs_antenna2)!0.95!(end_pl_utk_antenna1)$);
+\draw[faint_propagation_link] (start_pl_bs_antenna2) -- ($(start_pl_bs_antenna2)!0.35!(utk_antenna_dots)$);
+\draw[propagation_link] (start_pl_bs_antenna2) -- node[pos=0.72, fill=white, inner sep=0.5pt, sloped] {$h_{k,\,N_R 2}$} ($(start_pl_bs_antenna2)!0.95!(end_pl_utk_antennaNr)$);
+
+\draw[propagation_link] (start_pl_bs_antennaNt) -- node[pos=0.80, fill=white, inner sep=1.5pt, sloped] {$h_{k,\,1 N_T}$} ($(start_pl_bs_antennaNt)!1.00!(end_pl_utk_antenna1)$);
+\draw[faint_propagation_link] (start_pl_bs_antennaNt) -- ($(start_pl_bs_antennaNt)!0.50!(utk_antenna_dots)$);
+\draw[propagation_link] (start_pl_bs_antennaNt) -- node[pos=0.70, fill=white, inner sep=1.5pt, sloped] {$h_{k,\,N_R N_T}$} ($(start_pl_bs_antennaNt)!1.00!(end_pl_utk_antennaNr)$);
+
+% BS -> UT 1
+\draw[propagation_link] (start_pl_bs_antenna1) -- ($(start_pl_bs_antenna1)!0.40!(end_pl_ut1_antenna1)$);
+\draw[faint_propagation_link] (start_pl_bs_antenna1) -- ($(start_pl_bs_antenna1)!0.40!(ut1_antenna_dots)$);
+\draw[propagation_link] (start_pl_bs_antenna1) -- ($(start_pl_bs_antenna1)!0.40!(end_pl_ut1_antennaNr)$);
+
+\draw[propagation_link] (start_pl_bs_antenna2) -- ($(start_pl_bs_antenna2)!0.15!(end_pl_ut1_antenna1)$);
+\draw[faint_propagation_link] (start_pl_bs_antenna2) -- ($(start_pl_bs_antenna2)!0.15!(ut1_antenna_dots.north)$);
+\draw[propagation_link] (start_pl_bs_antenna2) -- ($(start_pl_bs_antenna2)!0.15!(ut1_antennaNr)$);
+
+\draw[propagation_link] (start_pl_bs_antennaNt) -- ($(start_pl_bs_antennaNt)!0.20!(end_pl_ut1_antenna1)$);
+\draw[faint_propagation_link] (start_pl_bs_antennaNt) -- ($(start_pl_bs_antennaNt)!0.20!(ut1_antenna_dots.north)$);
+\draw[propagation_link] (start_pl_bs_antennaNt) -- ($(start_pl_bs_antennaNt)!0.20!(ut1_antennaNr)$);
+
+% BS -> UT K
+\draw[propagation_link] (start_pl_bs_antenna1) -- ($(start_pl_bs_antenna1)!0.06!(end_pl_utK_antenna1)$);
+\draw[faint_propagation_link] (start_pl_bs_antenna1) -- ($(start_pl_bs_antenna1)!0.0775!(utK_antenna_dots.south)$);
+\draw[propagation_link] (start_pl_bs_antenna1) -- ($(start_pl_bs_antenna1)!0.055!(utK_antennaNr)$);
+
+\draw[propagation_link] (start_pl_bs_antenna2) -- ($(start_pl_bs_antenna2)!0.10!(end_pl_utK_antenna1)$);
+\draw[faint_propagation_link] (start_pl_bs_antenna2) -- ($(start_pl_bs_antenna2)!0.10!(utK_antenna_dots.south)$);
+\draw[propagation_link] (start_pl_bs_antenna2) -- ($(start_pl_bs_antenna2)!0.10!(utK_antennaNr)$);
+
+\draw[propagation_link] (start_pl_bs_antennaNt) -- ($(start_pl_bs_antennaNt)!0.40!(end_pl_utK_antenna1)$);
+\draw[faint_propagation_link] (start_pl_bs_antennaNt) -- ($(start_pl_bs_antennaNt)!0.40!(utK_antenna_dots.south)$);
+\draw[propagation_link] (start_pl_bs_antennaNt) -- ($(start_pl_bs_antennaNt)!0.40!(utK_antennaNr)$);
+
+\end{tikzpicture}
+
+\end{document}
