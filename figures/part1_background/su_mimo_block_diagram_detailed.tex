@@ -1,0 +1,280 @@
+\documentclass[border=3pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, fit, calc}
+
+\begin{document}
+
+% ======================
+%   LAYOUT PARAMETERS
+% ======================
+
+% Arrow lengths
+\newcommand{\InOutBitsLength}{1.5cm}
+\newcommand{\TXRXGap}{9cm}
+
+% TX/RX block parameters
+\newcommand{\NodeDistance}{0.3cm}
+\newcommand{\BlockWidth}{1.6cm}
+\newcommand{\BlockHeight}{5cm} 
+\pgfmathsetlengthmacro{\SingleStreamBlockWidth}{\BlockWidth}
+\pgfmathsetlengthmacro{\SingleStreamBlockHeight}{\BlockHeight / 4.5}
+\pgfmathsetlengthmacro{\yShiftSingleStreamFirstBlock}{0.5*\BlockHeight - 0.5*\SingleStreamBlockHeight}
+\newcommand{\BoxGap}{1mm}
+
+% Antenna array parameters
+\newcommand{\AntennaPoleHeight}{0.5cm}
+\newcommand{\AntennaArmLength}{0.4cm}
+\newcommand{\AntennaArmAngle}{45}
+\pgfmathsetlengthmacro{\AntennaHeight}{\AntennaPoleHeight + \AntennaArmLength*sin(\AntennaArmAngle)}
+\pgfmathsetlengthmacro{\AntennaWidth}{\AntennaArmLength*cos(\AntennaArmAngle)}
+\newcommand{\AntennaArraySep}{1.2cm}
+
+\newcommand{\BlockToAntennaGap}{0.75cm}
+\newcommand{\AntennaLabelGapX}{2mm}
+\newcommand{\AntennaLabelGapY}{1.5mm}
+\newcommand{\AntennaPropagationGap}{2mm}
+
+% ======================
+\begin{tikzpicture}
+
+
+% ======================
+%   STYLE DEFINITIONS
+% ======================
+
+% node style
+\tikzset{
+    node distance=\NodeDistance,
+    every node/.style = {
+        font=\small, 
+        align=center
+    }
+}
+
+% array style
+\tikzset{
+    arrow/.style = {
+        ->,
+        %thick
+    }
+}
+
+% TX and RX block style 
+\tikzset{
+    block/.style = {
+        draw,
+        rectangle,
+        %thick,
+        minimum height=\BlockHeight,
+        minimum width=\BlockWidth,
+        align=center
+    },
+    single_stream_block/.style = {
+        draw,
+        rectangle,
+        %thick,
+        minimum height=\SingleStreamBlockHeight,
+        minimum width=\SingleStreamBlockWidth,
+        align=center
+    },
+}
+
+% propagation links styles
+\tikzset{
+    propagation_link/.style = {
+        -Stealth,
+    },
+    faint_propagation_link/.style = {
+        -Stealth,
+        dashed
+    }
+}
+
+% antenna symbol style
+\tikzset{
+    antenna symbol/.pic = {
+        % mast
+        \draw[thick] (0,0) -- ++(0,\AntennaPoleHeight);
+
+        % arms
+        \draw[thick] (0,\AntennaPoleHeight) -- ++(\AntennaArmAngle:\AntennaArmLength);
+        \draw[thick] (0,\AntennaPoleHeight) -- ++({180-\AntennaArmAngle}:\AntennaArmLength);
+
+        % base
+        %\draw[thick] (-0.18cm,0) -- (0.18cm,0);
+
+        % radiation arcs
+        \draw[thin] (0,\AntennaPoleHeight+0.05cm) ++(55:0.18cm) arc[start angle=55,end angle=125,radius=0.18cm];
+        \draw[thin] (0,\AntennaPoleHeight+0.05cm) ++(55:0.30cm) arc[start angle=55,end angle=125,radius=0.30cm];
+    }
+}
+
+
+% ======================
+%     FIGURE CONTENT
+% ======================
+
+
+% TRANSMITTER
+% ===========
+
+% Bit loader
+\node[block] (bit_loader) {Bit\\Loader};
+
+% Mapper blocks
+\node[single_stream_block, right=of bit_loader, yshift=\yShiftSingleStreamFirstBlock] (mapper1) {Mapper};
+\node[single_stream_block, below=of mapper1] (mapper2) {Mapper};
+\node[below=of mapper2] {\vdots};
+\node[single_stream_block, right=of bit_loader, yshift=-\yShiftSingleStreamFirstBlock] (mapperNt) {Mapper};
+
+% Precoder block
+\node[block, right=of mapper1, yshift=-\yShiftSingleStreamFirstBlock] (precoder) {Precoder};
+
+% TX box
+\coordinate (tx_northwest) at ([xshift=-\BoxGap, yshift=\BoxGap]bit_loader.north west);
+\coordinate (tx_southwest) at ([xshift=-\BoxGap, yshift=-\BoxGap]bit_loader.south west);
+\coordinate (tx_northeast) at ([xshift=\BoxGap, yshift=\BoxGap]precoder.north east);
+\coordinate (tx_southeast) at ([xshift=\BoxGap, yshift=-\BoxGap]precoder.south east);
+\node[draw, thick, fit=(tx_northwest)(tx_southwest)(tx_northeast)(tx_southeast), label=below:\textbf{TX}] (tx_box) {};
+
+
+% Transmit antenna 1.
+\coordinate (tx_antenna1) at ($(tx_box.east |- mapper1) + (\BoxGap,0) + (\BlockToAntennaGap,0)$);
+\pic at (tx_antenna1) {antenna symbol};
+\node[xshift=\AntennaLabelGapX, yshift=\AntennaLabelGapY] at (tx_antenna1) {$1$};
+\draw[thick] (tx_box.east |- tx_antenna1) -- (tx_antenna1);
+
+% Transmit antenna 2.
+\coordinate (tx_antenna2) at ($(tx_box.east |- mapper2) + (\BoxGap,0) + (\BlockToAntennaGap,0)$);
+\pic at (tx_antenna2) {antenna symbol};
+\node[xshift=\AntennaLabelGapX, yshift=\AntennaLabelGapY] at (tx_antenna2) {$2$};
+\draw[thick] (tx_box.east |- tx_antenna2) -- (tx_antenna2);
+
+% Transmit antenna Nt.
+\coordinate (tx_antennaNt) at ($(tx_box.east |- mapperNt) + (\BoxGap,0) + (\BlockToAntennaGap,0)$);
+\pic at (tx_antennaNt) {antenna symbol};
+\node[xshift=\AntennaLabelGapX, yshift=\AntennaLabelGapY] at ($(tx_antennaNt) + (0.15,0)$) {$N_T$};
+\draw[thick] (tx_box.east |- tx_antennaNt) -- (tx_antennaNt);
+
+% Faint transmit antennas.
+\coordinate (txadots) at ($0.5*(tx_antenna2) + 0.5*(tx_antennaNt) + 0.5*(0,\AntennaHeight)$);
+\node at (txadots) {\vdots};
+
+
+% Data flow arrows inside TX
+\draw[arrow] (bit_loader.east |- mapper1.west) -- (mapper1.west);
+\draw[arrow] (bit_loader.east |- mapper2.west) -- (mapper2.west);
+\draw[arrow] (bit_loader.east |- mapperNt.west) -- (mapperNt.west);
+\draw[arrow] (mapper1.east) -- (precoder.west |- mapper1.east);
+\draw[arrow] (mapper2.east) -- (precoder.west |- mapper2.east);
+\draw[arrow] (mapperNt.east) -- (precoder.west |- mapperNt.east);
+\draw[arrow] (precoder.east |- tx_antenna1.west) -- (tx_box.east |- tx_antenna1.west);
+\draw[arrow] (precoder.east |- tx_antenna2.west) -- (tx_box.east |- tx_antenna2.west);
+\draw[arrow] (precoder.east |- tx_antennaNt.west) -- (tx_box.east |- tx_antennaNt.west);
+
+\draw[arrow] ([xshift=-\InOutBitsLength]tx_box.west) -- node[below]{input\\bits} (bit_loader.west);
+
+
+% RECEIVER
+% ========
+
+% Combiner block
+\node[block, right=\TXRXGap of precoder] (combiner) {Combiner};
+
+% Demapper blocks
+\node[single_stream_block, right=of combiner, yshift=\yShiftSingleStreamFirstBlock] (demapper1) {Demapper};
+\node[single_stream_block, below=of demapper1] (demapper2) {Demapper};
+\node[below=of demapper2] (demapperdots) {\vdots};
+\node[single_stream_block, right=of combiner, yshift=-\yShiftSingleStreamFirstBlock] (demapperNt) {Demapper};
+
+% Bit collector
+\node[block, right=of demapper1, yshift=-\yShiftSingleStreamFirstBlock] (bit_collector) {Bit\\Collector};
+
+% RX box
+\coordinate (rx_northwest) at ([xshift=-\BoxGap, yshift=\BoxGap]combiner.north west);
+\coordinate (rx_southwest) at ([xshift=-\BoxGap, yshift=-\BoxGap]combiner.south west);
+\coordinate (rx_northeast) at ([xshift=\BoxGap, yshift=\BoxGap]bit_collector.north east);
+\coordinate (rx_southeast) at ([xshift=\BoxGap, yshift=-\BoxGap]bit_collector.south east);
+\node[draw, thick, fit=(rx_northwest)(rx_southwest)(rx_northeast)(rx_southeast), label=below:\textbf{RX}] (rx_box) {};
+
+
+% Receive antenna 1
+\coordinate (rx_antenna1) at ($(rx_box.west |- demapper1) + (-\BoxGap,0) + (-\BlockToAntennaGap,0)$);
+\pic at (rx_antenna1) {antenna symbol};
+\node[xshift=-\AntennaLabelGapX, yshift=\AntennaLabelGapY] at (rx_antenna1) {$1$};
+\draw[thick] (rx_box.west |- rx_antenna1) -- (rx_antenna1);
+
+% Receive antenna 2
+\coordinate (rx_antenna2) at ($(rx_box.west |- demapper2) + (-\BoxGap,0) + (-\BlockToAntennaGap,0)$);
+\pic at (rx_antenna2) {antenna symbol};
+\node[xshift=-\AntennaLabelGapX, yshift=\AntennaLabelGapY] at (rx_antenna2) {$2$};
+\draw[thick] (rx_box.west |- rx_antenna2) -- (rx_antenna2);
+
+% Receive antenna Nr
+\coordinate (rx_antennaNr) at ($(rx_box.west |- demapperNt) + (-\BoxGap,0) + (-\BlockToAntennaGap,0)$);
+\pic at (rx_antennaNr) {antenna symbol};
+\node[xshift=-\AntennaLabelGapX, yshift=\AntennaLabelGapY] at ($(rx_antennaNr) + (-0.15,0)$) {$N_R$};
+\draw[thick] (rx_box.west |- rx_antennaNr) -- (rx_antennaNr);
+
+% Faint receive antennas
+\coordinate (rxadots) at ($0.5*(rx_antenna2) + 0.5*(rx_antennaNr) + 0.5*(0,\AntennaHeight)$);
+\node at (rxadots) {\vdots};
+
+% Data flow arrows inside RX
+\draw[arrow] (rx_box.west |- rx_antenna1.east) -- (combiner.west |- rx_antenna1.east);
+\draw[arrow] (rx_box.west |- rx_antenna2.east) -- (combiner.west |- rx_antenna2.east);
+\draw[arrow] (rx_box.west |- rx_antennaNr.east) -- (combiner.west |- rx_antennaNr.east);
+
+\draw[arrow] (combiner.east |- demapper1.west) -- (demapper1.west);
+\draw[arrow] (combiner.east |- demapper2.west) -- (demapper2.west);
+\draw[arrow] (combiner.east |- demapperNt.west) -- (demapperNt.west);
+
+\draw[arrow] (demapper1.east) -- (bit_collector.west |- demapper1.east);
+\draw[arrow] (demapper2.east) -- (bit_collector.west |- demapper2.east);
+\draw[arrow] (demapperNt.east) -- (bit_collector.west |- demapperNt.east);
+
+\draw[arrow] (bit_collector.east) -- node[below]{output\\bits} ([xshift=\InOutBitsLength]rx_box.east);
+
+
+% CHANNEL
+% =======
+
+% Channel component
+\node (channel) at ($(tx_box.south east)!0.5!(rx_box.south west)$) {Channel};
+
+% Start and end points of propagation links.
+\coordinate (start_pl_tx_antenna1) at ($(tx_antenna1) + (\AntennaWidth,\AntennaHeight) + (\AntennaPropagationGap,0)$);
+\coordinate (start_pl_tx_antenna2) at ($(tx_antenna2) + (\AntennaWidth,\AntennaHeight) + (\AntennaPropagationGap,0)$);
+\coordinate (start_pl_tx_antennaNt) at ($(tx_antennaNt) + (\AntennaWidth,\AntennaHeight) + (\AntennaPropagationGap,0)$);
+\coordinate (end_pl_rxa1) at ($(rx_antenna1) + (-\AntennaWidth,\AntennaHeight) + (-\AntennaPropagationGap,0)$);
+\coordinate (end_pl_rxa2) at ($(rx_antenna2) + (-\AntennaWidth,\AntennaHeight) + (-\AntennaPropagationGap,0)$);
+\coordinate (end_pl_rxaNr) at ($(rx_antennaNr) + (-\AntennaWidth,\AntennaHeight) + (-\AntennaPropagationGap,0)$);
+
+% TX antenna 1.
+\draw[propagation_link] (start_pl_tx_antenna1) -- node[midway, fill=white, inner sep=1.5pt] {$h_{1,1}$} (end_pl_rxa1);
+\draw[propagation_link] (start_pl_tx_antenna1) -- node[midway, fill=white, inner sep=1.5pt] {$h_{2,1}$} (end_pl_rxa2);
+\draw[propagation_link] (start_pl_tx_antenna1) -- node[midway, fill=white, inner sep=1.5pt] {$h_{N_R,1}$} (end_pl_rxaNr);
+\draw[faint_propagation_link] (start_pl_tx_antenna1) -- ($(start_pl_tx_antenna1)!0.75!(rxadots)$);
+
+% TX antenna 2.
+\draw[propagation_link] (start_pl_tx_antenna2) -- ($(start_pl_tx_antenna2)!0.18!(end_pl_rxa1)$);
+\draw[propagation_link] (start_pl_tx_antenna2) -- ($(start_pl_tx_antenna2)!0.20!(end_pl_rxa2)$);
+\draw[propagation_link] (start_pl_tx_antenna2) -- ($(start_pl_tx_antenna2)!0.23!(end_pl_rxaNr)$);
+\draw[faint_propagation_link] (start_pl_tx_antenna2) -- ($(start_pl_tx_antenna2)!0.22!(rxadots)$);
+
+% TX antenna Nt.
+\draw[propagation_link] (start_pl_tx_antennaNt) -- ($(start_pl_tx_antennaNt)!0.25!(end_pl_rxa1)$);
+\draw[propagation_link] (start_pl_tx_antennaNt) -- ($(start_pl_tx_antennaNt)!0.30!(end_pl_rxa2)$);
+\draw[propagation_link] (start_pl_tx_antennaNt) -- ($(start_pl_tx_antennaNt)!0.40!(end_pl_rxaNr)$);
+\draw[faint_propagation_link] (start_pl_tx_antennaNt) -- ($(start_pl_tx_antennaNt)!0.35!(rxadots)$);
+
+
+% BOUNDING BOX
+\path[use as bounding box]
+    ([xshift=-\InOutBitsLength]tx_box.west |- tx_box.north)
+    rectangle
+    ([xshift=\InOutBitsLength]rx_box.east |- rx_box.south);
+
+\end{tikzpicture}
+
+\end{document}
