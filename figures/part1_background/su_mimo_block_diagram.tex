@@ -1,0 +1,204 @@
+\documentclass[border=3pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, fit, calc}
+
+\begin{document}
+
+% ======================
+%   LAYOUT PARAMETERS
+% ======================
+
+\newcommand{\InOutBitsLength}{2.5cm}    % length of input/output bits arrows
+
+
+\newcommand{\BlockWidth}{2.5cm}         % width of a TX/RX block
+\newcommand{\BlockHeight}{5cm}          % height of a TX/RX block
+
+\newcommand{\TXRXGap}{8.5cm}            % gap between TX and RX blocks
+
+
+\newcommand{\AntennaArraySep}{1.25cm}   % vertical separation between antenna symbols in the array
+\newcommand{\BlockToAntennaGap}{0.75cm} % gap between block and antenna array
+
+\newcommand{\AntennaPoleHeight}{0.5cm}  % height of the vertical pole in the antenna symbol
+\newcommand{\AntennaArmLength}{0.4cm}   % length of the arms in the antenna symbol
+\newcommand{\AntennaArmAngle}{45}       % angle of the arms in the antenna symbol (in degrees)
+\pgfmathsetlengthmacro{\AntennaHeight}{\AntennaPoleHeight + \AntennaArmLength*sin(\AntennaArmAngle)}        % total height of the antenna symbol
+\pgfmathsetlengthmacro{\AntennaWidth}{\AntennaArmLength*cos(\AntennaArmAngle)}                              % half of the total width of the antenna symbol
+
+\newcommand{\AntennaLabelGapX}{2mm}     % horizontal shift for antenna labels (relative to the antenna symbol)
+\newcommand{\AntennaLabelGapY}{1.5mm}   % vertical shift for antenna labels (relative to the antenna symbol)
+\newcommand{\AntennaPropagationGap}{2mm} % gap between the start of the propagation link and the antenna symbol
+
+% ======================
+\begin{tikzpicture}
+
+
+% ======================
+%   STYLE DEFINITIONS
+% ======================
+
+% node style
+\tikzset{
+    every node/.style = {
+        font=\small, 
+        align=center
+    }
+}
+
+% array style
+\tikzset{
+    arrow/.style = {
+        ->,
+        thick
+    }
+}
+
+% TX and RX block style 
+\tikzset{
+    block/.style = {
+        draw,
+        rectangle,
+        thick,
+        minimum height=\BlockHeight,
+        minimum width=\BlockWidth,
+        align=center
+    }
+}
+
+% propagation links styles
+\tikzset{
+    propagation_link/.style = {
+        -Stealth,
+    },
+    faint_propagation_link/.style = {
+        -Stealth,
+        dashed
+    }
+}
+
+% antenna symbol style
+\tikzset{
+    antenna symbol/.pic = {
+        % mast
+        \draw[thick] (0,0) -- ++(0,\AntennaPoleHeight);
+
+        % arms
+        \draw[thick] (0,\AntennaPoleHeight) -- ++(\AntennaArmAngle:\AntennaArmLength);
+        \draw[thick] (0,\AntennaPoleHeight) -- ++({180-\AntennaArmAngle}:\AntennaArmLength);
+
+        % base
+        %\draw[thick] (-0.18cm,0) -- (0.18cm,0);
+
+        % radiation arcs
+        \draw[thin] (0,\AntennaPoleHeight+0.05cm) ++(55:0.18cm) arc[start angle=55,end angle=125,radius=0.18cm];
+        \draw[thin] (0,\AntennaPoleHeight+0.05cm) ++(55:0.30cm) arc[start angle=55,end angle=125,radius=0.30cm];
+    }
+}
+
+
+% ======================
+%     FIGURE CONTENT
+% ======================
+
+
+% TRANSMITTER
+% ===========
+
+% TX Component.
+\node[block] (tx) {Transmitter};
+
+% Input bits.
+\draw[arrow] ([xshift=-\InOutBitsLength]tx.west) -- node[above]{input\\bitstreams} (tx.west);
+
+% Transmit antenna 1.
+\coordinate (txa1) at ($(tx.north east) + (\BlockToAntennaGap,-0.5*\AntennaArraySep)$);
+\pic at (txa1) {antenna symbol};
+\node[xshift=\AntennaLabelGapX, yshift=\AntennaLabelGapY] at (txa1) {$1$};
+\draw[thick] (tx.east |- txa1) -- (txa1);
+
+% Transmit antenna 2.
+\coordinate (txa2) at ($(txa1) + (0,-\AntennaArraySep)$);
+\pic at (txa2) {antenna symbol};
+\node[xshift=\AntennaLabelGapX, yshift=\AntennaLabelGapY] at (txa2) {$2$};
+\draw[thick] (tx.east |- txa2) -- (txa2);
+
+% Transmit antenna Nt.
+\coordinate (txaNt) at ($(tx.south east) + (\BlockToAntennaGap,0.5*\AntennaArraySep)$);
+\pic at (txaNt) {antenna symbol};
+\node[xshift=\AntennaLabelGapX, yshift=\AntennaLabelGapY] at ($(txaNt) + (0.15,0)$) {$N_T$};
+\draw[thick] (tx.east |- txaNt) -- (txaNt);
+
+% Faint transmit antennas.
+\coordinate (txadots) at ($0.5*(txa2) + 0.5*(txaNt) + 0.5*(0,\AntennaHeight)$);
+\node at (txadots) {\vdots};
+
+
+% RECEIVER
+% ========
+
+% RX Component
+\node[block, right=\TXRXGap of tx] (rx) {Receiver};
+
+% Output bits
+\draw[arrow] (rx.east) -- node[above]{output\\bitstreams} ([xshift=\InOutBitsLength]rx.east);
+
+% Receive antenna 1.
+\coordinate (rxa1) at ($(rx.north west) + (-\BlockToAntennaGap,-0.5*\AntennaArraySep)$);
+\pic at (rxa1) {antenna symbol};
+\node[xshift=-\AntennaLabelGapX, yshift=\AntennaLabelGapY] at (rxa1) {$1$};
+\draw[thick] (rx.west |- rxa1) -- (rxa1);
+
+% Receive antenna 2.
+\coordinate (rxa2) at ($(rxa1) + (0,-\AntennaArraySep)$);
+\pic at (rxa2) {antenna symbol};
+\node[xshift=-\AntennaLabelGapX, yshift=\AntennaLabelGapY] at (rxa2) {$2$};
+\draw[thick] (rx.west |- rxa2) -- (rxa2);
+
+% Receive antenna Nr.
+\coordinate (rxaNr) at ($(rx.south west) + (-\BlockToAntennaGap,0.5*\AntennaArraySep)$);
+\pic at (rxaNr) {antenna symbol};
+\node[xshift=-\AntennaLabelGapX, yshift=\AntennaLabelGapY] at ($(rxaNr) + (-0.15,0)$) {$N_R$};
+\draw[thick] (rx.west |- rxaNr) -- (rxaNr);
+
+% Faint receive antennas.
+\coordinate (rxadots) at ($0.5*(rxa2) + 0.5*(rxaNr) + 0.5*(0,\AntennaHeight)$);
+\node at (rxadots) {\vdots};
+
+
+% CHANNEL
+% =======
+
+% Channel component
+\node (channel) at ($(tx.south east)!0.5!(rx.south west)$) {Channel};
+
+% Start and end points of propagation links.
+\coordinate (start_pl_txa1) at ($(txa1) + (\AntennaWidth,\AntennaHeight) + (\AntennaPropagationGap,0)$);
+\coordinate (start_pl_txa2) at ($(txa2) + (\AntennaWidth,\AntennaHeight) + (\AntennaPropagationGap,0)$);
+\coordinate (start_pl_txaNt) at ($(txaNt) + (\AntennaWidth,\AntennaHeight) + (\AntennaPropagationGap,0)$);
+\coordinate (end_pl_rxa1) at ($(rxa1) + (-\AntennaWidth,\AntennaHeight) + (-\AntennaPropagationGap,0)$);
+\coordinate (end_pl_rxa2) at ($(rxa2) + (-\AntennaWidth,\AntennaHeight) + (-\AntennaPropagationGap,0)$);
+\coordinate (end_pl_rxaNr) at ($(rxaNr) + (-\AntennaWidth,\AntennaHeight) + (-\AntennaPropagationGap,0)$);
+
+% TX antenna 1.
+\draw[propagation_link] (start_pl_txa1) -- node[midway, fill=white, inner sep=1.5pt] {$h_{1,1}$} (end_pl_rxa1);
+\draw[propagation_link] (start_pl_txa1) -- node[midway, fill=white, inner sep=1.5pt] {$h_{2,1}$} (end_pl_rxa2);
+\draw[propagation_link] (start_pl_txa1) -- node[midway, fill=white, inner sep=1.5pt] {$h_{N_R,1}$} (end_pl_rxaNr);
+\draw[faint_propagation_link] (start_pl_txa1) -- ($(start_pl_txa1)!0.75!(rxadots)$);
+
+% TX antenna 2.
+\draw[propagation_link] (start_pl_txa2) -- ($(start_pl_txa2)!0.18!(end_pl_rxa1)$);
+\draw[propagation_link] (start_pl_txa2) -- ($(start_pl_txa2)!0.20!(end_pl_rxa2)$);
+\draw[propagation_link] (start_pl_txa2) -- ($(start_pl_txa2)!0.23!(end_pl_rxaNr)$);
+\draw[faint_propagation_link] (start_pl_txa2) -- ($(start_pl_txa2)!0.22!(rxadots)$);
+
+% TX antenna Nt.
+\draw[propagation_link] (start_pl_txaNt) -- ($(start_pl_txaNt)!0.25!(end_pl_rxa1)$);
+\draw[propagation_link] (start_pl_txaNt) -- ($(start_pl_txaNt)!0.30!(end_pl_rxa2)$);
+\draw[propagation_link] (start_pl_txaNt) -- ($(start_pl_txaNt)!0.40!(end_pl_rxaNr)$);
+\draw[faint_propagation_link] (start_pl_txaNt) -- ($(start_pl_txaNt)!0.35!(rxadots)$);
+
+
+\end{tikzpicture}
+
+\end{document}
