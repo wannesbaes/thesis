@@ -1,4 +1,4 @@
-\chapter{System Models}
+\chapter{Communication Systems}
 
 
 \section{Digital Communication System}
@@ -7,12 +7,12 @@ A general digital communication system transfers information from a source to a 
 
 \begin{figure}[hb]
     \centering
-    \makebox[\textwidth][c]{\resizebox{1.05\textwidth}{!}{\includestandalone{figures/part1_background/digcom_system_block_diagram}}}
+    \makebox[\textwidth][c]{\resizebox{\textwidth}{!}{\includegraphics{figures/part1_background/out/digcom_system_block_diagram.pdf}}}
     \caption{Block diagram of a general digital communication system.}
     \label{fig:digcom_system_block_diagram}
 \end{figure}
 
-At the \ac{TX}, the information sequence is first processed by a source encoder to remove redundancy, followed by a channel encoder that introduces controlled redundancy to enable error correction.
+At the \ac{TX}, the information sequence is first processed by a source encoder to remove redundancy, followed by a channel encoder that introduces controlled redundancy to enable error detection.
 The resulting coded bit sequence is partitioned into blocks of $m_c$ bits, each of which is mapped onto a complex-valued symbol drawn from a constellation $\mathcal{X}$ of size $2^{m_c}$.
 The modulator then converts the symbol sequence into a baseband signal suitable for transmission.
 
@@ -29,15 +29,103 @@ Channel coding and decoding are also not considered, such that the analysis is r
 The transmission medium is assumed to be a wireless channel affected by fading and additive noise. Furthermore, the channel is considered to be frequency-flat, meaning that its response remains constant over the entire signal bandwidth. The specific channel models used in this work are introduced in the relevant chapters.
 
 
-\section{MIMO}
+\section{MIMO Communication Systems}
+
+When both the \ac{TX} and the \ac{RX} are equipped with multiple antennas, the system is referred to as a \ac{MIMO} system.
+
+Compared to a single-antenna link, the multiple antennas provide additional spatial degrees of freedom that can be exploited to increase data throughput, improve reliability, or achieve a trade-off between both.
+Spatial multiplexing techniques enable significant capacity gains by transmitting multiple independent data streams simultaneously over different antennas. A well-known example is the BLAST architecture~\cite{foschini_1998}.
+Alternatively, spatial diversity can be achieved through space-time coding schemes, which distribute symbols across both space and time to improve robustness against fading. A classical example is the Alamouti scheme~\cite{alamouti_1998}.
+Throughout this work, the focus is on spatial multiplexing and, in particular, on how the simultaneous transmission of multiple data streams over a shared channel can be made most efficient through precoding.
 
 \subsection{SU-MIMO}
 
-A point-to-point communication system that consists of a \ac{TX} equipped with $N_T$ antennas communicating with a single \ac{RX} equipped with $N_R$ antennas, is called a \ac{SU} \ac{MIMO} system.
-A block diagram of such a system is shown in Fig.%~\ref{fig:SU_MIMO_block_diagram}.
+In the point-to-point case, where a single \ac{TX} with $N_T$ antennas communicates with a single \ac{RX} with $N_R$ antennas, the system is called a \ac{SU} \ac{MIMO} system. A block diagram is shown in Fig.~\ref{fig:SU_MIMO_block_diagram_detailed}.
 
-Compared to a single-antenna link, the additional spatial degrees of freedom provided by multiple antennas can be exploited to increase data throughput, improve data reliability, or achieve a trade-off between both.
-Spatial multiplexing techniques enable significant capacity gains by transmitting multiple independent data streams simultaneously over different antennas, as exemplified by architectures such as BLAST~\cite{foschini_1998}.
-Alternatively, spatial diversity can be achieved through space-time coding schemes, which distribute symbols across both space and time to improve robustness against fading. A well-known example is the Alamouti scheme~\cite{alamouti_1998}.
-In the future of this work, we focus on spatial multiplexing and in particular on how the we can transmit the data streams simultaneously over different antennas most efficiently.
+\begin{figure}[!ht]
+    \centering
+    \makebox[\textwidth][c]{\resizebox{1.2\textwidth}{!}{\includegraphics{figures/part1_background/out/su_mimo_block_diagram_detailed.pdf}}}
+    \caption{Block diagram of a SU-MIMO system.}
+    \label{fig:SU_MIMO_block_diagram_detailed}
+\end{figure}
 
+% channel input-output
+The discrete-time complex baseband input-output relation of a \ac{SU}-\ac{MIMO} Gaussian channel is characterized by
+\begin{equation}
+    \mathbf{y} = \mathbf{H}\mathbf{x} + \mathbf{n},
+\label{eq:su_mimo_io}
+\end{equation}
+where $\mathbf{x} \in \mathbb{C}^{N_T \times 1}$ is the transmitted signal vector, $\mathbf{y} \in \mathbb{C}^{N_R \times 1}$ is the received signal vector, $\mathbf{H} \in \mathbb{C}^{N_R \times N_T}$ is the channel matrix, and $\mathbf{n} \in \mathbb{C}^{N_R \times 1}$ is the additive noise vector.
+The $(n_r, n_t)$-th entry of $\mathbf{H}$ represents the complex channel coefficient between transmit antenna $n_t$ and receive antenna $n_r$.
+The noise vector is assumed to be circularly symmetric complex Gaussian, i.e., $\mathbf{n} \sim \mathcal{N}_{\mathbb{C}}(\mathbf{0}, N_0 \, \mathbf{I}_{N_R})$, such that its entries are spatially independent, each with an expected power of $N_0$.
+The time index is omitted for brevity.
+
+% transmitter
+At the \ac{TX}, the information bits are divided into $N_S$ streams and mapped onto data symbols, which are collected in the vector $\mathbf{a} \in \mathbb{C}^{N_S \times 1}$.
+Then, the transmitted signal is obtained by mapping the $N_S$ data symbol streams onto the $N_T$ transmit antennas according to a linear precoding scheme, represented by a matrix $\mathbf{F} \in \mathbb{C}^{N_T \times N_S}$.
+The transmitted signal can therefore be expressed as
+\begin{equation}
+    \mathbf{x} = \mathbf{F} \, \mathbf{a}.
+\label{eq:su_mimo_precoding}
+\end{equation}
+The data symbols are assumed to be zero-mean, mutually uncorrelated, and normalized, such that $ \mathbb{E}\!\left[\mathbf{a}\mathbf{a}^H\right] = \mathbf{I}_{N_S} $.
+Throughout this work, the power allocation is assumed to be incorporated into the precoding matrix, unless explicitly stated otherwise. Under this convention, the total transmit power is constrained by
+\begin{equation}
+    \mathbb{E}\!\left[\|\mathbf{x}\|^2\right] = \mathrm{tr}\!\left(\mathbf{F}^H \mathbf{F}\right) \leq P_t.
+\end{equation}
+\begin{comment}
+\begin{subequations}
+\begin{align}
+    P_t
+    &\geq \mathbb{E}\!\left[ \left\|\mathbf{x}\right\|^2 \right] \\
+    &= \mathbb{E}\!\left[ \mathbf{x}^H \mathbf{x} \right] \\
+    &= \mathbb{E}\!\left[ \left(\mathbf{F} \mathbf{a}\right)^H \left(\mathbf{F} \mathbf{a}\right) \right] \\
+    &= \mathbb{E}\!\left[ \mathbf{a}^H \mathbf{F}^H \mathbf{F} \mathbf{a} \right] \\
+    &= \mathbb{E}\!\left[ \text{Tr}\!\left[ \mathbf{a}^H \mathbf{F}^H \mathbf{F} \mathbf{a} \right] \right] \\
+    &= \mathbb{E}\!\left[ \text{Tr}\!\left[ \mathbf{F}^H \mathbf{F} \, \mathbf{a} \mathbf{a}^H \right] \right] \\
+    &= \text{Tr}\!\left[ \mathbb{E}\!\left[ \mathbf{F}^H \mathbf{F} \, \mathbf{a} \mathbf{a}^H \right]  \right] \\
+    &= \text{Tr}\!\left[ \mathbf{F}^H \mathbf{F} \, \mathbb{E}\!\left[ \mathbf{a} \mathbf{a}^H \right]  \right] \\
+    &= \text{Tr}\!\left[ \mathbf{F}^H \mathbf{F} \, \mathbf{I}_{N_S} \right] \\
+    &= \text{Tr}\!\left[ \mathbf{F}^H \mathbf{F} \right] \\
+\label{eq:su_mimo_power_constraint_derivation}
+\end{align}
+\end{subequations}
+\end{comment}
+
+% receiver
+At the \ac{RX}, the $N_R$ received signals are linearly combined to obtain the decision-variable vector $\mathbf{z} \in \mathbb{C}^{N_S \times 1}$.
+The combiner is represented by a matrix $\mathbf{G} \in \mathbb{C}^{N_S \times N_R}$.
+The decision variables can therefore be expressed as
+\begin{equation}
+    \mathbf{z} = \mathbf{G} \, \mathbf{y}.
+\label{eq:su_mimo_combining}
+\end{equation}
+Based on $\mathbf{z}$, the detector forms estimates of the transmitted data symbols, which are then mapped back to bits.
+
+% overall input-output
+Substituting \eqref{eq:su_mimo_precoding} into \eqref{eq:su_mimo_io} and applying \eqref{eq:su_mimo_combining} yields the relation between the transmitted data symbols and the decision variables:
+\begin{subequations}
+\begin{align}
+    \mathbf{z} &= \left(\mathbf{G} \, \mathbf{H} \, \mathbf{F}\right) \; \mathbf{a} + \mathbf{G} \, \mathbf{n}, \\
+    &= \mathbf{T} \, \mathbf{a} + \mathbf{n_G},
+\end{align}
+\end{subequations}
+where $\mathbf{T} \in \mathbb{C}^{N_S \times N_S}$ is the \ac{MIMO} transfer matrix and $\mathbf{n_G}$ represents spatially correlated Gaussian noise.
+
+\subsection{MU-MIMO}
+
+When multiple receivers are served simultaneously by a single multi-antenna transmitter, the system is referred to as a \ac{MU} \ac{MIMO} system. In this context, the transmitter is called the \ac{BS} and the individual receivers are referred to as \acp{UT}. A block diagram is shown in Fig.~\ref{fig:MU_MIMO_block_diagram}.
+
+\begin{figure}[!ht]
+    \centering
+    \makebox[\textwidth][c]{\resizebox{0.8\textwidth}{!}{\includegraphics{figures/part1_background/out/mu_mimo_block_diagram.pdf}}}
+    \caption{Block diagram of a MU-MIMO system.}
+    \label{fig:MU_MIMO_block_diagram}
+\end{figure}
+
+
+\section{Capacity of a MIMO System}
+
+\subsection{SU-MIMO}
+
+\subsection{MU-MIMO}

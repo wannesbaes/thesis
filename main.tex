@@ -7,20 +7,20 @@
 
 % ---- TITLE PAGE ----
 \includepdf{frontmatter/titlepage.pdf}
-\input{frontmatter/declarations.tex}
+\input{frontmatter/declarations}
 
 
 % ---- FRONTMATTER ----
 \frontmatter
 
 % acknowledgements
-\input{frontmatter/acknowledgements.tex}
+\input{frontmatter/acknowledgements}
 
 % abstract
-\input{frontmatter/abstract.tex}
+\input{frontmatter/abstract}
 
 % extended abstract
-\input{frontmatter/extended_abstract.tex}
+\input{frontmatter/extended_abstract}
 
 % table of contents
 \cleardoublepage
@@ -41,21 +41,21 @@
 \listoftables
 
 % symbols and notations
-\input{frontmatter/symbols_and_notations.tex}
+\input{frontmatter/symbols_and_notations}
 
 
 % ---- MAIN CONTENT ----
 \mainmatter
 
-\input{chapters/01_introduction.tex}
+\include{chapters/01_introduction}
 
 \part{Background Material}
-\input{chapters/part1_background/02_digcom_system.tex}
-\input{chapters/part1_background/03_precoding_techniques.tex}
+\include{chapters/part1_background/02_digcom_system}
+\include{chapters/part1_background/03_precoding_techniques}
 
 \part{Precoding with perfect CSI}
-\input{chapters/part2_terrestrial/04_SU_MIMO.tex}
-\input{chapters/part2_terrestrial/05_MU_MIMO.tex}
+\include{chapters/part2_terrestrial/04_SU_MIMO}
+\include{chapters/part2_terrestrial/05_MU_MIMO}
 
 \part{Precoding for Satellite Communications}
 
@@ -63,8 +63,8 @@
 % ---- APPENDICES ----
 \appendix
 \part{Appendices}
-\input{annex/A_todo.tex}
-\input{annex/B_todo.tex}
+\include{annex/A_todo}
+\include{annex/B_todo}
 
 
 % ---- REFERENCES ----

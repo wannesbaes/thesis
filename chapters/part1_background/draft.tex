@@ -1,0 +1,136 @@
+\documentclass[11pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+
+\begin{document}
+
+% --- PAGE 1 ---
+\setcounter{page}{9}
+\chapter{Information theory basics}
+
+In this chapter, we present a few basic results from information theory, which will be exploited in the remaining chapters (Chapters 3--7 from Part I). Some of the notations introduced here in Part I do not appear in Part II; these notations are not included in the (already quite extensive) overview list of symbols and notations.
+
+\section{Complex-valued circular-symmetric Gaussian vectors}
+
+A complex-valued Gaussian random vector $\mathbf{v}$ with mean $\mathbf{m}_v = \mathbb{E}[\mathbf{v}]$ and full-rank covariance matrix $\mathbf{C}_v = \mathbb{E}[(\mathbf{v}-\mathbf{m}_v)(\mathbf{v}-\mathbf{m}_v)^H]$ is circular symmetric when $\mathbb{E}[(\mathbf{v}-\mathbf{m}_v)(\mathbf{v}-\mathbf{m}_v)^T] = 0$. The corresponding probability density function (pdf) $p(\mathbf{v})$ is given by
+\begin{equation}
+    p(\mathbf{v}) = \frac{1}{\det[\pi \mathbf{C}_v]} e^{-(\mathbf{v}-\mathbf{m}_v)^H \mathbf{C}_v^{-1} (\mathbf{v}-\mathbf{m}_v)}
+\end{equation}
+To indicate that a random vector $\mathbf{v}$ has a pdf given by (2.1), we adopt the notation $\mathbf{v} \sim \mathcal{CN}(\mathbf{m}_v, \mathbf{C}_v)$.
+
+\section{Mutual information and capacity}
+
+A TX generates a random vector $\mathbf{x} \in \mathbb{C}^{N_t}$ according to a pdf $p(\mathbf{x})$; the intended RX observes the vector $\mathbf{y} \in \mathbb{C}^{N_r}$, which results from sending $\mathbf{x}$ over the communication channel. The relation between $\mathbf{x}$ and $\mathbf{y}$ is probabilistic, and is characterized by the conditional pdf $p(\mathbf{y}|\mathbf{x})$. The transmission of $\mathbf{x}$ is referred to as a channel use.
+
+\newpage
+% --- PAGE 2 ---
+\noindent 10 \hfill Chapter 2. Information theory basics \\
+
+The TX uses a codebook to encode the messages to be conveyed to the RX; for each message $m \in \{1, \dots, M\}$ a corresponding codeword $(\mathbf{x}^{(1)}, \dots, \mathbf{x}^{(N)})$ of blocklength $N$ is sent to the RX; the transmission of a codeword involves $N$ consecutive channel uses. Defining the information rate $R$ as the number of information bits transmitted per channel use, we have $R = \frac{1}{N} \log_2(M)$; hence, the number of possible messages is given by $M = 2^{R \cdot N}$, which also equals the size of the codebook. Assuming the channel is memoryless, the corresponding observation $(\mathbf{y}^{(1)}, \dots, \mathbf{y}^{(N)})$ at the RX has a conditional density given by
+\begin{equation*}
+    p(\mathbf{y}^{(1)}, \dots, \mathbf{y}^{(N)} | \mathbf{x}^{(1)}, \dots, \mathbf{x}^{(N)}) = \prod_{n=1}^N p(\mathbf{y}^{(n)} | \mathbf{x}^{(n)})
+\end{equation*}
+The RX tries to recover the transmitted message, by performing a decoding operation on the observation $(\mathbf{y}^{(1)}, \dots, \mathbf{y}^{(N)})$. The message $\hat{m}$ extracted by the RX results from the decision rule that minimizes the error probability $Pr[\hat{m} \neq m]$; this optimal decision rule is
+\begin{equation*}
+    \hat{m} = \arg \max_{m \in \{1, \dots, M\}} Pr[m | \mathbf{y}^{(1)}, \dots, \mathbf{y}^{(N)}]
+\end{equation*}
+It has been shown by Shannon that there exist codes for which $Pr[\hat{m} \neq m]$ goes to zero when the blocklength $N$ increases without limit, if and only if $R$ is less than the mutual information (MI) $I(\mathbf{x};\mathbf{y})$ between $\mathbf{x}$ and $\mathbf{y}$ [18]. For given $p(\mathbf{x})$ and $p(\mathbf{y}|\mathbf{x})$, rates satisfying $R < I(\mathbf{x};\mathbf{y})$ are referred to as achievable; note that $I(\mathbf{x};\mathbf{y})$ is the least upper bound (also called supremum) on the achievable rates, meaning that no smaller upper bound exists. The MI is defined as
+\begin{equation}
+    I(\mathbf{x};\mathbf{y}) = \mathbb{E} \left[ \log_2 \left( \frac{p(\mathbf{y}|\mathbf{x})}{p(\mathbf{y})} \right) \right]
+\end{equation}
+where the expectation $\mathbb{E}[\cdot]$ is over the joint pdf $p(\mathbf{x}, \mathbf{y})$ of $\mathbf{x}$ and $\mathbf{y}$, and $p(\mathbf{y})$ is the marginal pdf of $\mathbf{y}$. For given $p(\mathbf{x})$ and $p(\mathbf{y}|\mathbf{x})$, the expressions
+\begin{align*}
+    p(\mathbf{x}, \mathbf{y}) &= p(\mathbf{x}) p(\mathbf{y}|\mathbf{x}) \\
+    p(\mathbf{y}) &= \int p(\mathbf{x}) p(\mathbf{y}|\mathbf{x}) d\mathbf{x}
+\end{align*}
+must be used in (2.2). For further use in Section 5.3 we define the conditional MI as
+\begin{equation*}
+    I(\mathbf{x};\mathbf{y}|\mathbf{z}) = \mathbb{E} \left[ \log_2 \left( \frac{p(\mathbf{y}|\mathbf{x},\mathbf{z})}{p(\mathbf{y}|\mathbf{z})} \right) \right]
+\end{equation*}
+where the expectation is over the joint pdf $p(\mathbf{x}, \mathbf{y}, \mathbf{z})$ of $\mathbf{x}$, $\mathbf{y}$, and $\mathbf{z}$.
+
+For given $p(\mathbf{y}|\mathbf{x})$, the capacity $C$ (in bit per channel use) equals the maximum of $I(\mathbf{x};\mathbf{y})$ over (the shape and the parameters of) $p(\mathbf{x})$. Typically, this maximization is performed under a transmit sum energy constraint
+\begin{equation}
+    \mathbb{E}[||\mathbf{x}||^2] \leq E_{tot}
+\end{equation}
+
+\newpage
+% --- PAGE 3 ---
+\noindent 2.3 Wireless communication systems \hfill 11 \\
+
+\noindent with $E_{tot}$ denoting the maximum of the sum (over the channel input index $q = 1, \dots, N_t$) of the transmit energies $\mathbb{E}[|(\mathbf{x})_q|^2]$ per channel use.
+
+Let us consider the case of a linear Gaussian MIMO channel, characterized by
+\begin{equation}
+    \mathbf{y} = \mathbf{T}\mathbf{x} + \mathbf{n}
+\end{equation}
+where $\mathbf{n} \sim \mathcal{CN}(\mathbf{0}, \mathbf{C}_n)$ represents spatially correlated Gaussian noise with full-rank covariance matrix $\mathbf{C}_n$, and $\mathbf{T} \in \mathbb{C}^{N_r \times N_t}$ is the MIMO transfer matrix: $(\mathbf{T})_{p,q}$ is the complex gain from the $q$th channel input to the $p$th channel output.
+
+For the linear Gaussian MIMO channel, it is known that under the constraint $\mathbb{E}[||\mathbf{x}||^2] \leq E_{tot}$, Gaussian signaling maximizes $I(\mathbf{x};\mathbf{y})$; hence, we consider $\mathbf{x} \sim \mathcal{CN}(\mathbf{0}, \mathbf{C}_x)$ with $Tr[\mathbf{C}_x] \leq E_{tot}$. The corresponding MI for given covariance matrix $\mathbf{C}_x$ is obtained as [19]
+\begin{equation}
+    I(\mathbf{x};\mathbf{y}) = \log_2(\det[\mathbf{I}_{N_r} + \mathbf{C}_n^{-1} \mathbf{T} \mathbf{C}_x \mathbf{T}^H])
+\end{equation}
+The capacity $C$ then results from the following optimization over $\mathbf{C}_x$:
+\begin{equation}
+    C = \max_{\mathbf{C}_x} (I(\mathbf{x};\mathbf{y})) \quad \text{s.t. } \begin{cases} \mathbf{C}_x \succeq 0 \\ Tr[\mathbf{C}_x] \leq E_{tot} \end{cases}
+\end{equation}
+with $I(\mathbf{x};\mathbf{y})$ given by (2.5).
+
+\section{Wireless communication systems}
+
+The linear Gaussian MIMO channel (2.4) will be used to describe the following single-carrier wireless communication systems, operating on frequency-flat channels:
+\begin{itemize}
+    \item The single-user (SU) MIMO communication system (see Chapter 3), characterized by
+    \begin{equation*}
+        \mathbf{y} = \mathbf{H}^H \mathbf{x} + \boldsymbol{\eta}
+    \end{equation*}
+    where $\boldsymbol{\eta} \sim \mathcal{CN}(\mathbf{0}, N_0 \mathbf{I}_{N_r})$ and the MIMO transfer matrix $\mathbf{T}$ from (2.4) is (for mathematical convenience) expressed as $\mathbf{H}^H$; we refer to $\mathbf{H} \in \mathbb{C}^{N_t \times N_r}$ (rather than to $\mathbf{H}^H$) as the channel matrix. The message $m$ to be conveyed to the RX is encoded into the codeword $(\mathbf{x}^{(1)}, \dots, \mathbf{x}^{(N)})$, which involves $N$ channel uses. The receiver tries to recover the message $m$ from $(\mathbf{y}^{(1)}, \dots, \mathbf{y}^{(N)})$.
+
+    In the case of a SU MIMO communication system with linear beamforming, the TX and RX construct $\mathbf{x} = \mathbf{F}\mathbf{a}$ and $\mathbf{z} = \mathbf{W}^H \mathbf{y}$ respectively, where $\mathbf{F} \in \mathbb{C}^{N_t \times N_s}$ is the precoding matrix, $\mathbf{W} \in \mathbb{C}^{N_r \times N_s}$ is the combining matrix, $\mathbf{a} \in \mathbb{C}^{N_s}$ is a vector consisting of $N_s$ data symbols, and $\mathbf{z} \in \mathbb{C}^{N_s}$ is the combiner output. The relation between the data symbols $\mathbf{a}$ and the combiner output $\mathbf{z}$ is characterized by
+    \begin{equation*}
+        \mathbf{z} = (\mathbf{W}^H \mathbf{H}^H \mathbf{F})\mathbf{a} + \mathbf{n}_w
+    \end{equation*}
+
+\newpage
+% --- PAGE 4 ---
+\noindent 12 \hfill Chapter 2. Information theory basics \\
+
+    \noindent where $\mathbf{n}_w = \mathbf{W}^H \boldsymbol{\eta} \sim \mathcal{CN}(\mathbf{0}, N_0 \mathbf{W}^H \mathbf{W})$ represents spatially correlated Gaussian noise, and $\mathbf{W}^H \mathbf{H}^H \mathbf{F}$ is the MIMO transfer matrix. The message $m$ to be conveyed to the RX is encoded into the codeword $(\mathbf{a}^{(1)}, \dots, \mathbf{a}^{(N)})$, which involves $N$ channel uses. The receiver tries to recover the message $m$ from $(\mathbf{z}^{(1)}, \dots, \mathbf{z}^{(N)})$.
+
+    \item The downlink multi-user (MU) MIMO communication system (see Chapters 4 and 5), where the communication from the TX to the RX of the $k$th user is characterized by
+    \begin{equation*}
+        \mathbf{y}_k = \mathbf{H}_k^H \mathbf{x} + \boldsymbol{\eta}_k
+    \end{equation*}
+    with $\boldsymbol{\eta}_k \sim \mathcal{CN}(\mathbf{0}, N_0 \mathbf{I}_{N_r})$ and $k = 1, \dots, K$. The MIMO transfer matrix from the BS to the $k$th user is (for mathematical convenience) expressed as $\mathbf{H}_k^H$; we refer to $\mathbf{H}_k \in \mathbb{C}^{N_t \times N_r}$ (rather than to $\mathbf{H}_k^H$) as the channel matrix from the BS to the $k$th user. Representing by $m_k$ the message intended for the $k$th user, we define the compound message $m = (m_1, \dots, m_K)$. In Chapter 5 we consider the case where $m$ is encoded into the codeword $(\mathbf{x}^{(1)}, \dots, \mathbf{x}^{(N)})$, which involves $N$ channel uses; this represents a joint encoding of the messages intended for the individual users. The $k$th user tries to recover the message $m_k$ from $(\mathbf{y}_k^{(1)}, \dots, \mathbf{y}_k^{(N)})$.
+
+    In Chapter 4 we consider a downlink MU MIMO communication system with linear beamforming. The BS constructs $\mathbf{x} = \sum_{k=1}^K \mathbf{F}_k \mathbf{a}_k$, where $\mathbf{a}_k \in \mathbb{C}^{N_s}$ consists of $N_s$ data symbols intended for the $k$th user, and $\mathbf{F}_k \in \mathbb{C}^{N_t \times N_s}$ is the precoding matrix associated with the $k$th user. The $k$th user constructs the combiner output $\mathbf{z}_k \in \mathbb{C}^{N_s}$ as $\mathbf{z}_k = \mathbf{W}_k^H \mathbf{y}_k$, where $\mathbf{W}_k \in \mathbb{C}^{N_r \times N_s}$ is the combining matrix, with $k = 1, \dots, K$. The relation between the data symbols $\mathbf{a}_k$ intended for the $k$th user and the combiner output $\mathbf{z}_k$ at the $k$th user is characterized by
+    \begin{equation*}
+        \mathbf{z}_k = (\mathbf{W}_k^H \mathbf{H}_k^H \mathbf{F}_k)\mathbf{a}_k + \mathbf{n}_{w,k}
+    \end{equation*}
+    where $\mathbf{n}_{w,k} = \sum_{k' \neq k} \mathbf{W}_k^H \mathbf{H}_k^H \mathbf{F}_{k'} \mathbf{a}_{k'} + \mathbf{W}_k^H \boldsymbol{\eta}_k$ is spatially correlated Gaussian noise (assuming Gaussian signaling), and $\mathbf{W}_k^H \mathbf{H}_k^H \mathbf{F}_k$ is the MIMO transfer matrix. The message $m_k$ intended for the $k$th user is encoded into the codeword $(\mathbf{a}_k^{(1)}, \dots, \mathbf{a}_k^{(N)})$, which involves $N$ channel uses. The $k$th user tries to recover the message $m_k$ from $(\mathbf{z}_k^{(1)}, \dots, \mathbf{z}_k^{(N)})$.
+
+    \item The uplink MU MIMO communication system (see Chapters 5 and 6), characterized by
+    \begin{equation*}
+        \mathbf{y}_{ul} = \sum_{k=1}^K \mathbf{H}_k \mathbf{x}_{ul,k} + \boldsymbol{\eta}_{ul}
+    \end{equation*}
+    where $\boldsymbol{\eta}_{ul} \sim \mathcal{CN}(\mathbf{0}, N_0 \mathbf{I}_{N_t})$, $\mathbf{x}_{ul,k}$ is the vector sent by the $k$th user, and the MIMO transfer matrix from the $k$th user to the BS is expressed as $\mathbf{H}_k$; we refer to $\mathbf{H}_k \in \mathbb{C}^{N_t \times N_r}$ as the channel matrix from the $k$th user
+
+\newpage
+% --- PAGE 5 ---
+\noindent 2.3 Wireless communication systems \hfill 13 \\
+
+    \noindent to the BS. In Chapter 5 we consider the case where the message $m_k$ from the $k$th user is encoded into the codeword $(\mathbf{x}_{ul,k}^{(1)}, \dots, \mathbf{x}_{ul,k}^{(N)})$, which involves $N$ channel uses. The BS tries to recover from $(\mathbf{y}_{ul}^{(1)}, \dots, \mathbf{y}_{ul}^{(N)})$ the compound message $m = (m_1, \dots, m_K)$; this corresponds to a joint decoding of the messages from the individual users.
+
+    In Chapter 6 we consider an uplink MU MIMO communication system with linear beamforming. The $k$th user constructs $\mathbf{x}_{ul,k} = \mathbf{F}_{ul,k} \mathbf{a}_{ul,k}$, where $\mathbf{F}_{ul,k} \in \mathbb{C}^{N_t \times N_s}$ is the precoding matrix and $\mathbf{a}_{ul,k} \in \mathbb{C}^{N_s}$ consists of $N_s$ data symbols generated by the $k$th user. The BS constructs the combiner outputs $\mathbf{z}_{ul,k} \in \mathbb{C}^{N_s}$ for $k = 1, \dots, K$, where $\mathbf{z}_{ul,k} = \mathbf{W}_{ul,k}^H \mathbf{y}_{ul}$ and $\mathbf{W}_{ul,k} \in \mathbb{C}^{N_r \times N_s}$ is the combining matrix associated with the $k$th user. The relation between the data symbols $\mathbf{a}_{ul,k}$ generated by the $k$th user and the combiner output $\mathbf{z}_{ul,k}$ associated with the $k$th user is characterized by
+    \begin{equation*}
+        \mathbf{z}_{ul,k} = (\mathbf{W}_{ul,k}^H \mathbf{H}_k \mathbf{F}_{ul,k})\mathbf{a}_{ul,k} + \mathbf{n}_{ul,w,k}
+    \end{equation*}
+    where $\mathbf{n}_{ul,w,k} = \sum_{k' \neq k} \mathbf{W}_{ul,k}^H \mathbf{H}_{k'} \mathbf{F}_{ul,k'} \mathbf{a}_{ul,k'} + \mathbf{W}_{ul,k}^H \boldsymbol{\eta}_{ul}$ is spatially correlated Gaussian noise (assuming Gaussian signaling), and $\mathbf{W}_{ul,k}^H \mathbf{H}_k \mathbf{F}_{ul,k}$ is the MIMO transfer matrix. The message $m_k$ generated by the $k$th user is encoded into the codeword $(\mathbf{a}_{ul,k}^{(1)}, \dots, \mathbf{a}_{ul,k}^{(N)})$, which involves $N$ channel uses. The BS tries to recover from $(\mathbf{z}_{ul,k}^{(1)}, \dots, \mathbf{z}_{ul,k}^{(N)})$ the message $m_k$, for $k = 1, \dots, K$.
+\end{itemize}
+
+In Chapter 7 the results from Chapters 3--6 will be extended to the case of multi-carrier communication over frequency-selective channels.
+
+\end{document}

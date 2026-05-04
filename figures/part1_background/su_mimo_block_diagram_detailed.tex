@@ -12,17 +12,17 @@
 % ======================
 
 % Arrow lengths
-\newcommand{\InOutBitsLength}{1.5cm}
+\newcommand{\InOutBitsLength}{1.4cm}
 \newcommand{\TXRXGap}{9cm}
 
 % TX/RX block parameters
-\newcommand{\NodeDistance}{0.3cm}
-\newcommand{\BlockWidth}{1.6cm}
+\newcommand{\NodeDistance}{0.25cm}
+\newcommand{\BlockWidth}{1.4cm}
 \newcommand{\BlockHeight}{5cm} 
 \pgfmathsetlengthmacro{\SingleStreamBlockWidth}{\BlockWidth}
 \pgfmathsetlengthmacro{\SingleStreamBlockHeight}{\BlockHeight / 4.5}
 \pgfmathsetlengthmacro{\yShiftSingleStreamFirstBlock}{0.5*\BlockHeight - 0.5*\SingleStreamBlockHeight}
-\newcommand{\BoxGap}{1mm}
+\newcommand{\BoxGap}{0.75mm}
 
 % Antenna array parameters
 \newcommand{\AntennaPoleHeight}{0.5cm}
@@ -32,7 +32,7 @@
 \pgfmathsetlengthmacro{\AntennaWidth}{\AntennaArmLength*cos(\AntennaArmAngle)}
 \newcommand{\AntennaArraySep}{1.2cm}
 
-\newcommand{\BlockToAntennaGap}{0.75cm}
+\newcommand{\BlockToAntennaGap}{0.825cm}
 \newcommand{\AntennaLabelGapX}{2mm}
 \newcommand{\AntennaLabelGapY}{1.5mm}
 \newcommand{\AntennaPropagationGap}{2mm}
@@ -145,19 +145,19 @@
 \coordinate (tx_antenna1) at ($(tx_box.east |- mapper1) + (\BoxGap,0) + (\BlockToAntennaGap,0)$);
 \pic at (tx_antenna1) {antenna symbol};
 \node[xshift=\AntennaLabelGapX, yshift=\AntennaLabelGapY] at (tx_antenna1) {$1$};
-\draw[thick] (tx_box.east |- tx_antenna1) -- (tx_antenna1);
+\draw[thick] (tx_box.east |- tx_antenna1) -- node[below] {$x_1$} (tx_antenna1);
 
 % Transmit antenna 2.
 \coordinate (tx_antenna2) at ($(tx_box.east |- mapper2) + (\BoxGap,0) + (\BlockToAntennaGap,0)$);
 \pic at (tx_antenna2) {antenna symbol};
 \node[xshift=\AntennaLabelGapX, yshift=\AntennaLabelGapY] at (tx_antenna2) {$2$};
-\draw[thick] (tx_box.east |- tx_antenna2) -- (tx_antenna2);
+\draw[thick] (tx_box.east |- tx_antenna2) -- node[below] {$x_2$} (tx_antenna2);
 
 % Transmit antenna Nt.
 \coordinate (tx_antennaNt) at ($(tx_box.east |- mapperNt) + (\BoxGap,0) + (\BlockToAntennaGap,0)$);
 \pic at (tx_antennaNt) {antenna symbol};
 \node[xshift=\AntennaLabelGapX, yshift=\AntennaLabelGapY] at ($(tx_antennaNt) + (0.15,0)$) {$N_T$};
-\draw[thick] (tx_box.east |- tx_antennaNt) -- (tx_antennaNt);
+\draw[thick] (tx_box.east |- tx_antennaNt) -- node[below] {$x_{N_T}$} (tx_antennaNt);
 
 % Faint transmit antennas.
 \coordinate (txadots) at ($0.5*(tx_antenna2) + 0.5*(tx_antennaNt) + 0.5*(0,\AntennaHeight)$);
@@ -184,11 +184,14 @@
 % Combiner block
 \node[block, right=\TXRXGap of precoder] (combiner) {Combiner};
 
+% Detector block
+\node[block, right=of combiner] (detector) {Detector};
+
 % Demapper blocks
-\node[single_stream_block, right=of combiner, yshift=\yShiftSingleStreamFirstBlock] (demapper1) {Demapper};
+\node[single_stream_block, right=of detector, yshift=\yShiftSingleStreamFirstBlock] (demapper1) {Demapper};
 \node[single_stream_block, below=of demapper1] (demapper2) {Demapper};
 \node[below=of demapper2] (demapperdots) {\vdots};
-\node[single_stream_block, right=of combiner, yshift=-\yShiftSingleStreamFirstBlock] (demapperNt) {Demapper};
+\node[single_stream_block, right=of detector, yshift=-\yShiftSingleStreamFirstBlock] (demapperNt) {Demapper};
 
 % Bit collector
 \node[block, right=of demapper1, yshift=-\yShiftSingleStreamFirstBlock] (bit_collector) {Bit\\Collector};
@@ -205,19 +208,19 @@
 \coordinate (rx_antenna1) at ($(rx_box.west |- demapper1) + (-\BoxGap,0) + (-\BlockToAntennaGap,0)$);
 \pic at (rx_antenna1) {antenna symbol};
 \node[xshift=-\AntennaLabelGapX, yshift=\AntennaLabelGapY] at (rx_antenna1) {$1$};
-\draw[thick] (rx_box.west |- rx_antenna1) -- (rx_antenna1);
+\draw[thick] (rx_box.west |- rx_antenna1) -- node[below] {$y_1$} (rx_antenna1);
 
 % Receive antenna 2
 \coordinate (rx_antenna2) at ($(rx_box.west |- demapper2) + (-\BoxGap,0) + (-\BlockToAntennaGap,0)$);
 \pic at (rx_antenna2) {antenna symbol};
 \node[xshift=-\AntennaLabelGapX, yshift=\AntennaLabelGapY] at (rx_antenna2) {$2$};
-\draw[thick] (rx_box.west |- rx_antenna2) -- (rx_antenna2);
+\draw[thick] (rx_box.west |- rx_antenna2) -- node[below] {$y_2$} (rx_antenna2);
 
 % Receive antenna Nr
 \coordinate (rx_antennaNr) at ($(rx_box.west |- demapperNt) + (-\BoxGap,0) + (-\BlockToAntennaGap,0)$);
 \pic at (rx_antennaNr) {antenna symbol};
 \node[xshift=-\AntennaLabelGapX, yshift=\AntennaLabelGapY] at ($(rx_antennaNr) + (-0.15,0)$) {$N_R$};
-\draw[thick] (rx_box.west |- rx_antennaNr) -- (rx_antennaNr);
+\draw[thick] (rx_box.west |- rx_antennaNr) -- node[below] {$y_{N_R}$} (rx_antennaNr);
 
 % Faint receive antennas
 \coordinate (rxadots) at ($0.5*(rx_antenna2) + 0.5*(rx_antennaNr) + 0.5*(0,\AntennaHeight)$);
@@ -228,9 +231,13 @@
 \draw[arrow] (rx_box.west |- rx_antenna2.east) -- (combiner.west |- rx_antenna2.east);
 \draw[arrow] (rx_box.west |- rx_antennaNr.east) -- (combiner.west |- rx_antennaNr.east);
 
-\draw[arrow] (combiner.east |- demapper1.west) -- (demapper1.west);
-\draw[arrow] (combiner.east |- demapper2.west) -- (demapper2.west);
-\draw[arrow] (combiner.east |- demapperNt.west) -- (demapperNt.west);
+\draw[arrow] (combiner.east |- demapper1.west) -- (detector.west |- demapper1.west);
+\draw[arrow] (combiner.east |- demapper2.west) -- (detector.west |- demapper2.west);
+\draw[arrow] (combiner.east |- demapperNt.west) -- (detector.west |- demapperNt.west);
+
+\draw[arrow] (detector.east |- demapper1.west) -- (demapper1.west);
+\draw[arrow] (detector.east |- demapper2.west) -- (demapper2.west);
+\draw[arrow] (detector.east |- demapperNt.west) -- (demapperNt.west);
 
 \draw[arrow] (demapper1.east) -- (bit_collector.west |- demapper1.east);
 \draw[arrow] (demapper2.east) -- (bit_collector.west |- demapper2.east);

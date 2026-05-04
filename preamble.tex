@@ -62,3 +62,14 @@
 \usepackage{standalone}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta, positioning, fit, calc}
+
+% comment environment
+\usepackage{comment}
+
+% page layout (don't start new paragraph at the end of a page)
+\usepackage{needspace}
+\clubpenalty=10000
+\widowpenalty=10000
+
+% Fast compilation of chapters under development.
+\includeonly{chapters/part1_background/02_digcom_system}
