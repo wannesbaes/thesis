@@ -55,7 +55,7 @@ The discrete-time complex baseband input-output relation of a \ac{SU}-\ac{MIMO} 
     \mathbf{y} = \mathbf{H}\mathbf{x} + \mathbf{n},
 \label{eq:su_mimo_io}
 \end{equation}
-where $\mathbf{x} \in \mathbb{C}^{N_T \times 1}$ is the transmitted signal vector, $\mathbf{y} \in \mathbb{C}^{N_R \times 1}$ is the received signal vector, $\mathbf{H} \in \mathbb{C}^{N_R \times N_T}$ is the channel matrix, and $\mathbf{n} \in \mathbb{C}^{N_R \times 1}$ is the additive noise vector.
+where $\mathbf{x} \in \mathbb{C}^{N_T}$ is the transmitted signal vector, $\mathbf{y} \in \mathbb{C}^{N_R}$ is the received signal vector, $\mathbf{H} \in \mathbb{C}^{N_R \times N_T}$ is the channel matrix, and $\mathbf{n} \in \mathbb{C}^{N_R \times 1}$ is the additive noise vector.
 The $(n_r, n_t)$-th entry of $\mathbf{H}$ represents the complex channel coefficient between transmit antenna $n_t$ and receive antenna $n_r$.
 The noise vector is assumed to be circularly symmetric complex Gaussian, i.e., $\mathbf{n} \sim \mathcal{N}_{\mathbb{C}}(\mathbf{0}, N_0 \, \mathbf{I}_{N_R})$, such that its entries are spatially independent, each with an expected power of $N_0$.
 The time index is omitted for brevity.
@@ -111,6 +111,8 @@ Substituting \eqref{eq:su_mimo_precoding} into \eqref{eq:su_mimo_io} and applyin
 \end{align}
 \end{subequations}
 where $\mathbf{T} \in \mathbb{C}^{N_S \times N_S}$ is the \ac{MIMO} transfer matrix and $\mathbf{n_G}$ represents spatially correlated Gaussian noise.
+It is evident that, whenever the transfer matrix is not diagonal, the data symbols of different streams interfere with each other. The design of the precoding and combining matrices is therefore essential to suppress this inter-stream interference and improve overall system performance.
+
 
 \subsection{MU-MIMO}
 
@@ -123,6 +125,69 @@ When multiple receivers are served simultaneously by a single multi-antenna tran
     \label{fig:MU_MIMO_block_diagram}
 \end{figure}
 
+% system dimension assumptions
+Throughout this work, the \ac{BS} is assumed to be equipped with more antennas than all \acp{UT} combined, and each \ac{UT} is assumed to receive at most as many data streams as it has receive antennas.
+For notational convenience, all \acp{UT} are assumed to receive the same number of data streams, denoted by $N_S$. In practical scenarios where this does not hold, $N_S$ is defined as the maximum number of data streams intended for any single \ac{UT}. The data symbol vectors intended for a \ac{UT} receiving fewer streams are padded with zeros.
+
+% channel input-output
+Analogous to the \ac{SU}-\ac{MIMO} case, the communication between the \ac{BS} and a certain \ac{UT}\textsubscript{k} is characterized by
+\begin{equation}
+    \mathbf{y}_k = \mathbf{H}_k \, \mathbf{x} + \mathbf{n}_k, \qquad k = 1, \dots, K,
+\label{eq:mu_mimo_io}
+\end{equation}
+where $\mathbf{H}_k \in \mathbb{C}^{N_R \times N_T}$ is the channel matrix that describes the link between the \ac{BS} and \ac{UT}\textsubscript{k}.
+
+% transmitter
+The transmitted signal vector $\mathbf{x} \in \mathbb{C}^{N_T}$ is now a function of the data symbol vectors intended for different \acp{UT}. The \ac{BS} assigns a dedicated precoding scheme $\mathbf{F}_k \in \mathbb{C}^{N_T \times N_S}$ to the data symbol vector $\mathbf{a}_k$ intended for \ac{UT}\textsubscript{k}, and transmits the superposition of all precoded streams:
+\begin{equation}
+    \mathbf{x} = \sum_{k=1}^{K} \mathbf{F}_k \, \mathbf{a}_k.
+\label{eq:mu_mimo_precoding}
+\end{equation}
+Since the data symbols intended for different \acp{UT} are considered to be uncorrelated, the total transmit power constraint can now be formulated as
+\begin{equation}
+    \mathbb{E}\!\left[\|\mathbf{x}\|^2\right] = \sum_{k=1}^{K} \mathrm{tr}\!\left(\mathbf{F}_k^H \mathbf{F}_k\right) \leq P_t.
+\end{equation}
+\begin{comment}
+\begin{subequations}
+\begin{align}
+    P_t
+    &\geq \mathbb{E}\!\left[ \left\|\mathbf{x}\right\|^2 \right] \\
+    &= \mathbb{E}\!\left[ \mathbf{x}^H \mathbf{x} \right] \\
+    &= \mathbb{E}\!\left[ \left(\sum_{k=1}^{K} \mathbf{F}_k \mathbf{a}_k\right)^H \left(\sum_{k'=1}^{K} \mathbf{F}_{k'} \mathbf{a}_{k'}\right) \right] \\
+    &= \mathbb{E}\!\left[ \sum_{k=1}^{K} \left(\mathbf{F}_k \mathbf{a}_k\right)^H \left(\sum_{k'=1}^{K} \mathbf{F}_{k'} \mathbf{a}_{k'}\right) \right] \\
+    &= \mathbb{E}\!\left[ \sum_{k=1}^{K} \sum_{k'=1}^{K} \left(\mathbf{F}_k \mathbf{a}_k \right)^H \mathbf{F}_{k'} \mathbf{a}_{k'} \right] \\
+    &= \mathbb{E}\!\left[ \sum_{k=1}^{K} \sum_{k'=1}^{K} \mathbf{a}_k^H \mathbf{F}_k^H \mathbf{F}_{k'} \mathbf{a}_{k'} \right] \\
+    &= \mathbb{E}\!\left[ \sum_{k=1}^{K} \sum_{k'=1}^{K} \text{Tr}\!\left[ \mathbf{a}_k^H \mathbf{F}_k^H \mathbf{F}_{k'} \mathbf{a}_{k'} \right] \right] \\
+    &= \mathbb{E}\!\left[ \sum_{k=1}^{K} \sum_{k'=1}^{K} \text{Tr}\!\left[ \mathbf{F}_k^H \mathbf{F}_{k'} \, \mathbf{a}_{k'} \mathbf{a}_k^H \right] \right] \\
+    &= \sum_{k=1}^{K} \sum_{k'=1}^{K} \text{Tr}\!\left[ \mathbf{F}_k^H \mathbf{F}_{k'} \, \mathbb{E}\!\left[ \mathbf{a}_{k'} \mathbf{a}_k^H \right] \right] \\
+    &= \sum_{k=1}^{K} \sum_{k'=1}^{K} \text{Tr}\!\left[ \mathbf{F}_k^H \mathbf{F}_{k'} \, \mathbf{I}_{N_S} \, \delta_{kk'} \right] \\
+    &= \sum_{k=1}^{K} \text{Tr}\!\left[ \mathbf{F}_k^H \mathbf{F}_{k} \right] \\
+\end{align}
+\end{subequations}
+\end{comment}
+
+% overall input-output
+Applying the combining scheme $\mathbf{G}_k \in \mathbb{C}^{N_S \times N_R}$ at \ac{UT}\textsubscript{k} to the received signal vector and substituting \eqref{eq:mu_mimo_precoding} into \eqref{eq:mu_mimo_io} yields
+\begin{equation}
+    \mathbf{z}_k 
+    = \underbrace{\left(\mathbf{G}_k \, \mathbf{H}_k \, \mathbf{F}_k\right) \; \mathbf{a}_k}_{\text{desired signal}}
+    + \underbrace{\sum_{\substack{k'=1, \, k'\neq k}}^{K} \left(\mathbf{G}_k \mathbf{H}_k \mathbf{F}_{k'}\right) \, \mathbf{a}_{k'}}_{\text{inter-user interference}} 
+    + \underbrace{\mathbf{G}_k \, \mathbf{n}_k}_{\text{noise}}.
+    \label{eq:mu_mimo_effective}
+\end{equation}
+The key difference from the \ac{SU}-\ac{MIMO} scenario is the presence of inter-user interference. Each \ac{UT} receives not only its desired signal but also the signals intended for all other \acp{UT}. Suppressing this interference through precoder design at the \ac{BS} is an important challenge in \ac{MU}-\ac{MIMO} systems.
+
+% compact notation
+The overall input-output relation of the \ac{MU}-\ac{MIMO} Gaussian channel can be written compactly as
+\begin{gather}
+    \mathbf{z} = \left(\mathbf{G} \, \mathbf{H} \, \mathbf{F}\right) \; \mathbf{a} + \mathbf{G} \, \mathbf{n}, \quad \text{with} \\
+    \quad \mathbf{z} = \begin{bmatrix} \mathbf{z}_1 \\ \vdots \\ \mathbf{z}_K \end{bmatrix},
+    \quad \mathbf{G} = \begin{bmatrix} \mathbf{G}_1 & & \\ & \ddots & \\ & & \mathbf{G}_K \end{bmatrix},
+    \quad \mathbf{H} = \begin{bmatrix} \mathbf{H}_1 \\ \vdots \\ \mathbf{H}_K \end{bmatrix}, 
+    \quad \mathbf{F} = \begin{bmatrix} \mathbf{F}_1 & \dots & \mathbf{F}_K \end{bmatrix}, 
+    \quad \mathbf{a} = \begin{bmatrix} \mathbf{a}_1 \\ \vdots \\ \mathbf{a}_K \end{bmatrix}. \notag
+\end{gather}
+where $\mathbf{G} \in \mathbb{C}^{K N_S \times K N_R}$ denotes the compound combining matrix, $\mathbf{H} \in \mathbb{C}^{K N_R \times N_T}$ the compound channel matrix, and $\mathbf{F} \in \mathbb{C}^{N_T \times K N_S}$ the compound precoding matrix.
 
 \section{Capacity of a MIMO System}
 
