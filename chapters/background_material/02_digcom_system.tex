@@ -191,4 +191,20 @@ where $\mathbf{G} \in \mathbb{C}^{K N_S \times K N_R}$ denotes the compound comb
 
 \section{Mutual Information and Capacity}
 
+Consider a single use of a \ac{MIMO} Gaussian channel, as described by \eqref{eq:su_mimo_io} or \eqref{eq:mu_mimo_io}.
+The \ac{TX} generates a random vector $\mathbf{x} \in \mathbb{C}^{N_T}$ according to the input distribution with \ac{pdf} $p(\mathbf{x})$, while the \ac{RX} observes the random vector $\mathbf{y} \in \mathbb{C}^{N_R}$.
+The relation between the channel input $\mathbf{x}$ and the channel output $\mathbf{y}$ is probabilistic and is fully characterized by the channel law, described by the conditional \ac{pdf} $p(\mathbf{y} \mid \mathbf{x})$.
 
+The number of information bits transmitted per channel use is referred to as the \ac{IBR}.
+The \ac{MI} between $\mathbf{x}$ and $\mathbf{y}$ quantifies how much information the received vector $\mathbf{y}$ provides about the transmitted vector $\mathbf{x}$.
+Equivalently, it represents the average reduction in the uncertainty about $\mathbf{x}$ obtained from observing $\mathbf{y}$~\cite{syllabus_information_theory}. It is given by
+\begin{equation}
+    I(\mathbf{x};\mathbf{y})
+    = \mathbb{E}\!\left[ \log_2\!\left( \frac{p(\mathbf{y}\mid\mathbf{x})}{p(\mathbf{y})} \right) \right],
+\label{eq:mutual_information}
+\end{equation}
+where the expectation is taken with respect to the joint distribution of $\mathbf{x}$ and $\mathbf{y}$ and $p(\mathbf{y})$ is the marginal distribution of $\mathbf{y}$.
+
+According to Shannon's channel coding theorem~\cite{shannon_1948}, reliable communication is possible if the transmission \ac{IBR} is strictly smaller than the \ac{MI} between $\mathbf{x}$ and $\mathbf{y}$. Here, reliable communication means that the decoding error probability can be made arbitrarily small by using sufficiently long channel codes. Hence, for a given input distribution $p(\mathbf{x})$ and channel law $p(\mathbf{y}\mid\mathbf{x})$, any \ac{IBR} smaller than the \ac{MI} is referred to as achievable.
+
+% part about capacity
