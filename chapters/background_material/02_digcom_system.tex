@@ -1,9 +1,9 @@
 \chapter{Communication Systems}
 
 
-\section{Digital Communication System}
+\section{Digital Communication Systems}
 
-A general digital communication system transfers information from a source to a destination over a physical transmission medium, referred to as the channel~\cite{syllabus_communicatietheorie}. The corresponding block diagram is shown in Fig.~\ref{fig:digcom_system_block_diagram}.
+A general digital communication system transfers digital information from a source to a destination over a physical transmission medium, referred to as the channel~\cite{syllabus_communicatietheorie}. The corresponding block diagram is shown in Fig.~\ref{fig:digcom_system_block_diagram}.
 
 \begin{figure}[hb]
     \centering
@@ -113,7 +113,6 @@ Substituting \eqref{eq:su_mimo_precoding} into \eqref{eq:su_mimo_io} and applyin
 where $\mathbf{T} \in \mathbb{C}^{N_S \times N_S}$ is the \ac{MIMO} transfer matrix and $\mathbf{n_G}$ represents spatially correlated Gaussian noise.
 It is evident that, whenever the transfer matrix is not diagonal, the data symbols of different streams interfere with each other. The design of the precoding and combining matrices is therefore essential to suppress this inter-stream interference and improve overall system performance.
 
-
 \subsection{MU-MIMO}
 
 When multiple receivers are served simultaneously by a single multi-antenna transmitter, the system is referred to as a \ac{MU} \ac{MIMO} system. In this context, the transmitter is called the \ac{BS} and the individual receivers are referred to as \acp{UT}. A block diagram is shown in Fig.~\ref{fig:MU_MIMO_block_diagram}.
@@ -189,8 +188,7 @@ The overall input-output relation of the \ac{MU}-\ac{MIMO} Gaussian channel can 
 \end{gather}
 where $\mathbf{G} \in \mathbb{C}^{K N_S \times K N_R}$ denotes the compound combining matrix, $\mathbf{H} \in \mathbb{C}^{K N_R \times N_T}$ the compound channel matrix, and $\mathbf{F} \in \mathbb{C}^{N_T \times K N_S}$ the compound precoding matrix.
 
-\section{Capacity of a MIMO System}
 
-\subsection{SU-MIMO}
+\section{Mutual Information and Capacity}
 
-\subsection{MU-MIMO}
+
