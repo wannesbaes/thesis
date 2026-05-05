@@ -1,9 +1,12 @@
 \chapter{Communication Systems}
 
+This chapter establishes the system models and information-theoretic framework that underlie the analysis presented throughout this work.
+We begin by describing the general architecture of a digital communication system and then specialize to the system model adopted in this work.
+Finally, we review the fundamental information-theoretic concepts required to analyze the performance of these systems.
 
 \section{Digital Communication Systems}
 
-A general digital communication system transfers digital information from a source to a destination over a physical transmission medium, referred to as the channel~\cite{syllabus_communicatietheorie}. The corresponding block diagram is shown in Fig.~\ref{fig:digcom_system_block_diagram}.
+A general digital communication system transfers digital information from a source to a destination over a physical transmission medium, referred to as the channel. The corresponding block diagram is shown in Fig.~\ref{fig:digcom_system_block_diagram}.
 
 \begin{figure}[hb]
     \centering
@@ -26,7 +29,7 @@ In this work, we consider a simplified version of this general architecture in o
 Source coding and decoding are omitted, and the information is assumed to be available as a sequence of \ac{i.i.d.} bits without prior compression or digitization.
 Channel coding and decoding are also not considered, such that the analysis is restricted to uncoded transmission.
 
-The transmission medium is assumed to be a wireless channel affected by fading and additive noise. Furthermore, the channel is considered to be frequency-flat, meaning that its response remains constant over the entire signal bandwidth. The specific channel models used in this work are introduced in the relevant chapters.
+The transmission medium is assumed to be a wireless channel affected by fading and additive white Gaussian noise. Furthermore, the channel is considered to be frequency-flat, meaning that its response remains constant over the entire signal bandwidth. The specific channel models used in this work are introduced in the relevant chapters.
 
 
 \section{MIMO Communication Systems}
@@ -38,7 +41,7 @@ Spatial multiplexing techniques enable significant capacity gains by transmittin
 Alternatively, spatial diversity can be achieved through space-time coding schemes, which distribute symbols across both space and time to improve robustness against fading. A classical example is the Alamouti scheme~\cite{alamouti_1998}.
 Throughout this work, the focus is on spatial multiplexing and, in particular, on how the simultaneous transmission of multiple data streams over a shared channel can be made most efficient through precoding.
 
-\subsection{SU-MIMO}
+\subsection{SU-MIMO System Model}
 
 In the point-to-point case, where a single \ac{TX} with $N_T$ antennas communicates with a single \ac{RX} with $N_R$ antennas, the system is called a \ac{SU} \ac{MIMO} system. A block diagram is shown in Fig.~\ref{fig:SU_MIMO_block_diagram_detailed}.
 
@@ -55,9 +58,9 @@ The discrete-time complex baseband input-output relation of a \ac{SU}-\ac{MIMO} 
     \mathbf{y} = \mathbf{H}\mathbf{x} + \mathbf{n},
 \label{eq:su_mimo_io}
 \end{equation}
-where $\mathbf{x} \in \mathbb{C}^{N_T}$ is the transmitted signal vector, $\mathbf{y} \in \mathbb{C}^{N_R}$ is the received signal vector, $\mathbf{H} \in \mathbb{C}^{N_R \times N_T}$ is the channel matrix, and $\mathbf{n} \in \mathbb{C}^{N_R \times 1}$ is the additive noise vector.
+where $\mathbf{x} \in \mathbb{C}^{N_T}$ is the transmitted signal vector, $\mathbf{y} \in \mathbb{C}^{N_R}$ is the received signal vector, $\mathbf{H} \in \mathbb{C}^{N_R \times N_T}$ is the channel matrix, and $\mathbf{n} \in \mathbb{C}^{N_R}$ is the additive noise vector.
 The $(n_r, n_t)$-th entry of $\mathbf{H}$ represents the complex channel coefficient between transmit antenna $n_t$ and receive antenna $n_r$.
-The noise vector is assumed to be circularly symmetric complex Gaussian, i.e., $\mathbf{n} \sim \mathcal{N}_{\mathbb{C}}(\mathbf{0}, N_0 \, \mathbf{I}_{N_R})$, such that its entries are spatially independent, each with an expected power of $N_0$.
+The noise vector is \ac{CS} complex Gaussian distributed, i.e. $\mathbf{n} \sim \mathcal{N}_{\mathbb{C}}(\mathbf{0}, N_0 \, \mathbf{I}_{N_R})$, such that its entries are spatially independent, each with an expected power of $N_0$.
 The time index is omitted for brevity.
 
 % transmitter
@@ -72,6 +75,7 @@ The data symbols are assumed to be zero-mean, mutually uncorrelated, and normali
 Throughout this work, the power allocation is assumed to be incorporated into the precoding matrix, unless explicitly stated otherwise. Under this convention, the total transmit power is constrained by
 \begin{equation}
     \mathbb{E}\!\left[\|\mathbf{x}\|^2\right] = \mathrm{tr}\!\left(\mathbf{F}^H \mathbf{F}\right) \leq P_t.
+\label{eq:Pt_constraint_su}
 \end{equation}
 \begin{comment}
 \begin{subequations}
@@ -113,7 +117,7 @@ Substituting \eqref{eq:su_mimo_precoding} into \eqref{eq:su_mimo_io} and applyin
 where $\mathbf{T} \in \mathbb{C}^{N_S \times N_S}$ is the \ac{MIMO} transfer matrix and $\mathbf{n_G}$ represents spatially correlated Gaussian noise.
 It is evident that, whenever the transfer matrix is not diagonal, the data symbols of different streams interfere with each other. The design of the precoding and combining matrices is therefore essential to suppress this inter-stream interference and improve overall system performance.
 
-\subsection{MU-MIMO}
+\subsection{MU-MIMO System Model}
 
 When multiple receivers are served simultaneously by a single multi-antenna transmitter, the system is referred to as a \ac{MU} \ac{MIMO} system. In this context, the transmitter is called the \ac{BS} and the individual receivers are referred to as \acp{UT}. A block diagram is shown in Fig.~\ref{fig:MU_MIMO_block_diagram}.
 
@@ -129,7 +133,7 @@ Throughout this work, the \ac{BS} is assumed to be equipped with more antennas t
 For notational convenience, all \acp{UT} are assumed to receive the same number of data streams, denoted by $N_S$. In practical scenarios where this does not hold, $N_S$ is defined as the maximum number of data streams intended for any single \ac{UT}. The data symbol vectors intended for a \ac{UT} receiving fewer streams are padded with zeros.
 
 % channel input-output
-Analogous to the \ac{SU}-\ac{MIMO} case, the communication between the \ac{BS} and a certain \ac{UT}\textsubscript{k} is characterized by
+Analogous to the \ac{SU}-\ac{MIMO} case, the communication between the \ac{BS} and a certain \ac{UT}\textsubscript{k} at a particular time instant is characterized by
 \begin{equation}
     \mathbf{y}_k = \mathbf{H}_k \, \mathbf{x} + \mathbf{n}_k, \qquad k = 1, \dots, K,
 \label{eq:mu_mimo_io}
@@ -142,9 +146,10 @@ The transmitted signal vector $\mathbf{x} \in \mathbb{C}^{N_T}$ is now a functio
     \mathbf{x} = \sum_{k=1}^{K} \mathbf{F}_k \, \mathbf{a}_k.
 \label{eq:mu_mimo_precoding}
 \end{equation}
-Since the data symbols intended for different \acp{UT} are considered to be uncorrelated, the total transmit power constraint can now be formulated as
+Since the data symbols intended for different \acp{UT} are assumed to be uncorrelated, the total transmit power constraint can now be formulated as
 \begin{equation}
     \mathbb{E}\!\left[\|\mathbf{x}\|^2\right] = \sum_{k=1}^{K} \mathrm{tr}\!\left(\mathbf{F}_k^H \mathbf{F}_k\right) \leq P_t.
+\label{eq:Pt_constraint_mu}
 \end{equation}
 \begin{comment}
 \begin{subequations}
@@ -189,22 +194,107 @@ The overall input-output relation of the \ac{MU}-\ac{MIMO} Gaussian channel can 
 where $\mathbf{G} \in \mathbb{C}^{K N_S \times K N_R}$ denotes the compound combining matrix, $\mathbf{H} \in \mathbb{C}^{K N_R \times N_T}$ the compound channel matrix, and $\mathbf{F} \in \mathbb{C}^{N_T \times K N_S}$ the compound precoding matrix.
 
 
-\section{Mutual Information and Capacity}
+\section{Information Theory Concepts}
 
-Consider a single use of a \ac{MIMO} Gaussian channel, as described by \eqref{eq:su_mimo_io} or \eqref{eq:mu_mimo_io}.
-The \ac{TX} generates a random vector $\mathbf{x} \in \mathbb{C}^{N_T}$ according to the input distribution with \ac{pdf} $p(\mathbf{x})$, while the \ac{RX} observes the random vector $\mathbf{y} \in \mathbb{C}^{N_R}$.
+In this section, we introduce the information-theoretic concepts needed for the analysis of \ac{MIMO} communication systems. We first discuss mutual information, then define the achievable rate and capacity for \ac{SU}-\ac{MIMO} channels, and finally extend these concepts to the \ac{MU} scenario.
+
+\subsection{Mutual Information}
+
+Consider a single use of a \ac{SU}-\ac{MIMO} Gaussian channel, as described by \eqref{eq:su_mimo_io}.
+The transmitter generates a random vector $\mathbf{x} \in \mathbb{C}^{N_T}$ according to the input distribution with \ac{pdf} $p(\mathbf{x})$, while the receiver observes the random vector $\mathbf{y} \in \mathbb{C}^{N_R}$.
 The relation between the channel input $\mathbf{x}$ and the channel output $\mathbf{y}$ is probabilistic and is fully characterized by the channel law, described by the conditional \ac{pdf} $p(\mathbf{y} \mid \mathbf{x})$.
 
 The number of information bits transmitted per channel use is referred to as the \ac{IBR}.
 The \ac{MI} between $\mathbf{x}$ and $\mathbf{y}$ quantifies how much information the received vector $\mathbf{y}$ provides about the transmitted vector $\mathbf{x}$.
-Equivalently, it represents the average reduction in the uncertainty about $\mathbf{x}$ obtained from observing $\mathbf{y}$~\cite{syllabus_information_theory}. It is given by
+In other words, it represents the average reduction in the uncertainty about $\mathbf{x}$ obtained from observing $\mathbf{y}$. It is given by
 \begin{equation}
     I(\mathbf{x};\mathbf{y})
     = \mathbb{E}\!\left[ \log_2\!\left( \frac{p(\mathbf{y}\mid\mathbf{x})}{p(\mathbf{y})} \right) \right],
-\label{eq:mutual_information}
+\label{eq:mutual_information_su}
 \end{equation}
 where the expectation is taken with respect to the joint distribution of $\mathbf{x}$ and $\mathbf{y}$ and $p(\mathbf{y})$ is the marginal distribution of $\mathbf{y}$.
 
-According to Shannon's channel coding theorem~\cite{shannon_1948}, reliable communication is possible if the transmission \ac{IBR} is strictly smaller than the \ac{MI} between $\mathbf{x}$ and $\mathbf{y}$. Here, reliable communication means that the decoding error probability can be made arbitrarily small by using sufficiently long channel codes. Hence, for a given input distribution $p(\mathbf{x})$ and channel law $p(\mathbf{y}\mid\mathbf{x})$, any \ac{IBR} smaller than the \ac{MI} is referred to as achievable.
+According to Shannon's channel coding theorem~\cite{shannon_1948}, reliable communication is possible if the transmission \ac{IBR} is strictly smaller than the \ac{MI} between $\mathbf{x}$ and $\mathbf{y}$.
+Here, reliable communication means that the decoding error probability can be made arbitrarily small by using sufficiently long channel codes.
 
-% part about capacity
+\subsection{Achievable Rate and Capacity}
+
+For a given input distribution $p(\mathbf{x})$ and channel law $p(\mathbf{y}\mid\mathbf{x})$, any \ac{IBR} $r$ smaller than the \ac{MI} is said to be achievable. The \ac{MI} is thus a supremum (least upper bound) on the achievable rate.
+
+The capacity $C$ of a \ac{SU}-\ac{MIMO} channel is the largest achievable rate. Equivalently, it is the highest spectral efficiency for which reliable communication is possible. It is defined as the maximum \ac{MI} between $\mathbf{x}$ and $\mathbf{y}$ over all possible input distributions $p(\mathbf{x})$:
+\begin{equation}
+    C = \max_{p(\mathbf{x})} \, I(\mathbf{x};\mathbf{y}).
+\label{eq:capacity}
+\end{equation}
+Typically, the maximization is subject to the transmit power constraint, as formulated in \eqref{eq:Pt_constraint_su}.
+
+In~\cite{telatar_1999}, the capacity for a \ac{SU}-\ac{MIMO} Gaussian communication system is derived. First, it is shown that under the total transmit power constraint, the \ac{MI} is maximized in case of Gaussian signaling, i.e. the channel input $\mathbf{x}$ is \ac{CS} complex Gaussian distributed. Then, the mutual information between $\mathbf{x}$ and $\mathbf{y}$ for a given covariance matrix $\mathbf{C}_{\mathrm{x}}$ is obtained as
+\begin{equation}
+    I(\mathbf{x};\mathbf{y})
+    = \log_2\left(\det\left(\mathbf{I}_{N_R} +  \mathbf{C}_{\mathrm{n}}^{-1} \; \mathbf{H}\,\mathbf{C}_{\mathrm{x}}\,\mathbf{H}^\mathrm{H} \right)\right).
+\label{eq:MI_Gaussian_channel}
+\end{equation}
+The capacity then results from maximizing \eqref{eq:MI_Gaussian_channel} over all positive semidefinite covariance matrices $\mathbf{C}_{\mathrm{x}}$ that satisfy the transmit power constraint:
+\begin{equation}
+\begin{aligned}
+    C =& \max_{\mathbf{C}_{\mathrm{x}}} \; \log_2\left(\det\left(\mathbf{I}_{N_R} + \mathbf{C}_{\mathrm{n}}^{-1} \; \mathbf{H}\,\mathbf{C}_{\mathrm{x}}\,\mathbf{H}^\mathrm{H} \right)\right) \\
+    &\text{s.t.} \quad \mathbf{C}_{\mathrm{x}} \succeq 0, \quad \mathrm{tr}\!\left(\mathbf{C}_{\mathrm{x}}\right) \leq P_t.
+\end{aligned}
+\label{eq:capacity_Gaussian_channel}
+\end{equation}
+
+\subsection{Rate Region and Sum-Capacity}
+
+In contrast to the \ac{SU} scenario, where the \ac{IBR} is a scalar $r$, a \ac{MU}-\ac{MIMO} channel is characterized by a rate tuple $(r_1, \ldots, r_K)$, where each element $r_k$ denotes the \ac{IBR} of a single \ac{UT}.
+The rate region $\mathcal{R}$ is the set of all rate tuples whose individual \acp{IBR} are simultaneously achievable
+under the given system constraints.
+The rate region is a convex set, since any convex combination of achievable rate tuples is itself achievable through time-sharing between the corresponding transmission strategies.
+An example rate region for $K = 2$ users is shown in Fig.~\ref{fig:rate_region}.
+
+\begin{figure}[!h]
+    \centering
+    \caption{Example of a rate region $\mathcal{R}$ and the sum-capacity $C_{\text{sum}}$ for two users in a MU-MIMO system.}
+    \label{fig:rate_region}
+\end{figure}
+
+The rate region captures the trade-offs inherent to multi-user transmission: increasing the \ac{IBR} of one user may reduce the rates achievable by others due to interference and shared resources.
+It is therefore desirable to operate on the boundary of the rate region, where no user's rate can be increased without reducing that of another.
+
+The sum-capacity $C_{\text{sum}}$ is the maximum achievable \ac{SR}, i.e., the sum of all individual \acp{IBR}:
+\begin{equation}
+    C_{\text{sum}} = \max_{(r_1,\ldots,r_K)\in\mathcal{R}} \; \sum_{k=1}^{K} \, r_k.
+\label{eq:sum_capacity}
+\end{equation}
+More generally, we define the \ac{WSR} as
+\begin{equation}
+    \mathrm{WSR} = \sum_{k=1}^{K} w_k \, r_k,
+\end{equation}
+where $w_k \geq 0$ is the weight assigned to \ac{UT}\textsubscript{k}.
+The full boundary of the rate region can then be traced by maximizing the \ac{WSR} over all achievable rate tuples for varying weight vectors $\mathbf{w} = (w_1, \ldots, w_K)$.
+The sum-capacity corresponds to the special case where all weights are equal to one. The maximization in both cases is typically subject to the total transmit power constraint \eqref{eq:Pt_constraint_mu}.
+
+The sum-capacity of the \ac{MU}-\ac{MIMO} Gaussian channel is derived in~\cite{viswanath_2002, viswanath_2003, yu_2004} by exploiting the uplink--downlink duality: the downlink broadcast channel and the uplink multiple-access channel yield
+the same rate region under the same total transmit power constraint. It therefore suffices to solve the uplink problem, which is more tractable.
+
+In the uplink channel, all $K$ \acp{UT} transmit simultaneously, with \ac{UT}\textsubscript{k} sending a vector $\mathbf{x}_k \in \mathbb{C}^{N_R}$ to the \ac{BS}.
+The \ac{MI} between the transmitted vectors $\mathbf{x}_1, \dots, \mathbf{x}_K$ and the received vector $\mathbf{y}$, given input covariance matrices $\mathbf{C}_{\mathrm{x},k}$, is defined as
+\begin{equation}
+    I(\mathbf{x}_1, \dots, \mathbf{x}_K; \mathbf{y})
+    = \mathbb{E}\!\left[ \log_2\!\left( \frac{p(\mathbf{y} \mid \mathbf{x}_1, \dots, \mathbf{x}_K)}{p(\mathbf{y})} \right) \right],
+\label{eq:mutual_information_mu}
+\end{equation}
+where the expectation is taken with respect to the joint \ac{pdf} of $(\mathbf{x}_1, \dots, \mathbf{x}_K)$ and $\mathbf{y}$, and $p(\mathbf{y})$ is the marginal \ac{pdf} of $\mathbf{y}$.
+It is further obtained as
+\begin{equation}
+    I(\mathbf{x}_1, \dots, \mathbf{x}_K; \mathbf{y})
+    = \log_2\!\left(\det\!\left(\mathbf{I}_{N_T} + \mathbf{C}_{\mathrm{n}}^{-1} \sum_{k=1}^{K} \mathbf{H}_k\,\mathbf{C}_{\mathrm{x},k}\,\mathbf{H}_k^\mathrm{H} \right)\right).
+\label{eq:mutual_information_uplink}
+\end{equation}
+The uplink \ac{SR} is achievable if and only if the sum of the \ac{IBR}s of all \acp{UT} is strictly smaller than the \ac{MI} as given in~\eqref{eq:mutual_information_uplink}. Therefore, the sum-capacity of the downlink channel is obtained by maximizing \eqref{eq:mutual_information_uplink} over all positive semidefinite covariance matrices satisfying the total transmit power constraint and applying the duality result:
+\begin{equation}
+\begin{aligned}
+    C_{\text{sum}} =& \max_{\mathbf{C}_{\mathrm{x},1}, \dots, \mathbf{C}_{\mathrm{x},K}} \; \log_2\!\left(\det\!\left(\mathbf{I}_{N_T} + \mathbf{C}_{\mathrm{n}}^{-1} \sum_{k=1}^{K} \mathbf{H}_k\,\mathbf{C}_{\mathrm{x},k}\,\mathbf{H}_k^\mathrm{H} \right)\right) \\
+    &\text{s.t.} \quad \sum_{k=1}^{K} \mathrm{tr}\!\left(\mathbf{C}_{\mathrm{x},k}\right) \leq P_t \quad \text{and} \quad \mathbf{C}_{\mathrm{x},k} \succeq 0, \quad \forall k = 1, \dots, K.
+\end{aligned}
+\label{eq:sum_capacity_Gaussian_channel}
+\end{equation}
