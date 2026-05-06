@@ -82,17 +82,14 @@ def plot_rate_region(C1_max, C2_max, n):
     # plot weight vector w
     dx_w  = (0.2 * C1_max) / np.sqrt(2)
     ax.annotate("", xy=(r1_sc + dx_w, r2_sc + dx_w), xytext=(r1_sc, r2_sc), arrowprops=dict(arrowstyle="-|>", lw=1, color="#c0392b"), annotation_clip=False, zorder=6)
-    ax.text(r1_sc + dx_w, r2_sc + dx_w, r"$\mathbf{w} = [1,\,1]^H$", color="#c0392b", fontsize=9, ha="left", va="bottom")
+    ax.text(r1_sc + dx_w, r2_sc + dx_w, r"$\mathbf{w} = [1,\,1]^{\mathrm{H}}$", color="#c0392b", fontsize=9, ha="left", va="bottom")
 
 
     # 3. Max-Min Rate Point
 
     # plot max-min rate point and label
     ax.plot(r1_mm, r2_mm, "o", color="#c0392b", markersize=6, zorder=5)
-    ax.annotate(r"$\max\,\min(r_1, r_2)$", 
-                xy=(r1_mm - 0.01, r2_mm - 0.005), 
-                xytext=(r1_mm - 0.25*C1_max, r2_mm + 0.2*C2_max), fontsize=10, color="#c0392b", ha="center", va="center", 
-                arrowprops=dict(arrowstyle="->", color="#c0392b", lw=0.75, connectionstyle="arc3,rad=0.75"), annotation_clip=False, zorder=6)
+    ax.annotate(r"$\max\,\min(r_1, r_2)$", xy=(r1_mm - 0.01, r2_mm - 0.005), xytext=(r1_mm - 0.25*C1_max, r2_mm + 0.2*C2_max), fontsize=10, color="#c0392b", ha="center", va="center", arrowprops=dict(arrowstyle="->", color="#c0392b", lw=0.75, connectionstyle="arc3,rad=0.75"), annotation_clip=False, zorder=6)
 
     # plot dashed rate indicator lines to axes
     ax.plot([r1_mm, r1_mm], [0,     r2_mm], ":", color="gray", lw=0.9, zorder=1)
