@@ -243,7 +243,7 @@ The capacity then results from maximizing \eqref{eq:MI_Gaussian_channel} over al
 \label{eq:capacity_Gaussian_channel}
 \end{equation}
 
-\subsection{Rate Region and Sum-Capacity}
+\subsection{Rate Region and Sum Capacity}
 
 In contrast to the \ac{SU} scenario, where the \ac{IBR} is a scalar $r$, a \ac{MU}-\ac{MIMO} channel is characterized by a rate tuple $(r_1, \ldots, r_K)$, where each element $r_k$ denotes the \ac{IBR} of a single \ac{UT}.
 The rate region $\mathcal{R}$ is the set of all rate tuples whose individual \acp{IBR} are simultaneously achievable
@@ -251,16 +251,22 @@ under the given system constraints.
 The rate region is a convex set, since any convex combination of achievable rate tuples is itself achievable through time-sharing between the corresponding transmission strategies.
 An example rate region for $K = 2$ users is shown in Fig.~\ref{fig:rate_region}.
 
-\begin{figure}[!h]
+\begin{figure}[htbp]
     \centering
-    \caption{Example of a rate region $\mathcal{R}$ and the sum-capacity $C_{\text{sum}}$ for two users in a MU-MIMO system.}
+    \includegraphics[width=0.75\textwidth]{figures/part1_background/out/rate_region.pdf}
+    \caption[Rate region of a MU-MIMO channel]
+    {
+    Example of a rate region $\mathcal{R}$ for a \ac{MU}-\ac{MIMO} system with $K=2$ users.\\
+    The sum-capacity point is the boundary point whose outward normal is the all-ones vector. 
+    The max--min point is given by the intersection of the boundary with the line $r_1 = r_2$. It corresponds to a fair operating point where both users achieve the same \ac{IBR}.
+    }
     \label{fig:rate_region}
 \end{figure}
 
 The rate region captures the trade-offs inherent to multi-user transmission: increasing the \ac{IBR} of one user may reduce the rates achievable by others due to interference and shared resources.
 It is therefore desirable to operate on the boundary of the rate region, where no user's rate can be increased without reducing that of another.
 
-The sum-capacity $C_{\text{sum}}$ is the maximum achievable \ac{SR}, i.e., the sum of all individual \acp{IBR}:
+The sum capacity $C_{\text{sum}}$ is the maximum achievable \ac{SR}, i.e., the sum of all individual \acp{IBR}:
 \begin{equation}
     C_{\text{sum}} = \max_{(r_1,\ldots,r_K)\in\mathcal{R}} \; \sum_{k=1}^{K} \, r_k.
 \label{eq:sum_capacity}
@@ -271,9 +277,9 @@ More generally, we define the \ac{WSR} as
 \end{equation}
 where $w_k \geq 0$ is the weight assigned to \ac{UT}\textsubscript{k}.
 The full boundary of the rate region can then be traced by maximizing the \ac{WSR} over all achievable rate tuples for varying weight vectors $\mathbf{w} = (w_1, \ldots, w_K)$.
-The sum-capacity corresponds to the special case where all weights are equal to one. The maximization in both cases is typically subject to the total transmit power constraint \eqref{eq:Pt_constraint_mu}.
+The sum capacity corresponds to the special case where all weights are equal to one. The maximization in both cases is typically subject to the total transmit power constraint \eqref{eq:Pt_constraint_mu}.
 
-The sum-capacity of the \ac{MU}-\ac{MIMO} Gaussian channel is derived in~\cite{viswanath_2002, viswanath_2003, yu_2004} by exploiting the uplink--downlink duality: the downlink broadcast channel and the uplink multiple-access channel yield
+The sum capacity of the \ac{MU}-\ac{MIMO} Gaussian channel is derived in~\cite{viswanath_2002, viswanath_2003, yu_2004} by exploiting the uplink--downlink duality: the downlink broadcast channel and the uplink multiple-access channel yield
 the same rate region under the same total transmit power constraint. It therefore suffices to solve the uplink problem, which is more tractable.
 
 In the uplink channel, all $K$ \acp{UT} transmit simultaneously, with \ac{UT}\textsubscript{k} sending a vector $\mathbf{x}_k \in \mathbb{C}^{N_R}$ to the \ac{BS}.
@@ -290,7 +296,7 @@ It is further obtained as
     = \log_2\!\left(\det\!\left(\mathbf{I}_{N_T} + \mathbf{C}_{\mathrm{n}}^{-1} \sum_{k=1}^{K} \mathbf{H}_k\,\mathbf{C}_{\mathrm{x},k}\,\mathbf{H}_k^\mathrm{H} \right)\right).
 \label{eq:mutual_information_uplink}
 \end{equation}
-The uplink \ac{SR} is achievable if and only if the sum of the \ac{IBR}s of all \acp{UT} is strictly smaller than the \ac{MI} as given in~\eqref{eq:mutual_information_uplink}. Therefore, the sum-capacity of the downlink channel is obtained by maximizing \eqref{eq:mutual_information_uplink} over all positive semidefinite covariance matrices satisfying the total transmit power constraint and applying the duality result:
+The uplink \ac{SR} is achievable if and only if the sum of the \ac{IBR}s of all \acp{UT} is strictly smaller than the \ac{MI} as given in~\eqref{eq:mutual_information_uplink}. Therefore, the sum capacity of the downlink channel is obtained by maximizing \eqref{eq:mutual_information_uplink} over all positive semidefinite covariance matrices satisfying the total transmit power constraint and applying the duality result:
 \begin{equation}
 \begin{aligned}
     C_{\text{sum}} =& \max_{\mathbf{C}_{\mathrm{x},1}, \dots, \mathbf{C}_{\mathrm{x},K}} \; \log_2\!\left(\det\!\left(\mathbf{I}_{N_T} + \mathbf{C}_{\mathrm{n}}^{-1} \sum_{k=1}^{K} \mathbf{H}_k\,\mathbf{C}_{\mathrm{x},k}\,\mathbf{H}_k^\mathrm{H} \right)\right) \\
