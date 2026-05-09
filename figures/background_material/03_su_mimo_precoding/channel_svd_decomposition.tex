@@ -1,0 +1,118 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\usetikzlibrary{arrows.meta, positioning, fit, calc, shapes.geometric}
+
+\begin{document}
+
+% ===================
+%  Layout Parameters
+% ===================
+
+% Vertical spacing between eigen subchannels
+\newcommand{\ChannelSep}{1.75cm}
+\newcommand{\NoiseHeight}{1cm}
+
+% Horizontal spacing
+\newcommand{\InputToPowerAllocator}{1.25cm}
+\newcommand{\PowerAllocatorToChannelGain}{1.25cm}
+\newcommand{\ChannelGainToNoiseAdder}{1.25cm}
+\newcommand{\NoiseAdderToOutput}{1.25cm}
+
+% Multiplier size
+\newcommand{\MultiplierWidth}{1.25cm}
+\newcommand{\MultiplierHeight}{0.75cm}
+
+% Adder size
+\newcommand{\AdderRadius}{0.25cm}
+
+% ===================
+% ===================
+
+\begin{tikzpicture}
+
+
+% Component Styles
+% ================
+
+\tikzset{
+    multiplier/.style = {
+        draw, 
+        rectangle,
+        minimum width=\MultiplierWidth,
+        minimum height=\MultiplierHeight,
+        align=center
+    },
+    adder/.style = {
+        draw, 
+        circle,
+        minimum size=2*\AdderRadius,
+        align=center
+    },
+    signal/.style = {
+        ->,
+    }
+}
+% =================
+
+
+% Figure Components
+% =================
+
+% eigen subchannel 1.
+\node (x1) at (0,0) {$\tilde{x}_1$};
+\node[multiplier, right=\InputToPowerAllocator of x1] (p1) {$\sqrt{p_1}$};
+\node[multiplier, right=\PowerAllocatorToChannelGain of p1] (ch1) {$\sigma_1$};
+\node[adder, right=\ChannelGainToNoiseAdder of ch1] (add1) {};
+\draw ($(add1) + (-\AdderRadius, 0)$) -- ($(add1) + (\AdderRadius, 0)$);
+\draw ($(add1) + (0, -\AdderRadius)$) -- ($(add1) + (0, \AdderRadius)$);
+\node (n1) at ($(add1) + (0,\NoiseHeight)$) {$\tilde{n}_1$};
+\node (y1) at ($(add1) + (\NoiseAdderToOutput,0)$) {$\tilde{y}_1$};
+
+\draw[signal] (x1) -- (p1);
+\draw[signal] (p1) -- (ch1);
+\draw[signal] (ch1) -- (add1);
+\draw[signal] (n1) -- (add1);
+\draw[signal] (add1) -- (y1);
+
+% eigen subchannel 2.
+\node (x2) at (0,-\ChannelSep) {$\tilde{x}_2$};
+\node[multiplier, below=\ChannelSep of p1.north] (p2) {$\sqrt{p_2}$};
+\node[multiplier, below=\ChannelSep of ch1.north] (ch2) {$\sigma_2$};
+\node[adder, below=\ChannelSep of add1.north] (add2) {};
+\draw ($(add2) + (-\AdderRadius, 0)$) -- ($(add2) + (\AdderRadius, 0)$);
+\draw ($(add2) + (0, -\AdderRadius)$) -- ($(add2) + (0, \AdderRadius)$);
+\node (n2) at ($(add2) + (0,\NoiseHeight)$) {$\tilde{n}_2$};
+\node (y2) at ($(add2) + (\NoiseAdderToOutput,0)$) {$\tilde{y}_2$};
+
+\draw[signal] (x2) -- (p2);
+\draw[signal] (p2) -- (ch2);
+\draw[signal] (ch2) -- (add2);
+\draw[signal] (n2) -- (add2);
+\draw[signal] (add2) -- (y2);
+
+% fantom eigen subchannels.
+\node (xR) at (0,-2*\ChannelSep) {$\vdots$};
+\node (yR) at ($(y2) + (0,-\ChannelSep)$) {$\vdots$};
+
+% eigen subchannel R_H.
+\node (xRH) at (0,-3*\ChannelSep) {$\tilde{x}_{R_H}$};
+\node[multiplier, below=3*\ChannelSep of p1.north] (pRH) {$\sqrt{p_{R_H}}$};
+\node[multiplier, below=3*\ChannelSep of ch1.north] (chRH) {$\sigma_{R_H}$};
+\node[adder, below=3*\ChannelSep of add1.north] (addRH) {};
+\draw ($(addRH) + (-\AdderRadius, 0)$) -- ($(addRH) + (\AdderRadius, 0)$);
+\draw ($(addRH) + (0, -\AdderRadius)$) -- ($(addRH) + (0, \AdderRadius)$);
+\node (nRH) at ($(addRH) + (0,\NoiseHeight)$) {$\tilde{n}_{R_H}$};
+\node (yRH) at ($(addRH) + (\NoiseAdderToOutput,0)$) {$\tilde{y}_{R_H}$};
+
+\draw[signal] (xRH) -- (pRH);
+\draw[signal] (pRH) -- (chRH);
+\draw[signal] (chRH) -- (addRH);
+\draw[signal] (nRH) -- (addRH);
+\draw[signal] (addRH) -- (yRH);
+
+
+\end{tikzpicture}
+
+\end{document}
