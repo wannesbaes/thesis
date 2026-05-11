@@ -6,10 +6,13 @@
 
 Consider the \ac{SU}-\ac{MIMO} system model introduced in Section~\ref{subsection:su_mimo_system_model} together with the associated capacity optimization problem in \eqref{eq:capacity_su_mimo_gaussian_channel_optimization_problem}.
 We first derive a more explicit expression for the channel capacity and then show that this capacity can be achieved by means of linear precoding.
-The section follows a similar structure as in Chapter 3 of~\cite{cornelis_2025}.
+Parts of this section follow a structure similar to that in Chapter 3 of~\cite{cornelis_2025}.
 
 \subsection{SU-MIMO Capacity}
 \label{subsection:su_mimo_capacity}
+% ==========================
+%    SU-MIMO Capacity
+% ========================== 
 
 The \ac{SVD} (see Appendix~\ref{appendix:svd}) of the channel matrix yields
 \begin{equation}
@@ -17,12 +20,12 @@ The \ac{SVD} (see Appendix~\ref{appendix:svd}) of the channel matrix yields
     \mathbf{H} = \mathbf{U} \boldsymbol{\Sigma} \mathbf{V}^H,
 \end{equation}
 where $\mathbf{U} \in \mathbb{C}^{N_R \times N_R}$ and $\mathbf{V} \in \mathbb{C}^{N_T \times N_T}$ are unitary matrices, and $\mathbf{\Sigma} \in \mathbb{R}^{N_R \times N_T}$ is a rectangular diagonal matrix which contains the singular values of $\mathbf{H}$ on its main diagonal in decreasing order.
-The columns of $\mathbf{U}$ and $\mathbf{V}$ are contain the left and right singular vectors of $\mathbf{H}$, respectively.
+The columns of $\mathbf{U}$ and $\mathbf{V}$ contain the left and right singular vectors of $\mathbf{H}$, respectively.
 
 Now define the transformed variables $\tilde{\mathbf{y}} = \mathbf{U}^H \mathbf{y}$, $\tilde{\mathbf{x}} = \mathbf{V}^H \mathbf{x}$, and $\tilde{\mathbf{n}} = \mathbf{U}^H \mathbf{n}$.
 Since multiplication by a unitary matrix preserves the distribution of \ac{CS} complex Gaussian noise, $\tilde{\mathbf{n}}$ has the same distribution as $\mathbf{n}$. 
 Moreover, because $\mathbf{U}$ and $\mathbf{V}$ are unitary, the transformations between $(\mathbf{x},\mathbf{y})$ and $(\tilde{\mathbf{x}},\tilde{\mathbf{y}})$ are bijective. 
-The original channel can therefore be represented equivalently as
+The original channel from~\eqref{eq:su_mimo_io} can therefore be represented equivalently as
 \begin{comment}
 \begin{subequations}
 \label{eq:su_mimo_equivalent_io_extended}
@@ -39,46 +42,49 @@ The original channel can therefore be represented equivalently as
 \label{eq:su_mimo_equivalent_io}
     \tilde{\mathbf{y}} = \mathbf{\Sigma}\tilde{\mathbf{x}} + \tilde{\mathbf{n}},
 \end{equation}
-which is obtained by applying the \ac{SVD} of the channel matrix and performing a change of variables. 
-The channel in~\eqref{eq:su_mimo_equivalent_io} is equivalent to the original channel~\eqref{eq:su_mimo_io} in the sense that the transformation preserves the mutual information between input and output. Consequently, both channels have the same capacity.
+which is obtained by applying the \ac{SVD} of the channel matrix and performing a change of variables (see Appendix~\ref{appendix:calculations}). 
+The channel in~\eqref{eq:su_mimo_equivalent_io} is equivalent to the original channel in the sense that the transformation preserves the mutual information between input and output. Consequently, both channels have the same capacity.
 
-The channel matrix $\mathbf{H}$ has exactly as many non-zero singular values $\{\sqrt{\sigma_i}\}$ as its rank, denoted as $R_H$.
+The channel matrix $\mathbf{H}$ has exactly as many non-zero singular values $\{\sigma_i\}$ as its rank, denoted as $R_H$.
 Written component-wise, the equivalent channel becomes
 \begin{equation}
 \label{eq:su_mimo_equivalent_io_component_wise}
-    \tilde{y}_i = \sqrt{\sigma_i} \, \tilde{x}_i + \tilde{n}_i \qquad \text{for} \quad i = 1, \dots, R_H,
+    \tilde{y}_i = \sigma_i \, \tilde{x}_i + \tilde{n}_i \qquad \text{for} \quad i = 1, \dots, R_H,
 \end{equation}
-with $\tilde{y}_i = \tilde{n}_i$ for $i > R_H$. 
-The equivalent channel decomposes into $R_H$ independent parallel scalar Gaussian subchannels, each with its own channel gain $\sqrt{\sigma_i}$. These subchannels and their gains are referred to as eigen subchannels and eigenmodes, respectively.
-Since the components $\tilde{x}_i$ for $i > R_H$ have no effect on the output, they carry no information and can be set to zero.
+with $\tilde{y}_i = \tilde{n}_i$ for $R_H < i \leq N_R$. 
+The equivalent channel decomposes into $R_H$ independent parallel scalar Gaussian subchannels, each with its own channel gain $\sigma_i$. These subchannels and their gains are referred to as eigen subchannels and eigenmodes, respectively.
+Since the components $\tilde{x}_i$ for $R_H < i \leq N_T$ have no effect on the output, they carry no information and can be set to zero.
 
-For each eigen subchannel, the \acf{MI} is maximised by a zero-mean, \ac{CS} complex Gaussian input~\cite{telatar_1999}. Under this choice, the optimisation problem \eqref{eq:capacity_su_mimo_gaussian_channel_optimization_problem} simplifies to
+For each eigen subchannel, the \acf{MI} is maximised by a zero-mean, \ac{CS} complex Gaussian input~\cite{telatar_1999}. Under this choice, the optimisation problem~\eqref{eq:capacity_su_mimo_gaussian_channel_optimization_problem} simplifies to
 \begin{equation}
 \label{eq:capacity_su_mimo_gaussian_channel_optimization_problem_simplified}
 \begin{aligned}
-    & C = \max_{\{\mathbb{E}\left[|\tilde{x}_i|^2\right] \, \}} \; \sum_{i=1}^{R_H} \log_2\!\left(1 + \mathbb{E}\left[|\tilde{x}_i|^2\right] \, \frac{\sigma_i}{N_0} \right) \\
+    & C = \max_{\{\mathbb{E}\left[|\tilde{x}_i|^2\right] \, \}} \; \sum_{i=1}^{R_H} \log_2\!\left(1 + \mathbb{E}\left[|\tilde{x}_i|^2\right] \, \frac{\sigma^2_i}{N_0} \right) \\
     & \text{s.t.} \quad \sum_{i=1}^{R_H} \mathbb{E}\left[|\tilde{x}_i|^2\right] \leq P_t.
 \end{aligned}
 \end{equation}
 
-This maximization problem is solved using the Lagrange multiplier method (see Appendix~\ref{appendix:lagrange}).
-The variances of the channel input need to be chosen according to the waterfilling principle~\cite{gallager_1968}:
+This maximization problem is solved using the Lagrange multiplier method (see Appendix~\ref{appendix:lagrange_and_waterfilling}).
+The variances of the channel input need to be chosen according to the waterfilling solution~\cite{gallager_1968}:
 \begin{equation}
-    \mathbb{E}\left[\left\|\tilde{x}_i\right\|^2\right] = \left(\mu_{\text{w}} - \frac{N_0}{\sigma_i}\right)^{+},
+    \mathbb{E}\left[\left\|\tilde{x}_i\right\|^2\right] = \left(\mu_{\text{w}} - \frac{N_0}{\sigma^2_i}\right)^{+},
 \end{equation}
 where the water level $\mu_{\text{w}}$ is found iteratively to satisfy the transmit power constraint with equality.
 
 The resulting capacity is given by
 \begin{equation}
 \label{eq:capacity_su_mimo_gaussian_channel}
-    C = \sum_{i=1}^{R_H} \, \log_2\!\left( \max(1, \, \mu_{\text{w}} \frac{\sigma_i}{N_0}) \right).
+    C = \sum_{i=1}^{R_H} \, \log_2\!\left( \max(1, \, \mu_{\text{w}} \frac{\sigma^2_i}{N_0}) \right).
 \end{equation}
 
 \subsection{Optimal Precoder Design}
 \label{subsection:optimal_precoder_design}
+% ==========================
+%  Optimal Precoder Design
+% ========================== 
 
-In this section, we design a linear precoder and combiner that achieve the capacity of the \ac{SU}-\ac{MIMO} channel.
-We assume that the data symbol vector is \ac{CS} complex Gaussian distributed and spatially uncorrelated, and restrict ourselves to the case where the number of transmission streams equals the rank of the channel matrix.
+In this section, we design a linear precoder and combiner that together achieve the capacity of the \ac{SU}-\ac{MIMO} channel.
+We assume that the data symbol vector is \ac{CS} complex Gaussian distributed and spatially uncorrelated, and restrict ourselves to the case where the number of data streams is not fixed in advance, but can be chosen freely as part of the design.
 
 % prove F and G achieve capacity by construction
 For an arbitrary precoding matrix $\mathbf{F}$ and combining matrix $\mathbf{G}$, the data processing inequality~\cite{cover_thomas_2005} yields $I(\mathbf{x}; \mathbf{y}) \geq I(\mathbf{a}; \mathbf{z})$, where the \ac{MI} between the transmitted data symbols $\mathbf{a}$ and the decision variables $\mathbf{z}$ is given by:
@@ -91,10 +97,10 @@ For an arbitrary precoding matrix $\mathbf{F}$ and combining matrix $\mathbf{G}$
 \end{align}
 \end{subequations}
 Expression~\eqref{eq:mi_az_a} follows directly from~\eqref{eq:mi_su_mimo_gaussian_channel} and the structural similarity between~\eqref{eq:su_mimo_io} and~\eqref{eq:su_mimo_precoding_combining_io}.
-Expression~\eqref{eq:mi_az_b} then follows from~\eqref{eq:mi_az_a} upon substituting $\mathbf{C}_{\mathrm{a}} = \mathbf{I}_{N_s}$ and $\mathbf{C}_{\mathrm{n}} = N_0 \mathbf{I}$.
+Expression~\eqref{eq:mi_az_b} then follows from~\eqref{eq:mi_az_a} upon substituting $\mathbf{C}_{\mathrm{a}} = \mathbf{I}_{N_s}$ and $\mathbf{C}_{\mathrm{n}} = N_0 \mathbf{I}_{N_R}$.
 
-Motivated by the capacity derivation in the previous subsection~\ref{subsection:su_mimo_capacity}, we choose the columns of $\mathbf{F}$ and the rows of $\mathbf{G}$ as the $N_s$ most dominant right and left singular vectors of $\mathbf{H}$, respectively.
-Since $N_s = R_H$, these are precisely the singular vectors associated with the non-zero singular values of $\mathbf{H}$.
+Motivated by the capacity derivation in the previous subsection, we choose the columns of $\mathbf{F}$ and the rows of $\mathbf{G}$ as the $R_H$ most dominant right and left singular vectors of $\mathbf{H}$, respectively.
+These are precisely the singular vectors associated with the non-zero singular values of $\mathbf{H}$. The number of data streams is therefore chosen equal to the rank of the channel matrix.
 In addition, the precoder incorporates the power allocation through a diagonal matrix $\mathbf{P}$.
 More specifically, we set
 \begin{equation}
@@ -102,7 +108,7 @@ More specifically, we set
     \mathbf{F} = \mathbf{V}_{N_s} \, \sqrt{\mathbf{P}} \qquad \text{and} \qquad \mathbf{G} = \mathbf{U}_{N_s}^H.
 \end{equation}
 
-It follows from~\eqref{eq:su_mimo_optimal_precoder_and_combiner} that $I(\mathbf{a}; \mathbf{z}) = I(\mathbf{x}; \mathbf{y})$ for an appropriate choice of the power allocation $\mathbf{P}$.
+It follows from~\eqref{eq:su_mimo_optimal_precoder_and_combiner} that $I(\mathbf{a}; \mathbf{z}) = I(\mathbf{x}; \mathbf{y})$ for an appropriate choice of the power allocation matrix~$\mathbf{P}$.
 This result can be verified in a brute-force way by substituting the particular precoder and combiner matrices from~\eqref{eq:su_mimo_optimal_precoder_and_combiner} into~\eqref{eq:mi_az} and replacing the channel matrix by its \ac{SVD} (see Appendix~\ref{appendix:calculations}).
 \begin{comment}
 \begin{subequations}
@@ -113,12 +119,13 @@ This result can be verified in a brute-force way by substituting the particular 
     &= \log_2\!\left(\det\!\left(\mathbf{I}_{N_s} + \tfrac{1}{N_0} \, \left(\begin{bmatrix} \mathbf{I}_{N_s} & \mathbf{0} \end{bmatrix} \, \begin{bmatrix} \mathbf{\Sigma}_{R_H} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} \end{bmatrix} \, \begin{bmatrix} \mathbf{I}_{N_s} \\ \mathbf{0} \end{bmatrix} \sqrt{\mathbf{P}}\right) \, \left(\begin{bmatrix} \mathbf{I}_{N_s} & \mathbf{0} \end{bmatrix} \, \begin{bmatrix} \mathbf{\Sigma}_{R_H} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} \end{bmatrix} \, \begin{bmatrix} \mathbf{I}_{N_s} \\ \mathbf{0} \end{bmatrix} \sqrt{\mathbf{P}}\right)^H\right)\right)  \\
     &= \log_2\!\left(\det\!\left(\mathbf{I}_{N_s} + \tfrac{1}{N_0} \, (\mathbf{\Sigma}_{N_s} \sqrt{\mathbf{P}}) \, (\mathbf{\Sigma}_{N_s} \sqrt{\mathbf{P}})^H\right)\right) \\
     &= \log_2\!\left(\det\!\left(\mathbf{I}_{N_s} + \tfrac{1}{N_0} \, \mathbf{\Sigma}_{N_s}^2 \, \mathbf{P}\right)\right) \\
-    &= \log_2\!\left( \prod_{i=1}^{N_s} \left(1 + \frac{\sigma_i}{N_0}\, p_i \right) \right)  \\
-    &= \sum_{i=1}^{N_s} \log_2\!\left(1 + \frac{\sigma_i}{N_0}\, p_i \right)
+    &= \log_2\!\left( \prod_{i=1}^{N_s} \left(1 + \frac{\sigma^2_i}{N_0}\, p_i \right) \right)  \\
+    &= \sum_{i=1}^{N_s} \log_2\!\left(1 + \frac{\sigma^2_i}{N_0}\, p_i \right)
 \end{align}
 \label{eq:mi_az_equals_mi_xy}
 \end{subequations}
 \end{comment}
+
 An alternative and more elegant approach consists in substituting the particular precoder and combiner into~\eqref{eq:su_mimo_precoding_combining_io} and comparing the resulting expression with the equivalent channel given in~\eqref{eq:su_mimo_equivalent_io}.
 This yields
 \begin{subequations}
@@ -130,29 +137,27 @@ This yields
 \end{align}
 \end{subequations}
 where $\mathbf{\Sigma}_{N_s} \in \mathbb{R}^{N_s \times N_s}$ contains the $R_H$ non-zero singular values of $\mathbf{H}$ on its diagonal.
-
-Comparing~\eqref{eq:su_mimo_optimal_precoding_combining_io} with~\eqref{eq:su_mimo_equivalent_io}, one can readily verify that $I(\mathbf{a}; \mathbf{z}) = I(\mathbf{x}; \mathbf{y})$, provided that the power allocated to each stream is set according to the waterfilling principle.
-Hence, transmission with the precoder and combiner in~\eqref{eq:su_mimo_optimal_precoder_and_combiner} achieves the capacity of the \ac{SU}-\ac{MIMO} channel.
+Comparing~\eqref{eq:su_mimo_optimal_precoding_combining_io} with~\eqref{eq:su_mimo_equivalent_io}, one can readily verify that $I(\mathbf{a}; \mathbf{z}) = I(\mathbf{x}; \mathbf{y})$, provided that the power allocated to each stream is set according to the waterfilling solution.
+Hence, transmission with the precoder and combiner from~\eqref{eq:su_mimo_optimal_precoder_and_combiner} achieves the capacity of the \ac{SU}-\ac{MIMO} channel.
 \bigskip
 
 % interpretation optimal precoding scheme: decomposition
 Denoting the $s$th element of the decision variable vector $\mathbf{z}$ by $z_s$, one can write~\eqref{eq:su_mimo_optimal_precoding_combining_io} component-wise as
 \begin{equation}
 \label{eq:su_mimo_optimal_precoding_combining_io_component_wise}
-    z_s = \sqrt{\sigma_s} \, \sqrt{p_s} \, a_s + \tilde{n}_s \qquad \text{for} \quad s = 1, \dots, N_s.
+    z_s = \sigma_s \, \sqrt{p_s} \, a_s + \tilde{n}_s \qquad \text{for} \quad s = 1, \dots, N_s.
 \end{equation}
 
-This expression shows that the precoder and combiner in \eqref{eq:su_mimo_optimal_precoder_and_combiner} diagonalize the \ac{SU}-\ac{MIMO} transfer matrix from~\eqref{eq:su_mimo_precoding_combining_io}.
-The original \ac{SU}-\ac{MIMO} channel is decoupled into $N_s$ independent parallel scalar \ac{SISO} Gaussian subchannels with gains $\sqrt{\sigma_s}$, which coincides exactly with the decomposition of the equivalent channel in~\eqref{eq:su_mimo_equivalent_io_component_wise}.
+This expression shows that the precoder and combiner in~\eqref{eq:su_mimo_optimal_precoder_and_combiner} diagonalize the \ac{SU}-\ac{MIMO} transfer matrix from~\eqref{eq:su_mimo_precoding_combining_io}.
+The original \ac{SU}-\ac{MIMO} channel is decoupled into $N_s = R_H$ independent parallel scalar \ac{SISO} Gaussian subchannels with gains $\sigma_s$, which coincides exactly with the decomposition of the equivalent channel in~\eqref{eq:su_mimo_equivalent_io_component_wise}.
 A visualization of this decomposition is shown in Fig.~\ref{fig:su_mimo_channel_decomposition}.
 
 As a result, the individual data streams become statistically independent. 
 Detection therefore reduces to symbol-by-symbol processing rather than joint detection of the full decision-variable vector. 
-This can lead to a significant reduction in receiver complexity, especially for systems with a large number of antennas and data streams.
+This leads to a significant reduction in receiver complexity, especially for systems with a large number of antennas and data streams.
 
 \begin{figure}[htb]
     \centering
-
     \begin{subfigure}[c]{0.45\textwidth}
         \centering
         \includegraphics[width=\linewidth]
@@ -166,31 +171,86 @@ This can lead to a significant reduction in receiver complexity, especially for 
         {figures/background_material/03_su_mimo_precoding/out/channel_decomposition.pdf}
         \caption{}
     \end{subfigure}
-
     \caption[Decomposition of SU-MIMO Channel]
     {A block diagram of the original \ac{SU}-\ac{MIMO} channel (a) and its decomposition into parallel \ac{SISO} Gaussian eigen subchannels (b) by means of the optimal precoder and combiner.}
-
     \label{fig:su_mimo_channel_decomposition}
 \end{figure}
+\bigskip
 
 % power allocation interpretation.
-No general closed-form expression exists for the optimal water level, and hence for the resulting power allocation. Nevertheless, the optimal allocation is fully characterized by
+No general closed-form expression exists for the optimal water level $\mu_{\mathrm{w}}$, and hence for the resulting power allocation. Nevertheless, the optimal power allocation is fully characterized by
 \begin{equation}
 \label{eq:_su_mimo_optimal_power_allocation}
     \sum_{i=1}^{N_s} p_i = P_t
     \qquad \text{and} \qquad
-    p_i = \left(\mu_{\mathrm{w}} - \frac{N_0}{\sigma_i}\right)^+.
+    p_i = \left(\mu_{\mathrm{w}} - \frac{N_0}{\sigma^2_i}\right)^+.
 \end{equation}
-Since the total allocated power is a monotonically increasing function of the water level $\mu_{\mathrm{w}}$, the latter can be determined numerically by means of a bisection method.
-A more efficient approach exploits the fact that the number of active streams,
-those receiving strictly positive power, is a discrete quantity.
-First, the number of active streams is determined via a binary search in at most
-$\lceil \log_2 N_s \rceil$ iterations, after which the water level follows in closed form.
+Since the total allocated power is a monotonically increasing function of the water level, the latter can be determined numerically by means of a bisection method.
+A more efficient approach exploits the fact that the number of active streams (those receiving strictly positive power) is a discrete quantity.
+First, the number of active streams is determined via a binary search in at most $\lceil \log_2 N_s \rceil$ iterations, after which the water level follows in closed form.
 Finally, the power allocated to each stream is computed.
-The complete procedure is summarized in Algorithm~\ref{alg:waterfilling}.
+The complete procedure is summarized in Algorithm~\ref{alg:waterfilling}, in Appendix~\ref{appendix:lagrange_and_waterfilling}.
 Note that this approach relies on the fact that the set of candidate streams is finite and therefore does not extend in the same form to waterfilling algorithms for power allocation across the frequency spectrum of a frequency-selective channel.
 
+The resulting solution admits a natural waterfilling interpretation, which also motivates the name of the algorithm.
+For each eigen subchannel, the quantity $\gamma_i^{-1} = N_0 / \sigma^2_i$ can be interpreted as a floor level, while the water level $\mu_{\mathrm{w}}$ is shared across all subchannels.
+Power is poured into each eigen subchannel container, so to speak, until the common water level is reached. Consequently, no power is assigned to eigen subchannels whose floor level exceeds the water level.
+The structure of the optimal power allocation is illustrated in Fig.~\ref{fig:waterfilling_power_allocation} for a \ac{SU}-\ac{MIMO} system with four transmit and four receive antennas operating at an \ac{SNR} of $5$ dB: eigen subchannels with stronger channel
+conditions, i.e. larger gains $\sigma_i$, receive more power than weaker ones.
 
-% \section[Generalized Design of Linear Precoder and Combiner]{Generalized Design of Linear Precoder and Combiner using the WMMSE Criterion}
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.6\linewidth]{figures/background_material/03_su_mimo_precoding/waterfilling/4x4__SNR_5dB.png}
+    \caption[Waterfilling Power Allocation]
+    {Optimal power allocation for a \ac{SU}-\ac{MIMO} system with 4 transmit and 4 receive antennas and a total transmit power $P_t$ of $\SI{1}{\watt}$ per channel use. The system operates at an \ac{SNR} of $5$ dB.}
+    \label{fig:waterfilling_power_allocation}
+\end{figure}
 
-%\section{Maximum Information Rate Design}
+At extremely low \ac{SNR}, the waterfilling solution corresponds to the eigenbeamforming power allocation strategy, which concentrates all available power on the strongest eigen subchannel. As a result, only a single data stream is transmitted in this \ac{SNR} regime. This behavior is illustrated in Fig.~\ref{subfig:waterfilling_power_allocation_low_SNR}.
+Conversely, at an extremely high \ac{SNR}, the optimal power allocation strategy reduces to the uniform power allocation, which distributes power equally across all eigen subchannels, as illustrated in Fig.~\ref{subfig:waterfilling_power_allocation_high_SNR}.
+It is worth noting that uniform power allocation does not require knowledge of the current channel matrix, in contrast to the general waterfilling solution.
+
+\begin{figure}[htb]
+    \centering
+    \begin{subfigure}[c]{0.475\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]
+        {figures/background_material/03_su_mimo_precoding/waterfilling/4x4__SNR_-10dB.png}
+        \caption{$\text{SNR} = -10 \text{ dB}$}
+        \label{subfig:waterfilling_power_allocation_low_SNR}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.475\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]
+        {figures/background_material/03_su_mimo_precoding/waterfilling/4x4__SNR_25dB.png}
+        \caption{$\text{SNR} = 25 \text{ dB}$}
+        \label{subfig:waterfilling_power_allocation_high_SNR}
+    \end{subfigure}
+    \caption[Waterfilling Power Allocation at SNR Extremes]
+    {Waterfilling power allocation for a \ac{SU}-\ac{MIMO} system with 4 transmit and 4 receive antennas at different \ac{SNR} extremes. The maximum transmit power $P_t$ is $\SI{1}{\watt}$ per channel use.}
+
+    \label{fig:waterfilling_power_allocation_SNR_extremes}
+\end{figure}
+
+
+\section{Joint Design for Linear Precoder and Combiner}
+\label{section:joint_design_for_linear_precoder_and_combiner}
+
+\subsection{Generalized WMMSE Design}
+\label{section:generalized_wmmse_design}
+% ==========================
+%  Generalized WMMSE Design
+% ==========================
+
+\subsection{Maximum Information Rate Design}
+\label{section:maximum_information_rate_design}
+% =================================
+%  Maximum Information Rate Design
+% =================================
+
+\subsection{Quality of Service Design}
+\label{section:quality_of_service_design}
+% ===========================
+%  Quality of Service Design
+% ===========================
