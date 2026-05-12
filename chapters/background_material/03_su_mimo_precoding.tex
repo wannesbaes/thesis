@@ -14,7 +14,7 @@ Parts of this section follow a structure similar to that in Chapter 3 of~\cite{c
 %    SU-MIMO Capacity
 % ========================== 
 
-The \ac{SVD} (see Appendix~\ref{appendix:svd}) of the channel matrix yields
+The \ac{SVD}~\cite{svd_lecture_notes} of the channel matrix yields
 \begin{equation}
 \label{eq:svd_channel_matrix}
     \mathbf{H} = \mathbf{U} \boldsymbol{\Sigma} \mathbf{V}^H,
@@ -189,7 +189,7 @@ Since the total allocated power is a monotonically increasing function of the wa
 A more efficient approach exploits the fact that the number of active streams (those receiving strictly positive power) is a discrete quantity.
 First, the number of active streams is determined via a binary search in at most $\lceil \log_2 N_s \rceil$ iterations, after which the water level follows in closed form.
 Finally, the power allocated to each stream is computed.
-The complete procedure is summarized in Algorithm~\ref{alg:waterfilling}, in Appendix~\ref{appendix:lagrange_and_waterfilling}.
+The complete procedure is summarized in Algorithm~\ref{alg:waterfilling}, in Appendix~\ref{appendix:waterfilling}.
 Note that this approach relies on the fact that the set of candidate streams is finite and therefore does not extend in the same form to waterfilling algorithms for power allocation across the frequency spectrum of a frequency-selective channel.
 
 The resulting solution admits a natural waterfilling interpretation, which also motivates the name of the algorithm.
