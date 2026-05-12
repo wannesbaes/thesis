@@ -1,0 +1,166 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\usetikzlibrary{calc, decorations.pathreplacing, arrows.meta, positioning, fit}
+
+\begin{document}
+
+% ===================
+%  Layout Parameters
+% ===================
+
+\newcommand{\HeightUnit}{1.5}
+\newcommand{\WidthUnit}{1.5}
+\newcommand{\PlotPadding}{0.25}
+
+\newcommand{\hOne}{0.5}
+\newcommand{\wOne}{1}
+
+\newcommand{\hTwo}{4}
+\newcommand{\wTwo}{0.75}
+
+\newcommand{\hThree}{1}
+\newcommand{\wThree}{2}
+
+\newcommand{\hFour}{2.5}
+\newcommand{\wFour}{1.5}
+
+\newcommand{\WaterLevel}{3}
+
+\pgfmathsetmacro{\PlotTop}{\WaterLevel*\HeightUnit + \PlotPadding}
+\pgfmathsetmacro{\ContainerSep}{\WidthUnit/10}
+\pgfmathsetmacro{\ChannelLabelOffset}{\PlotPadding}
+
+\definecolor{WaterColor}{RGB}{31,119,180}
+\definecolor{WaterLevelColor}{RGB}{214,39,40}
+
+% ===================
+
+\begin{tikzpicture}
+
+% ===================
+%  Style Definitions
+% ===================
+
+\tikzset{
+    container wall/.style = {
+        draw,
+        line width=0.9pt
+    },
+    floor block/.style = {
+        draw,
+        fill=gray!18,
+        line width=0.9pt
+    },
+    water/.style = {
+        draw=none,
+        fill=WaterColor!65
+    },
+    water line/.style = {
+        draw=WaterLevelColor,
+        dashed,
+        line width=1.5pt
+    },
+    dimension/.style = {
+        decorate,
+        decoration={brace, mirror, amplitude=5pt},
+        thin
+    },
+    note/.style = {
+        font=\small,
+        align=center
+    },
+    small note/.style = {
+        font=\footnotesize,
+        align=center
+    },
+    measure/.style = {
+    <->,
+    >=Stealth,
+    thin
+    },
+}
+
+% ===================
+%   Helper Macro
+% ===================
+
+\newcommand{\DrawChannelContainer}[4]{
+    % #1: channel index
+    % #2: w_i = alpha_i (container width)
+    % #3: h_i = 1/(alpha_i gamma_i) (floor height)
+    % #4: x-position of the container center
+
+    \pgfmathsetmacro{\ContainerWidth}{#2*\WidthUnit}
+    \pgfmathsetmacro{\FloorHeight}{#3*\HeightUnit}
+    \pgfmathsetmacro{\WaterDepth}{max(\WaterLevel-#3,0)*\HeightUnit}
+    \pgfmathsetmacro{\WaterTop}{\FloorHeight + \WaterDepth}
+    \pgfmathsetmacro{\WaterMid}{\FloorHeight + 0.5*\WaterDepth}
+
+    \pgfmathsetmacro{\xLeft}{#4 - 0.5*\ContainerWidth}
+    \pgfmathsetmacro{\xRight}{#4 + 0.5*\ContainerWidth}
+    \pgfmathsetmacro{\xMid}{0.5*(\xLeft+\xRight)}
+
+    % Floor pedestal
+    \path[floor block] (\xLeft,0) rectangle (\xRight,\FloorHeight);
+
+    % Water inside the container
+    \ifdim \WaterDepth pt > 0pt
+        \path[water] (\xLeft,\FloorHeight) rectangle (\xRight,\WaterTop);
+    \fi
+
+    % Container outline
+    \draw[container wall] (\xLeft,\FloorHeight) -- (\xLeft,\PlotTop);
+    \draw[container wall] (\xRight,\FloorHeight) -- (\xRight,\PlotTop);
+    \draw[container wall] (\xLeft,\FloorHeight) -- (\xRight,\FloorHeight);
+
+    % Channel index
+    \node[small note] at (\xMid,-\ChannelLabelOffset) {$n=#1$};
+
+    % Power annotation
+    \ifdim \WaterDepth pt > 0pt
+        \node[small note] at (\xMid,\WaterMid) {$p_{#1}$};
+    \fi
+}
+
+% ===================
+%   Figure Content
+% ===================
+
+% Water level
+\pgfmathsetmacro{\WaterSurfaceY}{\WaterLevel*\HeightUnit}
+
+% Centers of the containers
+\pgfmathsetmacro{\xOne}{0.5*\wOne*\WidthUnit}
+\pgfmathsetmacro{\xTwo}{\wOne*\WidthUnit + \ContainerSep + 0.5*\wTwo*\WidthUnit}
+\pgfmathsetmacro{\xThree}{\wOne*\WidthUnit + \wTwo*\WidthUnit + 2*\ContainerSep + 0.5*\wThree*\WidthUnit}
+\pgfmathsetmacro{\xFour}{\wOne*\WidthUnit + \wTwo*\WidthUnit + \wThree*\WidthUnit + 3*\ContainerSep + 0.5*\wFour*\WidthUnit}
+\pgfmathsetmacro{\xMax}{\wOne*\WidthUnit + \wTwo*\WidthUnit + \wThree*\WidthUnit + \wFour*\WidthUnit + 3*\ContainerSep}
+
+
+% Draw channel containers
+\DrawChannelContainer{1}{\wOne}{\hOne}{\xOne}
+\DrawChannelContainer{2}{\wTwo}{\hTwo}{\xTwo}
+\DrawChannelContainer{3}{\wThree}{\hThree}{\xThree}
+\DrawChannelContainer{4}{\wFour}{\hFour}{\xFour}
+
+% Indicator for the width of container 3.
+\pgfmathsetmacro{\WidthArrowY}{\ChannelLabelOffset}
+\pgfmathsetmacro{\xThreeLeft}{\xThree - 0.5*\wThree*\WidthUnit}
+\pgfmathsetmacro{\xThreeRight}{\xThree + 0.5*\wThree*\WidthUnit}
+\draw[measure] (\xThreeLeft,\WidthArrowY) -- node[above, small note] {$\alpha_3$} (\xThreeRight,\WidthArrowY);
+
+% Indicator for the height of container 4.
+\pgfmathsetmacro{\HeightArrowX}{\xFour - 0.5*\wFour*\WidthUnit + \ChannelLabelOffset}
+\pgfmathsetmacro{\yFourTop}{\hFour*\HeightUnit}
+\draw[measure] (\HeightArrowX,0) -- node[right, small note] {$\frac{1}{\alpha_4 \gamma_4}$} (\HeightArrowX,\yFourTop);
+
+% Draw water level
+\draw[water line] (-\PlotPadding,\WaterSurfaceY) -- (\xMax+\PlotPadding,\WaterSurfaceY) node[right, small note] {$\mu_{\mathrm{w}}$};
+
+% Baseline
+\draw[thin] (-\PlotPadding,0) -- (\xMax+\PlotPadding,0);
+
+\end{tikzpicture}
+\end{document}
