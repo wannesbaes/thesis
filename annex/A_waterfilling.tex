@@ -7,7 +7,7 @@ The solution to the optimal power allocation problem gives rise to the waterfill
 
 
 \section{Optimal Power Allocation using Lagrangian Multipliers}
-\label{app_section:optimal_power_allocation_using_lagrangian_multipliers}
+\label{appendix_section:optimal_power_allocation_using_lagrangian_multipliers}
 % ===========================================================
 %  Optimal Power Allocation using Lagrangian Multipliers
 % =========================================================== 
@@ -89,7 +89,7 @@ Since $\mu$ cannot be obtained in closed form, it is determined iteratively such
 
 
 \section{Waterfilling Algorithm}
-\label{app_section:waterfilling_algorithm}
+\label{appendix_section:waterfilling_algorithm}
 % =============================
 %    Waterfilling Algorithm
 % =============================
@@ -128,7 +128,7 @@ The complete procedure for determining the water level and the corresponding pow
     \State $w_i \leftarrow \alpha_{\mathcal{P}(n)}, \quad h_i \leftarrow 1 / (\alpha_{\mathcal{P}(n)} \gamma_{\mathcal{P}(n)})$
     
     \medskip
-    \Statex \hspace{-\algorithmicindent}\textbf{Iteration:} Determine the optimal number of active channels.
+    \Statex \hspace{-\algorithmicindent}\textbf{Iteration:} Determine the optimal number of active channels ($\mathrm{O}(\log N)$).
     \State $N^{\mathrm{LB}}, \, N^{\mathrm{UB}} \leftarrow 0, \, N$
     \While{$N^{\mathrm{UB}} - N^{\mathrm{LB}} > 1$}
         \Statex \hspace{\algorithmicindent/2} Update the number of active channels: 
@@ -158,7 +158,7 @@ The complete procedure for determining the water level and the corresponding pow
 
 
 \section{Examples}
-\label{app_section:waterfilling_examples}
+\label{appendix_section:waterfilling_examples}
 % =============================
 %          Examples
 % =============================

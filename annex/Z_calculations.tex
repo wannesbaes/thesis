@@ -1,2 +1,102 @@
 \chapter{Extended Calculations}
 \label{appendix:calculations}
+
+In this appendix, we provide detailed calculations that are relevant to the main text but were omitted for brevity.
+The appendix is organized into separate sections that correspond to specific intermediate results used throughout the dissertation.
+
+\section*{Total Transmit Power Constraint}
+\label{calculation:transmit_power_constraint}
+
+The following calculations derive the total transmit power as a function of the precoding matrix for both the \ac{SU}-\ac{MIMO} and \ac{MU}-\ac{MIMO} system models.
+In both cases, the power allocation is assumed to be incorporated into the precoding matrix, and the data symbols are assumed to be zero-mean, mutually uncorrelated, and normalized, i.e.\ $\mathbb{E}\!\left[\mathbf{a}\mathbf{a}^H\right] = \mathbf{I}_{N_S}$.
+
+Consider the \ac{SU}-\ac{MIMO} system model as described in Section~\ref{subsection:su_mimo_system_model}.
+The total transmit power is constraint is given by:
+\begin{equation*}
+    \mathbb{E}\!\left[\|\mathbf{x}\|^2\right] = \mathrm{tr}\!\left(\mathbf{F}^H \mathbf{F}\right) \leq P_t.
+\end{equation*}
+
+\textbf{Calculation:}
+\begin{fleqn}[2.5em]
+\begin{subequations}
+\begin{align*}
+    P_t
+    &\geq \mathbb{E}\!\left[ \left\|\mathbf{x}\right\|^2 \right]
+    = \mathbb{E}\!\left[ \mathbf{x}^H \mathbf{x} \right]
+    = \mathbb{E}\!\left[ \left(\mathbf{F} \mathbf{a}\right)^H \left(\mathbf{F} \mathbf{a}\right) \right]
+    = \mathbb{E}\!\left[ \mathbf{a}^H \mathbf{F}^H \mathbf{F} \mathbf{a} \right] \\
+    &= \mathbb{E}\!\left[ \mathrm{tr}\!\left( \mathbf{a}^H \mathbf{F}^H \mathbf{F} \mathbf{a} \right) \right]
+    = \mathbb{E}\!\left[ \mathrm{tr}\!\left( \mathbf{F}^H \mathbf{F} \mathbf{a} \mathbf{a}^H \right) \right] \\
+    &= \mathrm{tr}\!\left( \mathbb{E}\!\left[ \mathbf{F}^H \mathbf{F} \mathbf{a} \mathbf{a}^H \right] \right)
+    = \mathrm{tr}\!\left( \mathbf{F}^H \mathbf{F} \, \mathbb{E}\!\left[ \mathbf{a} \mathbf{a}^H \right] \right) \\
+    &= \mathrm{tr}\!\left( \mathbf{F}^H \mathbf{F} \, \mathbf{I}_{N_S} \right)
+    = \mathrm{tr}\!\left( \mathbf{F}^H \mathbf{F} \right)
+\end{align*}
+\end{subequations}
+\end{fleqn}
+
+Consider the \ac{MU}-\ac{MIMO} system model as described in Section~\ref{subsection:mu_mimo_system_model}.
+The total transmit power is constraint is given by:
+\begin{equation*}
+    \mathbb{E}\!\left[\|\mathbf{x}\|^2\right] = \sum_{k=1}^{K} \mathrm{tr}\!\left(\mathbf{F}_k^H \mathbf{F}_k\right) \leq P_t.
+\end{equation*}
+
+\textbf{Calculation:}
+\begin{fleqn}[2.5em]
+\begin{subequations}
+\begin{align*}
+    P_t
+    &\geq \mathbb{E}\!\left[ \left\|\mathbf{x}\right\|^2 \right]
+    = \mathbb{E}\!\left[ \mathbf{x}^H \mathbf{x} \right]
+    = \mathbb{E}\!\left[ \left(\sum_{k=1}^{K} \mathbf{F}_k \mathbf{a}_k\right)^H \left(\sum_{k'=1}^{K} \mathbf{F}_{k'} \mathbf{a}_{k'}\right) \right] \\
+    &= \mathbb{E}\!\left[ \sum_{k=1}^{K} \sum_{k'=1}^{K} \left(\mathbf{F}_k \mathbf{a}_k \right)^H \mathbf{F}_{k'} \mathbf{a}_{k'} \right]
+    = \mathbb{E}\!\left[ \sum_{k=1}^{K} \sum_{k'=1}^{K} \mathbf{a}_k^H \mathbf{F}_k^H \mathbf{F}_{k'} \mathbf{a}_{k'} \right] \\
+    &= \mathbb{E}\!\left[ \sum_{k=1}^{K} \sum_{k'=1}^{K} \text{Tr}\!\left( \mathbf{a}_k^H \mathbf{F}_k^H \mathbf{F}_{k'} \mathbf{a}_{k'} \right) \right]
+    = \mathbb{E}\!\left[ \sum_{k=1}^{K} \sum_{k'=1}^{K} \text{Tr}\!\left( \mathbf{F}_k^H \mathbf{F}_{k'} \, \mathbf{a}_{k'} \mathbf{a}_k^H \right) \right] \\
+    &= \sum_{k=1}^{K} \sum_{k'=1}^{K} \text{Tr}\!\left( \mathbf{F}_k^H \mathbf{F}_{k'} \, \mathbb{E}\!\left[ \mathbf{a}_{k'} \mathbf{a}_k^H \right] \right) \\
+    &= \sum_{k=1}^{K} \sum_{k'=1}^{K} \text{Tr}\!\left( \mathbf{F}_k^H \mathbf{F}_{k'} \, \mathbf{I}_{N_S} \, \delta_{kk'} \right) \\
+    &= \sum_{k=1}^{K} \text{Tr}\!\left( \mathbf{F}_k^H \mathbf{F}_{k} \right)
+\end{align*}
+\end{subequations}
+\end{fleqn}
+
+\section*{Equivalent SU-MIMO Channel Representation}
+\label{calculation:su_mimo_equivalent_channel}
+
+Applying the singular value decomposition of the channel matrix together with a change of variables yields an equivalent representation of the \ac{SU}-\ac{MIMO} channel. The following calculation shows how the original channel input-output relation is transformed into a set of parallel scalar Gaussian subchannels.
+
+\textbf{Calculation:}
+\begin{fleqn}[2.5em]
+\begin{subequations}
+\begin{align*}
+    & \mathbf{y} = \mathbf{H} \mathbf{x} + \mathbf{n} \\
+    & \Leftrightarrow \quad \mathbf{y} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^H \, \mathbf{x} + \mathbf{n} \\
+    & \Leftrightarrow \quad \mathbf{U} \tilde{\mathbf{y}} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^H \, \mathbf{V} \tilde{\mathbf{x}} + \mathbf{n} \\
+    & \Leftrightarrow \quad \tilde{\mathbf{y}} = \mathbf{U}^H \mathbf{U} \mathbf{\Sigma} \mathbf{V}^H \mathbf{V} \, \tilde{\mathbf{x}} + \mathbf{U}^H \mathbf{n} \\
+    & \Leftrightarrow \quad \tilde{\mathbf{y}} = \mathbf{\Sigma} \tilde{\mathbf{x}} + \tilde{\mathbf{n}}.
+\end{align*}
+\end{subequations}
+\end{fleqn}
+
+\section*{Mutual Information under Optimal Precoder and Combiner}
+\label{calculation:su_mimo_optimal_precoder_mi}
+
+The following calculation verifies that the \ac{MI} between the transmitted data symbols $\mathbf{a}$ and the decision variables $\mathbf{z}$ equals the \ac{MI} between the channel input $\mathbf{x}$ and the channel output $\mathbf{y}$ when the optimal precoder and combiner from~\eqref{eq:su_mimo_optimal_precoder_and_combiner} are employed.
+The result is obtained by substituting $\mathbf{F} = \mathbf{V}_{N_s}\sqrt{\mathbf{P}}$ and $\mathbf{G} = \mathbf{U}_{N_s}^H$ into~\eqref{eq:mi_az_b} and replacing the channel matrix by its \ac{SVD}~\eqref{eq:svd_channel_matrix}.
+
+\textbf{Calculation:}
+\begin{fleqn}[1.5em]
+\begin{subequations}
+\begin{align*}
+    &I(\mathbf{a}; \mathbf{z}) \\
+    &= \log_2\!\left(\det\!\left(\mathbf{I}_{N_s} + \tfrac{1}{N_0} (\mathbf{U}_{N_s}^H \mathbf{U}_{N_s})^{-1} \, (\mathbf{U}_{N_s}^H (\mathbf{U} \mathbf{\Sigma} \mathbf{V}^H) \mathbf{V}_{N_s} \sqrt{\mathbf{P}}) \, (\mathbf{U}_{N_s}^H (\mathbf{U} \mathbf{\Sigma} \mathbf{V}^H) \mathbf{V}_{N_s} \sqrt{\mathbf{P}})^H\right)\right) \\
+    &= \log_2\!\left(\det\!\left(\mathbf{I}_{N_s} + \tfrac{1}{N_0} \mathbf{I}_{N_s} \, (\mathbf{U}_{N_s}^H \mathbf{U} \mathbf{\Sigma} \mathbf{V}^H \mathbf{V}_{N_s} \sqrt{\mathbf{P}}) \, (\mathbf{U}_{N_s}^H \mathbf{U} \mathbf{\Sigma} \mathbf{V}^H \mathbf{V}_{N_s} \sqrt{\mathbf{P}})^H\right)\right) \\
+    &= \log_2\!\left(\det\!\left(\mathbf{I}_{N_s} + \tfrac{1}{N_0} \, \left(\begin{bmatrix} \mathbf{I}_{N_s} & \mathbf{0} \end{bmatrix} \, \begin{bmatrix} \mathbf{\Sigma}_{R_H} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} \end{bmatrix} \, \begin{bmatrix} \mathbf{I}_{N_s} \\ \mathbf{0} \end{bmatrix} \sqrt{\mathbf{P}}\right) \, \left(\begin{bmatrix} \mathbf{I}_{N_s} & \mathbf{0} \end{bmatrix} \, \begin{bmatrix} \mathbf{\Sigma}_{R_H} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} \end{bmatrix} \, \begin{bmatrix} \mathbf{I}_{N_s} \\ \mathbf{0} \end{bmatrix} \sqrt{\mathbf{P}}\right)^H\right)\right)  \\
+    &= \log_2\!\left(\det\!\left(\mathbf{I}_{N_s} + \tfrac{1}{N_0} \, (\mathbf{\Sigma}_{N_s} \sqrt{\mathbf{P}}) \, (\mathbf{\Sigma}_{N_s} \sqrt{\mathbf{P}})^H\right)\right) \\
+    &= \log_2\!\left(\det\!\left(\mathbf{I}_{N_s} + \tfrac{1}{N_0} \, \mathbf{\Sigma}_{N_s}^2 \, \mathbf{P}\right)\right) \\
+    &= \log_2\!\left( \prod_{i=1}^{N_s} \left(1 + \frac{\sigma^2_i}{N_0}\, p_i \right) \right)  \\
+    &= \sum_{i=1}^{N_s} \log_2\!\left(1 + \frac{\sigma^2_i}{N_0}\, p_i \right) \\
+    %&= I(\mathbf{x}; \mathbf{x}) \qquad \text{for} \quad p_i = \mathbb{E}\left[\left\|x\right\|^2\right]
+\end{align*}
+\end{subequations}
+\end{fleqn}

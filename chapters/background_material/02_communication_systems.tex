@@ -76,7 +76,7 @@ The transmitted signal can therefore be expressed as
     \mathbf{x} = \mathbf{F} \, \mathbf{a}.
 \end{equation}
 The data symbols are assumed to be zero-mean, mutually uncorrelated, and normalized, such that $ \mathbb{E}\!\left[\mathbf{a}\mathbf{a}^H\right] = \mathbf{I}_{N_S} $.
-Throughout this work, the power allocation is assumed to be incorporated into the precoding matrix, unless explicitly stated otherwise. Under this convention, the total transmit power is constrained by
+Throughout this work, the power allocation is assumed to be incorporated into the precoding matrix, unless explicitly stated otherwise. Under this convention, the total transmit power is constrained by (see Appendix~\ref{calculation:transmit_power_constraint})
 \begin{equation}
 \label{eq:su_mimo_power_constraint}
     \mathbb{E}\!\left[\|\mathbf{x}\|^2\right] = \mathrm{tr}\!\left(\mathbf{F}^H \mathbf{F}\right) \leq P_t.
@@ -152,7 +152,7 @@ The transmitted signal vector $\mathbf{x} \in \mathbb{C}^{N_T}$ is now a functio
 \label{eq:mu_mimo_precoding}
     \mathbf{x} = \sum_{k=1}^{K} \mathbf{F}_k \, \mathbf{a}_k.
 \end{equation}
-Since the data symbols intended for different \acp{UT} are assumed to be uncorrelated, the total transmit power constraint can now be formulated as
+Since the data symbols intended for different \acp{UT} are assumed to be uncorrelated, the total transmit power constraint can now be formulated as (see Appendix~\ref{calculation:transmit_power_constraint})
 \begin{equation}
 \label{eq:mu_mimo_power_constraint}
     \mathbb{E}\!\left[\|\mathbf{x}\|^2\right] = \sum_{k=1}^{K} \mathrm{tr}\!\left(\mathbf{F}_k^H \mathbf{F}_k\right) \leq P_t.

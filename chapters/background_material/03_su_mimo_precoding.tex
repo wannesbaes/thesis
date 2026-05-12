@@ -42,7 +42,7 @@ The original channel from~\eqref{eq:su_mimo_io} can therefore be represented equ
 \label{eq:su_mimo_equivalent_io}
     \tilde{\mathbf{y}} = \mathbf{\Sigma}\tilde{\mathbf{x}} + \tilde{\mathbf{n}},
 \end{equation}
-which is obtained by applying the \ac{SVD} of the channel matrix and performing a change of variables (see Appendix~\ref{appendix:calculations}). 
+which is obtained by applying the \ac{SVD} of the channel matrix and performing a change of variables (see Appendix~\ref{calculation:su_mimo_equivalent_channel}). 
 The channel in~\eqref{eq:su_mimo_equivalent_io} is equivalent to the original channel in the sense that the transformation preserves the mutual information between input and output. Consequently, both channels have the same capacity.
 
 The channel matrix $\mathbf{H}$ has exactly as many non-zero singular values $\{\sigma_i\}$ as its rank, denoted as $R_H$.
@@ -109,7 +109,7 @@ More specifically, we set
 \end{equation}
 
 It follows from~\eqref{eq:su_mimo_optimal_precoder_and_combiner} that $I(\mathbf{a}; \mathbf{z}) = I(\mathbf{x}; \mathbf{y})$ for an appropriate choice of the power allocation matrix~$\mathbf{P}$.
-This result can be verified in a brute-force way by substituting the particular precoder and combiner matrices from~\eqref{eq:su_mimo_optimal_precoder_and_combiner} into~\eqref{eq:mi_az} and replacing the channel matrix by its \ac{SVD} (see Appendix~\ref{appendix:calculations}).
+This result can be verified in a brute-force way by substituting the particular precoder and combiner matrices from~\eqref{eq:su_mimo_optimal_precoder_and_combiner} into~\eqref{eq:mi_az} and replacing the channel matrix by its \ac{SVD} (see Appendix~\ref{calculation:su_mimo_optimal_precoder_mi}).
 \begin{comment}
 \begin{subequations}
 \begin{align}
@@ -180,25 +180,20 @@ This leads to a significant reduction in receiver complexity, especially for sys
 % power allocation interpretation.
 No general closed-form expression exists for the optimal water level $\mu_{\mathrm{w}}$, and hence for the resulting power allocation. Nevertheless, the optimal power allocation is fully characterized by
 \begin{equation}
-\label{eq:_su_mimo_optimal_power_allocation}
+\label{eq:su_mimo_optimal_power_allocation}
     \sum_{i=1}^{N_s} p_i = P_t
     \qquad \text{and} \qquad
     p_i = \left(\mu_{\mathrm{w}} - \frac{N_0}{\sigma^2_i}\right)^+.
 \end{equation}
 Since the total allocated power is a monotonically increasing function of the water level, the latter can be determined numerically by means of a bisection method.
-A more efficient approach exploits the fact that the number of active streams (those receiving strictly positive power) is a discrete quantity.
-First, the number of active streams is determined via a binary search in at most $\lceil \log_2 N_s \rceil$ iterations, after which the water level follows in closed form.
-Finally, the power allocated to each stream is computed.
-The complete procedure is summarized in Algorithm~\ref{alg:waterfilling}, in Appendix~\ref{appendix:waterfilling}.
-Note that this approach relies on the fact that the set of candidate streams is finite and therefore does not extend in the same form to waterfilling algorithms for power allocation across the frequency spectrum of a frequency-selective channel.
+A more efficient approach exploits the geometric interpretation of the waterfilling solution.
+In the present \ac{SU}-\ac{MIMO} setting, each eigen subchannel can be represented as a container with unit width and floor level $N_0 / \sigma_i^2$, while the total transmit power is interpreted as water that is poured into these containers until a common water level is reached.
+The complete procedure is summarized in Appendix~\ref{appendix_section:waterfilling_algorithm}.
+Note that this specific approach relies on the fact that the set of candidate streams is finite and therefore does not extend in the same form to waterfilling algorithms for, e.g., power allocation across the frequency spectrum of a frequency-selective channel.
 
-The resulting solution admits a natural waterfilling interpretation, which also motivates the name of the algorithm.
-For each eigen subchannel, the quantity $\gamma_i^{-1} = N_0 / \sigma^2_i$ can be interpreted as a floor level, while the water level $\mu_{\mathrm{w}}$ is shared across all subchannels.
-Power is poured into each eigen subchannel container, so to speak, until the common water level is reached. Consequently, no power is assigned to eigen subchannels whose floor level exceeds the water level.
 The structure of the optimal power allocation is illustrated in Fig.~\ref{fig:waterfilling_power_allocation} for a \ac{SU}-\ac{MIMO} system with four transmit and four receive antennas operating at an \ac{SNR} of $5$ dB: eigen subchannels with stronger channel
 conditions, i.e. larger gains $\sigma_i$, receive more power than weaker ones.
-
-\begin{figure}[htb]
+\begin{figure}[!hbt]
     \centering
     \includegraphics[width=0.6\linewidth]{figures/background_material/03_su_mimo_precoding/waterfilling/4x4__SNR_5dB.png}
     \caption[Waterfilling power allocation]
