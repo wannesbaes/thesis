@@ -231,7 +231,7 @@ It is worth noting that uniform power allocation does not require knowledge of t
 
 In the previous section, a linear precoder and combiner that jointly decompose the \ac{SU}-\ac{MIMO} channel into independent parallel eigen subchannels were shown to achieve the channel capacity.
 In this section, we generalize this result by adopting the minimization of a weighted sum of symbol estimation errors as the design criterion.
-It will be shown that the optimal precoder and combiner under this criterion likewise decouple the channel into parallel eigen subchannels, regardless of the specific choice of error weights.
+It will be shown that the optimum precoder and combiner under this criterion likewise decouple the channel into parallel eigen subchannels, regardless of the specific choice of error weights.
 By an appropriate selection of these weights, the framework specializes to the maximum information rate design, the quality-of-service design, and the minimum sum-of-errors design.
 
 \subsection{Generalized WMMSE Design}
@@ -276,7 +276,7 @@ The \ac{MSE} matrix, also referred to as the error covariance matrix, is defined
 \end{comment}
 where the last equality follows from the independence of the data symbols $\mathbf{a}$ and the noise vector $\mathbf{n}$, and the assumption that the data symbols are spatially uncorrelated and normalized.
 
-The \ac{WMSE} matrix is defined as
+The \ac{WMSE} is defined as
 \begin{equation}
 \label{eq:wmse_matrix}
     \text{WMSE} 
@@ -305,7 +305,7 @@ This leads to the following necessary optimality conditions~\cite{su_mimo_joint_
 \end{subequations}
 where $\mu > 0$ is the Lagrange multiplier associated with the total transmit power constraint.
 
-Solving these coupled matrix equations yields the optimal linear precoder and combiner.
+Solving these coupled matrix equations yields the optimum linear precoder and combiner.
 As shown in~\cite{su_mimo_joint_precoder_decoder_design}, they admit the following closed-form expressions:
 \begin{subequations}
 \label{eq:solution_generalized_design}
@@ -352,7 +352,7 @@ From~\eqref{eq:solution_generalized_design_precoder} and~\eqref{eq:solution_gene
 \label{eq:diagonalization_transfer_matrix_generalized_design}
     \mathbf{T} = \mathbf{G}\mathbf{H}\mathbf{F} = \mathbf{\Phi}_{\mathrm{g}} \mathbf{\Lambda} \mathbf{\Phi}_{\mathrm{f}}.
 \end{equation}
-In other words, the optimal precoder and combiner diagonalize the \ac{SU}-\ac{MIMO} transfer matrix $\mathbf{T}$, and hence decouple the channel into parallel eigen subchannels, regardless of the specific choice of error weights. This result is similar to the capacity-achieving precoder and combiner from Section~\ref{subsection:optimal_precoder_design}, who also decompose the channel matrix $\mathbf{H}$.
+In other words, the optimum precoder and combiner diagonalize the \ac{SU}-\ac{MIMO} transfer matrix $\mathbf{T}$, and hence decouple the channel into parallel eigen subchannels, regardless of the specific choice of error weights. This result is similar to the capacity-achieving precoder and combiner from Section~\ref{subsection:optimal_precoder_design}, who also decompose the channel matrix $\mathbf{H}$.
 
 We can now design a linear precoder and combiner according to different design criteria, such as the maximize the information rate, minimize the sum of estimation errors, or meet certain quality-of-service requirements by choosing an appropriate error weight matrix $\mathbf{W}_{\mathrm{e}}$. In the following, we will explore some of these design criteria in more detail.
 
@@ -362,23 +362,75 @@ We can now design a linear precoder and combiner according to different design c
 %  Maximum Information Rate Design
 % =================================
 
-It was already shown in Section~\ref{subsection:optimal_precoder_design} that the capacity of the \ac{SU}-\ac{MIMO} channel can be achieved by a linear precoder and combiner that diagonalize the transfer matrix and a waterfilling power allocation strategy.
+It was already shown in Section~\ref{subsection:optimal_precoder_design} that the capacity of the \ac{SU}-\ac{MIMO} channel can be achieved by a linear precoder and combiner that diagonalize the transfer matrix and employ a waterfilling power allocation strategy.
 Rewriting~\eqref{eq:su_mimo_optimal_power_allocation} in matrix format and switching to the parameters of the generalized design, we obtain~\cite{su_mimo_joint_precoder_decoder_design}
 \begin{equation}
 \label{eq:waterfilling_power_allocation_generalized_design}
     \mathbf{\Phi}_{\mathrm{f}} = (\mu^{-1/2} \mathbf{I} - \mathbf{\Lambda}^{-1})^{1/2}_{+}.
 \end{equation}
 
-The above equation is obtained by choosing the error weight matrix as $\mathbf{W}_{\mathrm{e}} = \mathbf{\Lambda}$ in~\eqref{eq:solution_generalized_design_precoder_phi}. It is shown in~\cite{su_mimo_joint_precoder_decoder_design} that the optimal precoder and combiner that maximize the information rate are given by~\eqref{eq:solution_generalized_design_precoder} and~\eqref{eq:solution_generalized_design_combiner} for this particular choice of error weights.
+The above equation is obtained by choosing the error weight matrix as $\mathbf{W}_{\mathrm{e}} = \mathbf{\Lambda}$ in~\eqref{eq:solution_generalized_design_precoder_phi}. It is shown in~\cite{su_mimo_joint_precoder_decoder_design} that the optimum precoder and combiner that maximize the information rate are given by~\eqref{eq:solution_generalized_design_precoder} and~\eqref{eq:solution_generalized_design_combiner} for this particular choice of error weights.
 In other words, the maximum information rate design is just a special case of the generalized WMMSE design.
 The choice of the error weights $\mathbf{W}_{\mathrm{e}} = \mathbf{\Lambda}$ tells us that stronger eigen subchannels support higher rates compared to the weaker ones, and hence need to be more heavily weighted in the cost function. This corresponds with the waterfilling solution for optimal power allocation, where more power is allocated to stronger subchannels.
 
 The maximum information rate design finds applications in adaptive modulation systems, where more power and higher order modulation are used on eigen subchannels with higher gains to improve the total data rate. The performance of these systems is evaluated in Section~\ref{section:unknown}, based on simulation results for different system settings.
-
 
 \subsection{Quality of Service Design}
 \label{section:quality_of_service_design}
 % ===========================
 %  Quality of Service Design
 % ===========================
+Imagine an application where different types of information with different \ac{SNR} requirements for successful transmission need to be simultaniously sent in different data streams. A concrete example is a multimedia application that transmits video and audio data in different data streams.
+For these \ac{QoS} applications, it is necessary to design our system such that the different eigen subchannels have different \acp{SNR}.
+
+First, we note that the expression for \ac{MSE} matrix can be simplified by using the expressions \eqref{eq:solution_generalized_design_precoder}~and~\eqref{eq:solution_generalized_design_combiner} for the optimum precoder and combiner to
+\begin{equation}
+\label{eq:mse_matrix_simplified}
+    \text{MSE} 
+    = \mathbb{E}\!\left[\mathbf{e}\, \mathbf{e}^H\right]
+    = \mathbf{W}^{-1/2}_{\mathrm{e}} \mathbf{\Lambda}^{- 1/2} \mu^{1/2}.
+\end{equation}
+Let us now define the \ac{SNR} matrix as
+\begin{subequations}
+\label{eq:snr_matrix}
+\begin{align}
+    \text{SNR} 
+    &= (\mathbf{G}\mathbf{H}\mathbf{F})^H \, (\mathbf{G} \mathbf{C}_{\mathrm{n}} \mathbf{G})^{-1} \, (\mathbf{G}\mathbf{H}\mathbf{F}) \\
+    &= \mathbf{\Phi}^2_{\mathrm{f}} \, \mathbf{\Lambda} = (\mu^{-1/2} \mathbf{\Lambda}^{1/2} \mathbf{W}^{1/2}_{\mathrm{e}} - \mathbf{I})_{+}
+\end{align}
+\end{subequations}
+where we again used the expressions for the optimum precoder and combiner to simplify the first equality.
+It is easy to see that the SNR and the MSE are inversely correlated as $\text{SNR} = (\text{MSE}^{-1} - \mathbf{I})_{+}$. Hence equal \acp{SNR} on the eigen subchannels implies equal \acp{MSE} regardless of the choice of error weights.
+
+We wonder how to choose the error weight matrix $\mathbf{W}_{\mathrm{e}}$ to achieve any set of relative output \acp{SNR} across the eigen subchannels.
+The problem boils down to the following equation with respect to the weight matrix
+\begin{equation}
+\label{eq:QoS_weight_matrix_equation}
+    d \, \mathbf{D} = (\mu^{-1/2} \mathbf{\Lambda}^{1/2} \mathbf{W}^{1/2}_{\mathrm{e}} - \mathbf{I})_{+}
+\end{equation}
+where $\mathbf{D}$ is the diagonal matrix with the desired relative \acp{SNR} across the eigen subchannels and $d > 0$ is a scalar.
+The solution is given by~\cite{su_mimo_joint_precoder_decoder_design}
+\begin{equation}
+\label{eq:QoS_weight_matrix_solution}
+    \mathbf{W}^{1/2}_{\mathrm{e}} = \mu^{1/2} (d \, \mathbf{D} + \mathbf{I}) \mathbf{\Lambda}^{-1/2}
+    \quad \text{with} \quad \mu^{-1/2} = \frac{\mathrm{tr}(\mathbf{\Lambda}^{-1/2} \mathbf{W}^{1/2}_{\mathrm{e}})}{P_t + \mathrm{tr}(\mathbf{\Lambda}^{-1})}
+    \quad \text{and} \quad d = \frac{P_t}{\mathrm{tr}(\mathbf{D} \mathbf{\Lambda}^{-1})},
+\end{equation}
+where we assumed $\mathbf{\Phi}_{\mathrm{f}} > 0$ for simplicity.
+
+Imagine a simple application that requires each data stream to be equally reliable. This means that all $R_H$ eigen subchannels must have an equal error rate and hence equal output \acp{SNR}. The latter requirement can be satisfied trivially by selecting $\mathbf{D} = \mathbf{I}$.
+The resulting optimum precoder matrix $\mathbf{F}$ and combiner matrix $\mathbf{G}$ are given by~\cite{su_mimo_joint_precoder_decoder_design}
+\begin{subequations}
+\begin{align}
+    \mathbf{F} &= \mathbf{V} \mathbf{\Phi}_{\mathrm{f}} 
+    \quad \text{with} \quad \mathbf{\Phi}_{\mathrm{f}} = \sqrt{\frac{P_t}{\mathrm{tr}(\mathbf{\Lambda}^{-1})}} \, \mathbf{\Lambda}^{-1/2} 
+    \label{eq:optimum_precoder_equal_errors} \\
+    \mathbf{G} &= \mathbf{\Phi}_{\mathrm{g}} \mathbf{V}^H \mathbf{H}^H \mathbf{C}^{-1}_{\mathrm{n}} 
+    \quad \text{with} \quad \mathbf{\Phi}_{\mathrm{g}} = \frac{\sqrt{P_t \, \mathrm{tr}(\mathbf{\Lambda}^{-1})}}{P_t + \mathrm{tr}(\mathbf{\Lambda}^{-1})} \, \mathbf{\Lambda}^{-1/2} 
+    \label{eq:optimum_combiner_equal_errors}
+\end{align}
+\end{subequations}
+The power allocation policy for a \ac{QoS} design with equal error rates assigns more power to the eigen subchannels with less channel gain while it allocates loss power to the subchannels with stronger eigenmodes so that the output \acp{SNR} and \acp{MSE} of each subchannel are equal. Furthermore, no subchannels are dropped, regardless of the channel realization.
+It can be shown that the optimum precoder and combiner matrix transform the transfer matrix of the system into a scaled identity matrix.
+
 
