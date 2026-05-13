@@ -42,7 +42,7 @@ The resulting Lagrangian is
 where $\mu$ is the Lagrange multiplier associated with the total power constraint, and $\lambda_n$ are the multipliers associated with the non-negativity constraints on the individual power allocations.
 
 Since the objective function is concave and all constraints are affine, the optimization problem is convex.
-For convex problems, the Karush-Kuhn-Tucker (KKT) conditions are both necessary and sufficient for a solution to be globally optimal~\cite{convex_optimization_2004, KKT_conditions_2009}.
+For convex problems, the \acf{KKT} conditions are both necessary and sufficient for a solution to be globally optimal~\cite{convex_optimization_2004, KKT_conditions_2009}.
 These conditions are given by
 \begin{subequations}
 \label{eq:KKT_conditions}
@@ -54,7 +54,7 @@ These conditions are given by
 \end{align}
 \end{subequations}
 
-From the KKT conditions, we can derive the optimal power allocation for each \ac{SISO} channel. The derivation proceeds by successively applying the stationarity, complementary slackness, and primal feasibility conditions.
+From the \ac{KKT} conditions, we can derive the optimal power allocation for each \ac{SISO} channel. The derivation proceeds by successively applying the stationarity, complementary slackness, and primal feasibility conditions.
 
 The stationarity condition requires that the gradient of the Lagrangian with respect to each optimization variable vanishes at the optimum. This expresses the balance between the marginal gain in the achievable rate and the penalties introduced by the power constraints. Applying this condition to the Lagrangian yields:
 \begin{equation}

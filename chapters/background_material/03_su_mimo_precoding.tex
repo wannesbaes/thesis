@@ -189,8 +189,6 @@ Since the total allocated power is a monotonically increasing function of the wa
 A more efficient approach exploits the geometric interpretation of the waterfilling solution.
 In the present \ac{SU}-\ac{MIMO} setting, each eigen subchannel can be represented as a container with unit width and floor level $N_0 / \sigma_i^2$, while the total transmit power is interpreted as water that is poured into these containers until a common water level is reached.
 The complete procedure is summarized in Appendix~\ref{appendix_section:waterfilling_algorithm}.
-Note that this specific approach relies on the fact that the set of candidate streams is finite and therefore does not extend in the same form to waterfilling algorithms for, e.g., power allocation across the frequency spectrum of a frequency-selective channel.
-
 The structure of the optimal power allocation is illustrated in Fig.~\ref{fig:waterfilling_power_allocation} for a \ac{SU}-\ac{MIMO} system with four transmit and four receive antennas operating at an \ac{SNR} of $5$ dB: eigen subchannels with stronger channel
 conditions, i.e. larger gains $\sigma_i$, receive more power than weaker ones.
 \begin{figure}[!hbt]
@@ -231,13 +229,132 @@ It is worth noting that uniform power allocation does not require knowledge of t
 \section{Joint Design for Linear Precoder and Combiner}
 \label{section:joint_design_for_linear_precoder_and_combiner}
 
+In the previous section, a linear precoder and combiner that jointly decompose the \ac{SU}-\ac{MIMO} channel into independent parallel eigen subchannels were shown to achieve the channel capacity.
+In this section, we generalize this result by adopting the minimization of a weighted sum of symbol estimation errors as the design criterion.
+It will be shown that the optimal precoder and combiner under this criterion likewise decouple the channel into parallel eigen subchannels, regardless of the specific choice of error weights.
+By an appropriate selection of these weights, the framework specializes to the maximum information rate design, the quality-of-service design, and the minimum sum-of-errors design.
+
 \subsection{Generalized WMMSE Design}
 \label{section:generalized_wmmse_design}
 % ==========================
 %  Generalized WMMSE Design
 % ==========================
 
+The objective is to jointly design the precoder $\mathbf{F}$ and the combiner $\mathbf{G}$ so as to minimize a weighted combination of symbol estimation errors.
+To this end, the estimation error vector $\mathbf{e} \in \mathbb{C}^{N_s}$ is defined as the difference between the transmitted data symbol vector $\mathbf{a}$ and the decision variable vector $\mathbf{z}$:
+\begin{equation}
+\label{eq:error_vector}
+    \mathbf{e} 
+    = \mathbf{a} - \mathbf{z} 
+    = \mathbf{a} - (\mathbf{G}\mathbf{H}\mathbf{F}\,\mathbf{a} + \mathbf{G}\mathbf{n}).
+\end{equation}
 
+The \ac{MSE} matrix, also referred to as the error covariance matrix, is defined as
+\begin{equation}
+\label{eq:mse_matrix}
+    \text{MSE} 
+    = \mathbb{E}\!\left[\mathbf{e}\, \mathbf{e}^H\right]
+    = (\mathbf{G}\mathbf{H}\mathbf{F} - \mathbf{I}_{N_s})(\mathbf{G}\mathbf{H}\mathbf{F} - \mathbf{I}_{N_s})^H + \mathbf{G} \mathbf{C}_{\mathrm{n}} \mathbf{G}^H
+\end{equation}
+\begin{comment}
+\begin{subequations}
+\label{eq:mse_matrix}
+\begin{align}
+    \text{MSE} 
+    &= \mathbb{E}\!\left[\mathbf{e}\, \mathbf{e}^H\right] \\
+    &= \mathbb{E}\!\left[(\mathbf{a} - \mathbf{G}\mathbf{H}\mathbf{F}\,\mathbf{a} - \mathbf{G}\mathbf{n}) (\mathbf{a} - \mathbf{G}\mathbf{H}\mathbf{F}\,\mathbf{a} - \mathbf{G}\mathbf{n})^H\right] \\
+    &= \mathbb{E}\!\left[(\mathbf{a} - \mathbf{G}\mathbf{H}\mathbf{F}\,\mathbf{a} - \mathbf{G}\mathbf{n}) (\mathbf{a}^H - \mathbf{a}^H(\mathbf{G}\mathbf{H}\mathbf{F})^H - \mathbf{n}^H\mathbf{G}^H)\right] \\
+    &= \mathbb{E}\!\left[((\mathbf{I}_{N_s} - \mathbf{G}\mathbf{H}\mathbf{F})\,\mathbf{a} - \mathbf{G}\mathbf{n}) (\mathbf{a}^H\,(\mathbf{I}_{N_s} - (\mathbf{G}\mathbf{H}\mathbf{F})^H) - \mathbf{n}^H\mathbf{G}^H)\right] \\
+    &= \mathbb{E}\!\left[(\mathbf{I}_{N_s} - \mathbf{G}\mathbf{H}\mathbf{F}) \, \mathbf{a} \, \mathbf{a}^H \, (\mathbf{I}_{N_s} - \mathbf{G}\mathbf{H}\mathbf{F})^H\right] - \mathbb{E}\!\left[(\mathbf{I}_{N_s} - \mathbf{G}\mathbf{H}\mathbf{F}) \, \mathbf{a} \, \mathbf{n}^H\mathbf{G}^H\right] \notag \\
+    & \quad \quad - \mathbb{E}\!\left[\mathbf{G}\mathbf{n} \, \mathbf{a}^H\,(\mathbf{I}_{N_s} - (\mathbf{G}\mathbf{H}\mathbf{F})^H)\right] + \mathbb{E}\!\left[\mathbf{G}\mathbf{n} \, \mathbf{n}^H\mathbf{G}^H\right] \\
+    &= (\mathbf{I}_{N_s} - \mathbf{G}\mathbf{H}\mathbf{F}) \, \mathbb{E}\!\left[\mathbf{a} \, \mathbf{a}^H\right] \, (\mathbf{I}_{N_s} - \mathbf{G}\mathbf{H}\mathbf{F})^H - (\mathbf{I}_{N_s} - \mathbf{G}\mathbf{H}\mathbf{F}) \, \mathbb{E}\!\left[\mathbf{a} \, \mathbf{n}^H\right] \, \mathbf{G}^H \notag \\
+    & \quad \quad - \mathbf{G} \, \mathbb{E}\!\left[\mathbf{n} \, \mathbf{a}^H\right] \, (\mathbf{I}_{N_s} - (\mathbf{G}\mathbf{H}\mathbf{F})^H) + \mathbf{G} \, \mathbb{E}\!\left[\mathbf{n} \, \mathbf{n}^H\right] \, \mathbf{G}^H\\
+    &= (\mathbf{I}_{N_s} - \mathbf{G}\mathbf{H}\mathbf{F}) \, \mathbf{I}_{N_s} \, (\mathbf{I}_{N_s} - \mathbf{G}\mathbf{H}\mathbf{F})^H + \mathbf{G} \, \mathbf{C}_{\mathrm{n}} \, \mathbf{G}^H \\
+    &= (\mathbf{G}\mathbf{H}\mathbf{F} - \mathbf{I}_{N_s})(\mathbf{G}\mathbf{H}\mathbf{F} - \mathbf{I}_{N_s})^H + \mathbf{G} \mathbf{C}_{\mathrm{n}} \mathbf{G}^H
+\end{align}
+\end{subequations}
+\end{comment}
+where the last equality follows from the independence of the data symbols $\mathbf{a}$ and the noise vector $\mathbf{n}$, and the assumption that the data symbols are spatially uncorrelated and normalized.
+
+The \ac{WMSE} matrix is defined as
+\begin{equation}
+\label{eq:wmse_matrix}
+    \text{WMSE} 
+    = \mathbb{E}\!\left[ \left\|\mathbf{W}^{1/2}_{\mathrm{e}} \, \mathbf{e}\right\|^2 \right]
+    = \mathbb{E}\!\left[ \mathrm{tr}(\mathbf{W}^{1/2}_{\mathrm{e}} \mathbf{e} \, \mathbf{e}^H \mathbf{W}^{1/2 \, H}_{\mathrm{e}}) \right]
+    = \mathrm{tr}(\mathbf{W}_{\mathrm{e}} \, \mathbb{E}\!\left[\mathbf{e} \mathbf{e}^H \right]),
+\end{equation}
+where $\mathbf{W}_{\mathrm{e}}$ is a diagonal positive definite weight matrix that assigns a relative importance to the error of each data stream.
+
+The \ac{WMMSE} optimization problem is then formulated as
+\begin{equation}
+\label{eq:su_mimo_WMMSE_optimization_problem}
+\begin{aligned}
+    & \min_{\mathbf{F}, \mathbf{G}} \; \mathrm{tr}(\mathbf{W}_{\mathrm{e}} \, \mathbb{E}\!\left[\mathbf{e} \mathbf{e}^H \right]) \\
+    & \text{s. t.} \quad \mathrm{tr}(\mathbf{F}\mathbf{F}^H) \leq P_t.
+\end{aligned}
+\end{equation}
+
+The method of Langrange duality and the \ac{KKT} conditions can be used to solve the optimization problem in~\eqref{eq:su_mimo_WMMSE_optimization_problem}.
+This leads to the following necessary optimality conditions~\cite{su_mimo_joint_precoder_decoder_design}:
+\begin{subequations}
+\begin{align}
+    & \mathbf{H}\mathbf{F} = \mathbf{H}\mathbf{F} \, (\mathbf{G}\mathbf{H}\mathbf{F})^H + \mathbf{C}_{\mathrm{n}}\mathbf{G}^H \\
+    & \mathbf{W}_{\mathrm{e}} \mathbf{G}\mathbf{H} = (\mathbf{G}\mathbf{H}\mathbf{F})^H \, \mathbf{W}_{\mathrm{e}} \mathbf{G}\mathbf{H} + \mu \mathbf{F}^H
+\end{align}
+\end{subequations}
+where $\mu > 0$ is the Lagrange multiplier associated with the total transmit power constraint.
+
+Solving these coupled matrix equations yields the optimal linear precoder and combiner.
+As shown in~\cite{su_mimo_joint_precoder_decoder_design}, they admit the following closed-form expressions:
+\begin{subequations}
+\label{eq:solution_generalized_design}
+\begin{align}
+    \mathbf{F} &= \mathbf{V} \mathbf{\Phi}_{\mathrm{f}} \label{eq:solution_generalized_design_precoder}\\
+    \mathbf{G} &= \mathbf{\Phi}_{\mathrm{g}} \mathbf{V}^H \mathbf{H}^H \mathbf{C}^{-1}_{\mathrm{n}} \label{eq:solution_generalized_design_combiner}
+\end{align}
+\end{subequations}
+The matrices $\mathbf{\Phi}_{\mathrm{f}}, \mathbf{\Phi}_{\mathrm{g}} \in \mathbb{R}^{R_H \times R_H}$ are diagonal matrices with non-negative diagonal entries, and are given by
+\begin{subequations}
+\label{eq:solution_generalized_design_phi}
+\begin{align}
+    \mathbf{\Phi}_{\mathrm{f}} &= (\mu^{-1/2} \mathbf{\Lambda}^{-1/2} \mathbf{W}^{1/2}_{\mathrm{e}} - \mathbf{\Lambda}^{-1})^{1/2}_{+} \label{eq:solution_generalized_design_precoder_phi}\\
+    \mathbf{\Phi}_{\mathrm{g}} &= (\mu^{1/2} \mathbf{\Lambda}^{-1/2} \mathbf{W}^{-1/2}_{\mathrm{e}} - \mu \mathbf{\Lambda}^{-1} \mathbf{W}^{-1}_{\mathrm{e}})^{1/2}_{+} \mathbf{\Lambda}^{1/2} \label{eq:solution_generalized_design_combiner_phi}
+\end{align}
+\end{subequations}
+The matrices $\mathbf{V} \in \mathbb{C}^{N_T \times R_H}$ and $\mathbf{\Lambda} \in \mathbb{R}^{R_H \times R_H}$ are obtained from the \ac{EVD} of the noise-whitened Gram matrix of $\mathbf{H}$:
+\begin{equation}
+\label{eq:evd_generalized_design}
+    \mathbf{H}^H \mathbf{C}^{-1}_{\mathrm{n}} \mathbf{H} = \begin{bmatrix} \mathbf{V} & \bar{\mathbf{V}} \end{bmatrix} \begin{bmatrix} \mathbf{\Lambda} & \mathbf{0} \\ \mathbf{0} & \bar{\mathbf{\Lambda}} \end{bmatrix} \begin{bmatrix} \mathbf{V} & \bar{\mathbf{V}} \end{bmatrix}^H,
+\end{equation}
+where the columns of $\mathbf{V}$ form an orthonormal basis for the range space of $(\mathbf{H}^H \mathbf{C}_{\mathrm{n}}^{-1} \mathbf{H})$, and the columns of $\bar{\mathbf{V}}$ span its null space.
+The diagonal matrix $\mathbf{\Lambda}$ contains the $R_H$ non-zero eigenvalues arranged in descending order, whereas $\bar{\mathbf{\Lambda}}$ contains the remaining zero eigenvalues.
+Note that, as in Section~\ref{subsection:optimal_precoder_design}, the number of data streams is set equal to the rank of the channel matrix, i.e. $N_s = R_H$. Moreover, the rank of the channel matrix is equal to the rank of $(\mathbf{H}^H \mathbf{C}_{\mathrm{n}}^{-1} \mathbf{H})$ since $\mathbf{C}_{\mathrm{n}}^{-1}$ is positive definite and therefore does not alter the rank of the product.
+
+Now, it only lasts us to show how to obtain the Lagrange multiplier that satisfies the power constraint and also is such that the bracketed matrices in both~\eqref{eq:solution_generalized_design_precoder_phi} and~\eqref{eq:solution_generalized_design_combiner_phi} are positive-definite.
+Let $\mathbf{\Lambda} = \mathrm{diag}(\lambda_1, \dots, \lambda_{R_H})$ and $\mathbf{W}_{\mathrm{e}} = \mathrm{diag}(w_1, \dots, w_{R_H})$.
+Suppose $k < R_H$ eigen subchannels are effectively used for transmission, i.e. they are allocated non-zero power.
+From~\eqref{eq:solution_generalized_design_precoder_phi} and the total power constraint in~\eqref{eq:su_mimo_WMMSE_optimization_problem}, we have
+\begin{equation}
+\label{eq:power_constraint_generalized_design}
+    \mathrm{tr}(\mathbf{F}\mathbf{F}^H) = \mathrm{tr}(\mathbf{\Phi}_{\mathrm{f}}^2) = \mu^{-1/2} \sum_{i=1}^k \lambda_i^{-1/2} w^{1/2}_i - \sum_{i=1}^k \lambda_i^{-1} = P_t.
+\end{equation}
+Therefore, we can obtain the following expression for the Lagrange multiplier $\mu$:
+\begin{equation}
+\label{eq:lagrange_multiplier_generalized_design}
+    \mu = \left( \frac{\sum_{i=1}^k \lambda_i^{-1/2} w^{1/2}_i}{P_t + \sum_{i=1}^k \lambda_i^{-1}} \right)^2.
+\end{equation}
+Let $\rho_k = \lambda_k w_k$ and let them be ordered in decreasing manner. To compute $\mathbf{\Phi}_{\mathrm{f}}$ optimally and ensure that it is positive-definite, we can compute $\mu$ according to~\eqref{eq:lagrange_multiplier_generalized_design} for each $k = 1, \dots, R_H$ iteratively, and select the largest $k$ such that $\mu \leq \rho_k$~\cite{su_mimo_joint_precoder_decoder_design}.
+
+
+From~\eqref{eq:solution_generalized_design_precoder} and~\eqref{eq:solution_generalized_design_combiner}, we have:
+\begin{equation}
+\label{eq:diagonalization_transfer_matrix_generalized_design}
+    \mathbf{T} = \mathbf{G}\mathbf{H}\mathbf{F} = \mathbf{\Phi}_{\mathrm{g}} \mathbf{\Lambda} \mathbf{\Phi}_{\mathrm{f}}.
+\end{equation}
+In other words, the optimal precoder and combiner diagonalize the \ac{SU}-\ac{MIMO} transfer matrix $\mathbf{T}$, and hence decouple the channel into parallel eigen subchannels, regardless of the specific choice of error weights. This result is similar to the capacity-achieving precoder and combiner from Section~\ref{subsection:optimal_precoder_design}, which also decompose the channel matrix $\mathbf{H}$.
+
+We can now design a linear precoder and combiner according to different design criteria, such as the maximize the information rate, minimize the sum of estimation errors, or meet certain quality-of-service requirements by choosing an appropriate error weight matrix $\mathbf{W}_{\mathrm{e}}$. In the following, we will explore some of these design criteria in more detail.
 
 \subsection{Maximum Information Rate Design}
 \label{section:maximum_information_rate_design}
