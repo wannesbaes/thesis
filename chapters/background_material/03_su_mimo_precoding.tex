@@ -55,7 +55,7 @@ with $\tilde{y}_i = \tilde{n}_i$ for $R_H < i \leq N_R$.
 The equivalent channel decomposes into $R_H$ independent parallel scalar Gaussian subchannels, each with its own channel gain $\sigma_i$. These subchannels and their gains are referred to as eigen subchannels and eigenmodes, respectively.
 Since the components $\tilde{x}_i$ for $R_H < i \leq N_T$ have no effect on the output, they carry no information and can be set to zero.
 
-For each eigen subchannel, the \acf{MI} is maximised by a zero-mean, \ac{CS} complex Gaussian input~\cite{telatar_1999}. Under this choice, the optimisation problem~\eqref{eq:capacity_su_mimo_gaussian_channel_optimization_problem} simplifies to
+For each eigen subchannel, the \acf{MI} is maximised by a zero-mean, \ac{CS} complex Gaussian input~\cite{telatar_1999}. Under this choice, the optimization problem~\eqref{eq:capacity_su_mimo_gaussian_channel_optimization_problem} simplifies to
 \begin{equation}
 \label{eq:capacity_su_mimo_gaussian_channel_optimization_problem_simplified}
 \begin{aligned}
@@ -352,7 +352,7 @@ From~\eqref{eq:solution_generalized_design_precoder} and~\eqref{eq:solution_gene
 \label{eq:diagonalization_transfer_matrix_generalized_design}
     \mathbf{T} = \mathbf{G}\mathbf{H}\mathbf{F} = \mathbf{\Phi}_{\mathrm{g}} \mathbf{\Lambda} \mathbf{\Phi}_{\mathrm{f}}.
 \end{equation}
-In other words, the optimal precoder and combiner diagonalize the \ac{SU}-\ac{MIMO} transfer matrix $\mathbf{T}$, and hence decouple the channel into parallel eigen subchannels, regardless of the specific choice of error weights. This result is similar to the capacity-achieving precoder and combiner from Section~\ref{subsection:optimal_precoder_design}, which also decompose the channel matrix $\mathbf{H}$.
+In other words, the optimal precoder and combiner diagonalize the \ac{SU}-\ac{MIMO} transfer matrix $\mathbf{T}$, and hence decouple the channel into parallel eigen subchannels, regardless of the specific choice of error weights. This result is similar to the capacity-achieving precoder and combiner from Section~\ref{subsection:optimal_precoder_design}, who also decompose the channel matrix $\mathbf{H}$.
 
 We can now design a linear precoder and combiner according to different design criteria, such as the maximize the information rate, minimize the sum of estimation errors, or meet certain quality-of-service requirements by choosing an appropriate error weight matrix $\mathbf{W}_{\mathrm{e}}$. In the following, we will explore some of these design criteria in more detail.
 
@@ -362,8 +362,23 @@ We can now design a linear precoder and combiner according to different design c
 %  Maximum Information Rate Design
 % =================================
 
+It was already shown in Section~\ref{subsection:optimal_precoder_design} that the capacity of the \ac{SU}-\ac{MIMO} channel can be achieved by a linear precoder and combiner that diagonalize the transfer matrix and a waterfilling power allocation strategy.
+Rewriting~\eqref{eq:su_mimo_optimal_power_allocation} in matrix format and switching to the parameters of the generalized design, we obtain~\cite{su_mimo_joint_precoder_decoder_design}
+\begin{equation}
+\label{eq:waterfilling_power_allocation_generalized_design}
+    \mathbf{\Phi}_{\mathrm{f}} = (\mu^{-1/2} \mathbf{I} - \mathbf{\Lambda}^{-1})^{1/2}_{+}.
+\end{equation}
+
+The above equation is obtained by choosing the error weight matrix as $\mathbf{W}_{\mathrm{e}} = \mathbf{\Lambda}$ in~\eqref{eq:solution_generalized_design_precoder_phi}. It is shown in~\cite{su_mimo_joint_precoder_decoder_design} that the optimal precoder and combiner that maximize the information rate are given by~\eqref{eq:solution_generalized_design_precoder} and~\eqref{eq:solution_generalized_design_combiner} for this particular choice of error weights.
+In other words, the maximum information rate design is just a special case of the generalized WMMSE design.
+The choice of the error weights $\mathbf{W}_{\mathrm{e}} = \mathbf{\Lambda}$ tells us that stronger eigen subchannels support higher rates compared to the weaker ones, and hence need to be more heavily weighted in the cost function. This corresponds with the waterfilling solution for optimal power allocation, where more power is allocated to stronger subchannels.
+
+The maximum information rate design finds applications in adaptive modulation systems, where more power and higher order modulation are used on eigen subchannels with higher gains to improve the total data rate. The performance of these systems is evaluated in Section~\ref{section:unknown}, based on simulation results for different system settings.
+
+
 \subsection{Quality of Service Design}
 \label{section:quality_of_service_design}
 % ===========================
 %  Quality of Service Design
 % ===========================
+
