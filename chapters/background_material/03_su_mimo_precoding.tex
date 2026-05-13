@@ -233,6 +233,7 @@ In the previous section, a linear precoder and combiner that jointly decompose t
 In this section, we generalize this result by adopting the minimization of a weighted sum of symbol estimation errors as the design criterion.
 It will be shown that the optimum precoder and combiner under this criterion likewise decouple the channel into parallel eigen subchannels, regardless of the specific choice of error weights.
 By an appropriate selection of these weights, the framework specializes to the maximum information rate design, the quality-of-service design, and the minimum sum-of-errors design.
+Deze sectie is grotendeels gebaseerd op~\cite{su_mimo_joint_precoder_decoder_design} and chapter 4 of~\cite{precoding_for_digcom}.
 
 \subsection{Generalized WMMSE Design}
 \label{section:generalized_wmmse_design}
@@ -433,4 +434,11 @@ The resulting optimum precoder matrix $\mathbf{F}$ and combiner matrix $\mathbf{
 The power allocation policy for a \ac{QoS} design with equal error rates assigns more power to the eigen subchannels with less channel gain while it allocates loss power to the subchannels with stronger eigenmodes so that the output \acp{SNR} and \acp{MSE} of each subchannel are equal. Furthermore, no subchannels are dropped, regardless of the channel realization.
 It can be shown that the optimum precoder and combiner matrix transform the transfer matrix of the system into a scaled identity matrix.
 
-
+\subsection{Unweighted MMSE Design}
+\label{section:unweighted_mmse_design}
+% ===========================
+%   Unweighted MMSE Design
+% ===========================
+If we let $\mathbf{W}_{\mathrm{e}} = \mathbf{I}$, then the optimum precoder and combiner derived in~\eqref{eq:solution_generalized_design_precoder} and~\eqref{eq:solution_generalized_design_combiner} will minimize the sum of symbol estimation errors across all eigen subchannels.
+While this approach improves the performance if the system, it is not guaranteed that the \acp{MSE} and \acp{SNR} on each individual subchannel is minimized. More specific, weaker subchannels will have a higher \ac{MSE} then the stronger ones, as can be observed by substituting $\mathbf{W}_{\mathrm{e}} = \mathbf{I}$ into~\eqref{eq:mse_matrix_simplified}.
+The power allocation policy in MMSE design allocates no power to an eigen subchannel of which the eigenmode is less than a certain threshold. Among the remaining subchannels, more power is allocated to the weakest subchannels, i.e. subchannels with the smallest eigenmodes.
