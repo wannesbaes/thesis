@@ -67,7 +67,7 @@ For each eigen subchannel, the \acf{MI} is maximised by a zero-mean, \ac{CS} com
 This maximization problem is solved using the Lagrange multiplier method (see Appendix~\ref{appendix:waterfilling}).
 The variances of the channel input need to be chosen according to the waterfilling solution~\cite{gallager_1968}:
 \begin{equation}
-    \mathbb{E}\left[\left\|\tilde{x}_i\right\|^2\right] = \left(\mu_{\text{w}} - \frac{N_0}{\sigma^2_i}\right)^{+},
+    \mathbb{E}\left[\left\|\tilde{x}_i\right\|^2\right] = \left(\mu_{\text{w}} - \frac{N_0}{\sigma^2_i}\right)_{+},
 \end{equation}
 where the water level $\mu_{\text{w}}$ is found iteratively to satisfy the transmit power constraint with equality.
 
@@ -183,7 +183,7 @@ No general closed-form expression exists for the optimal water level $\mu_{\math
 \label{eq:su_mimo_optimal_power_allocation}
     \sum_{i=1}^{N_s} p_i = P_t
     \qquad \text{and} \qquad
-    p_i = \left(\mu_{\mathrm{w}} - \frac{N_0}{\sigma^2_i}\right)^+.
+    p_i = \left(\mu_{\mathrm{w}} - \frac{N_0}{\sigma^2_i}\right)_{+}.
 \end{equation}
 Since the total allocated power is a monotonically increasing function of the water level, the latter can be determined numerically by means of a bisection method.
 A more efficient approach exploits the geometric interpretation of the waterfilling solution.
@@ -228,7 +228,6 @@ It is worth noting that uniform power allocation does not require knowledge of t
     \label{fig:waterfilling_power_allocation_SNR_extremes}
 \end{figure}
 
-
 \section{Joint Design for Linear Precoder and Combiner}
 \label{section:joint_design_for_linear_precoder_and_combiner}
 
@@ -237,6 +236,8 @@ It is worth noting that uniform power allocation does not require knowledge of t
 % ==========================
 %  Generalized WMMSE Design
 % ==========================
+
+
 
 \subsection{Maximum Information Rate Design}
 \label{section:maximum_information_rate_design}

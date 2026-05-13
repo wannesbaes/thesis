@@ -76,13 +76,13 @@ The complementary slackness condition links the non-negativity constraint on the
 The primal feasibility condition enforces the non-negativity of the power allocations. As a result, the above expression for $p_n$ must be clipped to zero whenever it becomes negative:
 \begin{equation}
 \label{eq:KKT_primal_feasibility_condition1}
-    p_n = \left( \frac{\alpha_n}{\mu \ln(2)} - \frac{1}{\gamma_n} \right)^{+}
+    p_n = \left( \frac{\alpha_n}{\mu \ln(2)} - \frac{1}{\gamma_n} \right)_{+}
 \end{equation}
 
 Finally, the primal feasibility condition also requires the total allocated power to equal the available transmit power $P_t$. By substituting the expression for $p_n$ from~\eqref{eq:KKT_primal_feasibility_condition1} into the total power constraint, we obtain an implicit equation for the Lagrangian multiplier $\mu$:
 \begin{equation}
 \label{eq:KKT_primal_feasibility_condition2}
-    \sum_{n=1}^{N} \left( \frac{\alpha_n}{\mu \ln(2)} - \frac{1}{\gamma_n} \right)^{+} = P_t
+    \sum_{n=1}^{N} \left( \frac{\alpha_n}{\mu \ln(2)} - \frac{1}{\gamma_n} \right)_{+} = P_t
 \end{equation}
 
 Since $\mu$ cannot be obtained in closed form, it is determined iteratively such that the total allocated power satisfies~\eqref{eq:KKT_primal_feasibility_condition2}. Owing to the monotonic relationship between $\mu$ and the total allocated power, a bisection method is typically employed to compute the optimal value of $\mu$ numerically.
