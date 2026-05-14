@@ -1,0 +1,101 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\usetikzlibrary{arrows.meta, positioning, fit, calc, shapes.geometric}
+
+\begin{document}
+
+% ===================
+%  Layout Parameters
+% ===================
+
+% Spacing
+\newcommand{\lengthHorizontalSignal}{1.25cm}
+\newcommand{\lengthVerticalSignal}{1.25cm}
+
+% Operator sizes
+\newcommand{\componentWidth}{1.9cm}
+\newcommand{\componentHeight}{0.8cm}
+\newcommand{\operatorRadius}{0.25cm}
+
+% ===================
+% ===================
+
+\begin{tikzpicture}
+
+
+% Component Styles
+% ================
+
+\tikzset{
+    component/.style = {
+        draw, 
+        rectangle,
+        %thick,
+        minimum width=\componentWidth,
+        minimum height=\componentHeight,
+        align=center
+    },
+    multiplier/.style = {
+        draw, 
+        circle,
+        %thick,
+        minimum size=2*\operatorRadius,
+        align=center
+    },
+    adder/.style = {
+        draw, 
+        circle,
+        minimum size=2*\operatorRadius,
+        %thick,
+        align=center
+    },
+    signal/.style = {
+        ->,
+        %thick,
+    }
+}
+% =================
+
+
+% Figure Components
+% =================
+
+% Input bits
+\node (bits) at (0,0) {};
+
+% Mapper
+\node[component] (mapper) at ($(bits.east) + (\lengthHorizontalSignal,0) + 0.5*(\componentWidth,0)$) {Mapper};
+\draw[signal] (bits) -- node[above, pos=0.5] {$\mathbf{b}$} (mapper);
+
+% AWGN Channel
+\node[multiplier] (channel) at ($(mapper.east) + (\lengthHorizontalSignal,0) + (\operatorRadius,0)$) {};
+\draw ($(channel) + (225:\operatorRadius)$) -- ($(channel) + (45:\operatorRadius)$);
+\draw ($(channel) + (135:\operatorRadius)$) -- ($(channel) + (315:\operatorRadius)$);
+\draw[signal] (mapper) -- node[above, pos=0.5] {$a$} (channel);
+\node (h) at ($(channel) + (0, \lengthVerticalSignal)$) {$h=1$};
+\draw[signal] (h) -- (channel);
+
+\node[adder] (noise_adder) at ($(channel.east) + (\lengthHorizontalSignal,0) + (\operatorRadius,0)$) {};
+\draw ($(noise_adder) + (-\operatorRadius, 0)$) -- ($(noise_adder) + (\operatorRadius, 0)$);
+\draw ($(noise_adder) + (0, -\operatorRadius)$) -- ($(noise_adder) + (0, \operatorRadius)$);
+\draw[signal] (channel) -- (noise_adder); 
+\node (n1) at ($(noise_adder) + (0,\lengthVerticalSignal)$) {$n=w$};
+\draw[signal] (n1) -- (noise_adder);
+
+% Detector
+\node[component] (detector) at ($(noise_adder.east) + (\lengthHorizontalSignal,0) + 0.5*(\componentWidth,0)$) {Detector};
+\draw[signal] (noise_adder) -- node[above, pos=0.5] {$z$} (detector);
+
+% Demapper
+\node[component] (demapper) at ($(detector.east) + (\lengthHorizontalSignal,0) + 0.5*(\componentWidth,0)$) {Demapper};
+\draw[signal] (detector) -- node[above, pos=0.5] {$\hat{a}$} (demapper);
+
+% Output bits
+\node (bits_hat) at ($(demapper.east) + (\lengthHorizontalSignal,0)$) {};
+\draw[signal] (demapper) -- node[above, pos=0.5] {$\hat{\mathbf{b}}$} (bits_hat);
+
+
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,87 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\usetikzlibrary{arrows.meta, calc}
+
+\begin{document}
+
+% ===================
+%  Layout Parameters
+% ===================
+
+% Constellation
+\newcommand{\constellationRadius}{2.5cm}
+\newcommand{\labelRadius}{2.95cm}
+\newcommand{\labelAxisOffset}{0.35cm}
+\newcommand{\decisionLineOverhang}{0.8cm}
+\newcommand{\pointSize}{6pt}
+\definecolor{pointColor}{RGB}{31,119,180}
+\definecolor{decisionLineColor}{RGB}{214,39,40}
+
+% Axes
+\newcommand{\XaxisOverhang}{1cm}
+\newcommand{\YaxisOverhang}{0.8cm}
+
+% ===================
+% ===================
+
+\begin{tikzpicture}
+
+% Component Styles
+% ================
+
+\tikzset{
+    point/.style = {
+        circle, 
+        inner sep=0pt,
+        fill=pointColor,
+        thick,
+        minimum size=\pointSize,
+    },
+    axisline/.style = {
+        ->, thick
+    },
+    radialline/.style = {
+        dashed, decisionLineColor, thin
+    },
+}
+
+% =================
+
+
+% Figure Components
+% =================
+
+% Axes
+\draw[axisline]
+    ($(0,0) + (-\constellationRadius, 0) + (-\XaxisOverhang, 0)$) --
+    ($(0,0) + (\constellationRadius, 0) + (\XaxisOverhang, 0)$)
+    node[right] {$\mathrm{Real}$};
+
+    \draw[axisline]
+    ($(0,0) + (0, -\constellationRadius) + (0, -\YaxisOverhang)$) --
+    ($(0,0) + (0, \constellationRadius) + (0, \YaxisOverhang)$)
+    node[above] {$\mathrm{Imag}$};
+
+% Constellation circle
+\draw[thin, lightgray] (0,0) circle [radius=\constellationRadius];
+
+% Constellation points and Gray-coded bit labels
+\foreach \angle/\bits/\shiftx/\shifty in {
+      0/000/0pt/\labelAxisOffset,
+     45/001/0pt/0pt,
+     90/011/{-\labelAxisOffset}/0pt,
+    135/010/0pt/0pt,
+    180/110/0pt/{-\labelAxisOffset},
+    225/111/0pt/0pt,
+    270/101/\labelAxisOffset/0pt,
+    315/100/0pt/0pt
+}{
+    \draw[radialline] (0,0) -- ({\angle+22.5}:{\constellationRadius + \decisionLineOverhang});
+    \node[point] at (\angle:\constellationRadius) {};
+    \node[font=\small, xshift=\shiftx, yshift=\shifty] at (\angle:\labelRadius) {$\bits$};
+}
+
+\end{tikzpicture}
+\end{document}
