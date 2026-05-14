@@ -1,25 +1,157 @@
 \chapter{Analytical BER of an AWGN Channel}
 \label{appendix:analytical_ber}
 
-Consider an \acf{AWGN} channel as illustrated in figure~\ref{fig:awgn_channel}.
+In this appendix, an analytical expression for the \acf{BER} of an uncoded transmission over an \acf{AWGN} channel is derived.
 
+The \ac{TX} maps $m_c$ \acf{i.i.d.} bits onto a data symbol $a$ drawn from the constellation $\mathcal{A}$, which contains $M = 2^{m_c}$ distinct symbols.
+The constellation is assumed to be normalized, i.e. $\mathbb{E}[|a|^2] = 1$. Let $p$ denote the transmit power per symbol. The actual channel input is then given by $\sqrt{p}\,a$.
+Transmission takes place over an \ac{AWGN} channel, so that the received signal can be written as
+\begin{equation}
+    y = \sqrt{p}\,a + n,
+\end{equation}
+where $n$ is a zero-mean \ac{CS} complex Gaussian noise sample with variance $N_0$.
+For convenience, the receiver works with the normalized decision variable $z = y / \sqrt{p}$, which allows the detection problem to be formulated directly in terms of the normalized constellation $\mathcal{A}$ and an equivalent noise sample $w$ with variance $N_0/p$.
+
+Based on the decision variable $z$ and the constellation $\mathcal{A}$, the detector at the \ac{RX} decides in favor of a symbol $\hat{a}$.
+The optimal detector is the one that minimizes the probability of decision error.
+For an \ac{AWGN} channel and under the assumption of \ac{i.i.d.} input bits, the optimal decision rule reduces to the minimum-distance decision rule, which selects the constellation symbol closest to $z$ in Euclidean distance.
+Finally, the demapper maps the detected symbol $\hat{a}$ back to $m_c$ bits, denoted by $\hat{\mathbf{b}}$.
+A block diagram of this transmission chain is shown in \autoref{fig:awgn_channel}.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/annex/B_analytical_ber/out/awgn_channel.pdf}
-    \caption{Block diagram of an \ac{AWGN} Channel}
+    \caption{Block diagram of an \acs{AWGN} channel}
     \label{fig:awgn_channel}
 \end{figure}
 
-\begin{figure}[htb]
+The mapper, detector, and demapper are deterministic functions, whereas the transmitted symbol $a$ and the noise sample $n$ are random variables.
+Consequently, the decision variable $z$ and the detected symbol $\hat{a}$ are also random variables, both of which depend on the transmitted symbol and the noise realization.
+Conditioned on the transmitted symbol $a$, the decision variable is \ac{CS} complex Gaussian with mean $a$ and variance $N_0/p$, i.e.
+\begin{equation}
+\label{eq:conditional_pdf_decision_variable}
+    z \mid a \sim \mathcal{N}_{\mathbb{C}}\!\left(a, \frac{N_0}{p}\right).
+\end{equation}
+
+% paragraph about the BER definition
+The \ac{BER} is defined as the probability that a transmitted bit is detected incorrectly.
+Equivalently, it can be expressed as the average number of bit errors per detected symbol, normalized by the number of bits per symbol:
+\begin{equation}
+\label{eq:ber_definition}
+    \mathrm{BER} = \frac{1}{\log_2(M)} \sum_{(\hat{\alpha}, \alpha) \in \mathcal{A}^{2}} \mathrm{N}(\hat{\alpha}, \alpha)\, \mathrm{Prob}[\hat{a} = \hat{\alpha} \land a = \alpha].
+\end{equation}
+Here, $\mathcal{A}^{2}$ denotes the Cartesian product of the constellation with itself, and thus contains all possible transmitted-detected symbol pairs.
+The quantity $\mathrm{N}(\hat{\alpha}, \alpha)$ denotes the number of bit errors incurred when the symbol $\alpha$ is transmitted and $\hat{\alpha}$ is detected.
+In other words, it equals the Hamming distance between the binary labels of $\alpha$ and $\hat{\alpha}$.
+Finally, $\mathrm{Prob}[\hat{a} = \hat{\alpha} \land a = \alpha]$ is the joint probability that $\alpha$ is transmitted and $\hat{\alpha}$ is detected.
+
+Since the transmission is uncoded and the input bits are \ac{i.i.d.}, all constellation symbols are equiprobable.
+The \ac{BER} expression can therefore be simplified using Bayes' rule as
+\begin{subequations}
+\label{eq:ber_simplified}
+\begin{align}
+    \mathrm{BER}
+    &= \frac{1}{\log_2(M)} \sum_{(\hat{\alpha}, \alpha) \in \mathcal{A}^{2}} \mathrm{N}(\hat{\alpha}, \alpha)\, \mathrm{Prob}[\hat{a} = \hat{\alpha} \mid a = \alpha]\, \mathrm{Prob}[a = \alpha] \\
+    &= \frac{1}{M \log_2(M)} \sum_{(\hat{\alpha}, \alpha) \in \mathcal{A}^{2}} \mathrm{N}(\hat{\alpha}, \alpha) \, \mathrm{Prob}[\hat{a} = \hat{\alpha} \mid a = \alpha].
+\end{align}
+\end{subequations}
+
+
+\section{Union Upper Bound}
+\label{appendix_section:union_upper_bound}
+% =========================
+%   Union Upper Bound
+% =========================
+
+Consider the pairwise error event in which the transmitted symbol $\alpha$ is detected as a different symbol $\hat{\alpha}$, with $\hat{\alpha} \neq \alpha$.
+Under the minimum-distance decision rule, the detector decides in favor of $\hat{\alpha}$ if and only if the decision variable $z$ falls inside the decision region associated with $\hat{\alpha}$.
+Hence,
+\begin{equation}
+    \mathrm{Prob}[\hat{a} = \hat{\alpha} \mid a = \alpha] = \mathrm{Prob}[z \in \mathcal{D}(\hat{\alpha}) \mid a = \alpha],
+\end{equation}
+where $\mathcal{D}(\hat{\alpha})$ denotes the decision region of $\hat{\alpha}$, i.e. the set of all points in the complex plane that are closer to $\hat{\alpha}$ than to any other constellation symbol. As an example, the decision regions of two different constellations are illustrated in \autoref{fig:constellations} by the red dashed lines.
+
+An exact evaluation of this conditional decision probability is generally cumbersome because the decision region may be bounded by several neighboring constellation points.
+A more tractable expression is obtained by replacing the full decision event by a necessary condition.
+Indeed, if $\hat{\alpha}$ is detected when $\alpha$ was transmitted, then the decision variable must at least be closer to $\hat{\alpha}$ than to $\alpha$.
+This condition is necessary, but not sufficient, since yet another constellation point may still be closer to $z$ than $\hat{\alpha}$.
+Therefore,
+\begin{equation}
+\label{eq:upper_bound_pairwise_error_probability}
+    \mathrm{Prob}[\hat{a} = \hat{\alpha} \mid a = \alpha] \leq \mathrm{Prob}[|z - \hat{\alpha}| < |z - \alpha| \mid a = \alpha].
+\end{equation}
+Geometrically, this upper bound corresponds to the probability that the noise pushes the decision variable across the perpendicular bisector between $\alpha$ and $\hat{\alpha}$, rather than all the way into the decision region of $\hat{\alpha}$.
+
+The right-hand side of \eqref{eq:upper_bound_pairwise_error_probability} can be simplified as
+\begin{subequations}
+\label{eq:upper_bound_pairwise_error_probability_simplification}
+\begin{align}
+    &\mathrm{Prob}[|z - \hat{\alpha}| < |z - \alpha| \mid a = \alpha] \notag \\
+    & \quad = \mathrm{Prob}\left[|(\alpha + w) - \hat{\alpha}|^2 < |(\alpha + w) - \alpha|^2 \right] \\
+    & \quad = \mathrm{Prob}\left[|w - (\hat{\alpha} - \alpha)|^2 - |w|^2 < 0 \right] \\
+    & \quad = \mathrm{Prob}\left[|\hat{\alpha} - \alpha|^2 - 2 \Re\{w \, (\hat{\alpha} - \alpha)^*\} < 0 \right] \\
+    & \quad = \mathrm{Prob}\left[\Re\{w \, \frac{(\hat{\alpha} - \alpha)^*}{|\hat{\alpha} - \alpha|}\} > \frac{|\hat{\alpha} - \alpha|}{2} \right] \\
+    & \quad = \mathrm{Q} \left( \sqrt{\frac{p}{2 N_0}} \, |\hat{\alpha} - \alpha| \right) \label{eq:simplified-upper-bound}
+\end{align}
+\end{subequations}
+In the last step, the conditional inequality is expressed as the tail probability of a real Gaussian random variable.
+Indeed, the quantity inside the probability operator is the projection of the \ac{CS} complex Gaussian noise $w$ onto a unit-magnitude complex direction.
+Such a multiplication only rotates $w$ in the complex plane and therefore leaves its distribution unchanged.
+Consequently, the projected quantity is a zero-mean real Gaussian random variable with variance equal to half the variance of $w$, i.e. $N_0/(2p)$.
+
+Substituting \eqref{eq:simplified-upper-bound} into \eqref{eq:ber_simplified} yields the following upper bound on the \ac{BER}:
+\begin{equation}
+\label{eq:ber_union_upper_bound}
+    \mathrm{BER} \leq \frac{1}{M \log_2(M)} \sum_{(\hat{\alpha}, \alpha) \in \mathcal{A}^{2}} \mathrm{N}(\hat{\alpha}, \alpha) \, \mathrm{Q} \left( \sqrt{\frac{p}{2 N_0}} \, |\hat{\alpha} - \alpha| \right).
+\end{equation}
+This expression is known as the union upper bound.
+
+\section{Nearest Neighbour Approximation}
+\label{appendix_section:nn_approximation}
+% =======================================
+%     Nearest Neighbour Approximation
+% =======================================
+
+The union upper bound in~\eqref{eq:ber_union_upper_bound} sums over all possible transmitted--detected symbol pairs.
+For moderate to high \ac{SNR}, however, the Q-function decays rapidly with increasing argument, so the dominant contributions arise from pairs $(\hat{\alpha}, \alpha)$ with the smallest inter-symbol distance.
+It is therefore common to retain only the nearest-neighbour terms in the sum, i.e. those located at the minimum Euclidean distance $d_{\min}$ between the constellation points in $\mathcal{A}$.
+Letting $\mathcal{S}(\alpha)$ denote the set of nearest neighbours of symbol $\alpha$ in $\mathcal{A}$, the approximation reads
+\begin{equation}
+\label{eq:ber_nn_approximation_with_N}
+    \mathrm{BER} 
+    \approx \frac{1}{M \log_2(M)} \, \mathrm{Q}\!\left(\sqrt{\frac{p}{2N_0}}\,d_{\min}\right) \, \sum_{\alpha \in \mathcal{A}} \sum_{\hat{\alpha} \in \mathcal{S}(\alpha)} \mathrm{N}(\hat{\alpha}, \alpha).
+\end{equation}
+
+For uncoded transmission, the optimal mapping from bits to symbol is given by Gray coding, which ensures that the binary labels of any two nearest-neighbour symbols differ in only one bit position, i.e. their Hamming distance is equal to one.
+As an example, the constellation diagrams in \autoref{fig:constellations} show the binary labels of the constellation points based on Gray coding.
+Hence,
+\begin{equation}
+    \mathrm{BER} \approx \frac{1}{M \log_2(M)}\; \mathrm{Q}\!\left(\sqrt{\frac{p}{2N_0}}\,d_{\min}\right) \sum_{\alpha \in \mathcal{A}} |\mathcal{S}(\alpha)|.
+\end{equation}
+where $|\mathcal{S}(\alpha)|$ denotes the number of nearest neighbours of symbol $\alpha$.
+The remaining sum counts the total number of nearest-neighbour pairs in the constellation.
+Dividing by $M$ gives the average number of nearest neighbours per symbol,
+\begin{equation}
+    K = \frac{1}{M} \sum_{\alpha \in \mathcal{A}} |\mathcal{S}(\alpha)|,
+\end{equation}
+which is a constant that depends only on the type and size of the constellation.
+The values of $K$ and $d_{\min}$ for all common modulation constellations, normalized to unit average symbol energy, are listed in \autoref{table:K_and_dmin_values}.
+
+The final nearest-neighbour \ac{BER} approximation reads
+\begin{equation}
+\label{eq:ber_nn_approximation}
+    \mathrm{BER} \approx \frac{K}{\log_2(M)}\; \mathrm{Q}\!\left(\sqrt{\frac{p}{2N_0}}\,d_{\min}\right).
+\end{equation}
+
+\begin{figure}[!htb]
     \centering
-    \begin{subfigure}[c]{0.45\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]
-        {figures/annex/B_analytical_ber/out/4pam_constellation.pdf}
-        \caption{4--PAM}
-        \label{subfig:4_pam}
-    \end{subfigure}
-    \vfill
+    % \begin{subfigure}[c]{0.45\textwidth}
+    %     \centering
+    %     \includegraphics[width=\linewidth]
+    %     {figures/annex/B_analytical_ber/out/4pam_constellation.pdf}
+    %     \caption{4--PAM}
+    %     \label{subfig:4_pam}
+    % \end{subfigure}
+    % \vfill
     \vspace{0.65cm}
     \begin{subfigure}[c]{0.475\textwidth}
         \centering
@@ -37,21 +169,33 @@ Consider an \acf{AWGN} channel as illustrated in figure~\ref{fig:awgn_channel}.
         \label{subfig:16_qam}
     \end{subfigure}
     \caption[Constellation Diagrams]
-    {An example of the constellation diagrams for different modulation schemes: 4--PAM, 8--PSK, and 16--QAM. The decision areas are bordered by the red dashed lines.}
+    {An example of the constellation diagrams for two different modulation schemes: 8--PSK and 16--QAM.
+    The decision areas are bordered by the red dashed lines.
+    The labels show the binary mapping of the constellation points, based on Gray coding.}
     \label{fig:constellations}
 \end{figure}
 
-
-\section{Union Upper Bound}
-\label{appendix_section:union_upper_bound}
-% =========================
-%   Union Upper Bound
-% =========================
-
-
-
-\section{Nearest Neighbour Approximation}
-\label{appendix_section:nn_approximation}
-% =======================================
-%     Nearest Neighbour Approximation
-% =======================================
+\begin{table}[!htb]
+    \centering
+    \setlength{\tabcolsep}{15pt}
+    \begin{tabular}{lcc}
+        \toprule
+        Constellation & $K$ & $d_{\min}$ \\
+        \midrule
+        \rule{0pt}{5.25ex}$M$-PAM &
+            $\dfrac{2(M-1)}{M}$ &
+            $\sqrt{\dfrac{12}{M^2-1}}$ \\
+        \rule{0pt}{5.25ex}$M$-PSK &
+            $\begin{cases} 1, & M = 2 \\ 2, & M > 2 \end{cases}$ &
+            $2\sin\!\left(\dfrac{\pi}{M}\right)$ \\
+        \rule{0pt}{5.25ex}$M$-QAM &
+            $\dfrac{4(\sqrt{M}-1)}{\sqrt{M}}$ &
+            $\sqrt{\dfrac{6}{M-1}}$ \\
+        \bottomrule
+    \end{tabular}
+    \caption[Nearest-neighbour parameters for common constellations]{%
+        Average number of nearest neighbours $K$ and minimum inter-symbol distance
+        $d_{\min}$ for common modulation constellations, normalized to unit average
+        symbol energy.}
+    \label{table:K_and_dmin_values}
+\end{table}
