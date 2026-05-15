@@ -68,7 +68,7 @@ Hence,
 \begin{equation}
     \mathrm{Prob}[\hat{a} = \hat{\alpha} \mid a = \alpha] = \mathrm{Prob}[z \in \mathcal{D}(\hat{\alpha}) \mid a = \alpha],
 \end{equation}
-where $\mathcal{D}(\hat{\alpha})$ denotes the decision region of $\hat{\alpha}$, i.e. the set of all points in the complex plane that are closer to $\hat{\alpha}$ than to any other constellation symbol. As an example, the decision regions of two different constellations are illustrated in \autoref{fig:constellations} by the red dashed lines.
+where $\mathcal{D}(\hat{\alpha})$ denotes the decision region of $\hat{\alpha}$, i.e. the set of all points in the complex plane that are closer to $\hat{\alpha}$ than to any other constellation symbol.
 
 An exact evaluation of this conditional decision probability is generally cumbersome because the decision region may be bounded by several neighboring constellation points.
 A more tractable expression is obtained by replacing the full decision event by a necessary condition.
@@ -122,7 +122,6 @@ Letting $\mathcal{S}(\alpha)$ denote the set of nearest neighbours of symbol $\a
 \end{equation}
 
 For uncoded transmission, the optimal mapping from bits to symbol is given by Gray coding, which ensures that the binary labels of any two nearest-neighbour symbols differ in only one bit position, i.e. their Hamming distance is equal to one.
-As an example, the constellation diagrams in \autoref{fig:constellations} show the binary labels of the constellation points based on Gray coding.
 Hence,
 \begin{equation}
     \mathrm{BER} \approx \frac{1}{M \log_2(M)}\; \mathrm{Q}\!\left(\sqrt{\frac{p}{2N_0}}\,d_{\min}\right) \sum_{\alpha \in \mathcal{A}} |\mathcal{S}(\alpha)|.
@@ -142,40 +141,8 @@ The final nearest-neighbour \ac{BER} approximation reads
     \mathrm{BER} \approx \frac{K}{\log_2(M)}\; \mathrm{Q}\!\left(\sqrt{\frac{p}{2N_0}}\,d_{\min}\right).
 \end{equation}
 
-\begin{figure}[!htb]
-    \centering
-    % \begin{subfigure}[c]{0.45\textwidth}
-    %     \centering
-    %     \includegraphics[width=\linewidth]
-    %     {figures/annex/B_analytical_ber/out/4pam_constellation.pdf}
-    %     \caption{4--PAM}
-    %     \label{subfig:4_pam}
-    % \end{subfigure}
-    % \vfill
-    \vspace{0.65cm}
-    \begin{subfigure}[c]{0.475\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]
-        {figures/annex/B_analytical_ber/out/8psk_constellation.pdf}
-        \caption{8--PSK}
-        \label{subfig:8_psk}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[c]{0.475\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]
-        {figures/annex/B_analytical_ber/out/16qam_constellation.pdf}
-        \caption{16--QAM}
-        \label{subfig:16_qam}
-    \end{subfigure}
-    \caption[Constellation Diagrams]
-    {An example of the constellation diagrams for two different modulation schemes: 8--PSK and 16--QAM.
-    The decision areas are bordered by the red dashed lines.
-    The labels show the binary mapping of the constellation points, based on Gray coding.}
-    \label{fig:constellations}
-\end{figure}
-
 \begin{table}[!htb]
+    \vspace{0.5cm}
     \centering
     \setlength{\tabcolsep}{15pt}
     \begin{tabular}{lcc}
@@ -199,3 +166,39 @@ The final nearest-neighbour \ac{BER} approximation reads
         symbol energy.}
     \label{table:K_and_dmin_values}
 \end{table}
+
+
+\begin{comment}
+\begin{figure}[!htb]
+    \centering
+    \begin{subfigure}[c]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]
+        {figures/annex/B_analytical_ber/out/4pam_constellation.pdf}
+        \caption{4--PAM}
+        \label{subfig:4_pam}
+    \end{subfigure}
+    \vfill
+    \vspace{0.65cm}
+    \begin{subfigure}[c]{0.475\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]
+        {figures/annex/B_analytical_ber/out/8psk_constellation.pdf}
+        \caption{8--PSK}
+        \label{subfig:8_psk}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.475\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]
+        {figures/annex/B_analytical_ber/out/16qam_constellation.pdf}
+        \caption{16--QAM}
+        \label{subfig:16_qam}
+    \end{subfigure}
+    \caption[Constellation Diagrams]
+    {An example of the constellation diagrams for two different modulation schemes: 8--PSK and 16--QAM.
+    The decision areas are bordered by the red dashed lines.
+    The labels show the binary mapping of the constellation points, based on Gray coding.}
+    \label{fig:constellations}
+\end{figure}
+\end{comment}
