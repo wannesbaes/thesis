@@ -1,2 +1,285 @@
-\chapter{Rayleigh Channel}
+\chapter{Rayleigh Fading Channel Model}
 \label{appendix:rayleigh_channel}
+
+This appendix derives the Rayleigh channel model, which is commonly used to characterize wireless propagation in environments with many scatterers.
+Understanding the physical origin of this model provides useful intuition, since it serves as a fundamental building block for the more sophisticated channel models encountered throughout the dissertation.
+The derivation proceeds in three steps.
+First, the Doppler shift experienced by a moving \ac{RX} receiving a signal reflected by a single scatterer is derived in Section~\ref{appendix_section:doppler_shift}.
+Second, this result is extended to a large number of independent scatterers in Section~\ref{appendix_section:cs_complex_gaussian_channel_gain}, and it is shown that the resulting channel gain converges to a circularly symmetric complex Gaussian random variable as the number of scatterers grows large.
+Finally, we explore the time-varying nature of the channel in Section~\ref{appendix_section:doppler_spectrum_jakes_model}, and derive the autocorrelation function and power spectral density of the fading process, which is known as Jakes' model.
+
+\section{Doppler Shift}
+\label{appendix_section:doppler_shift}
+% =====================
+%    Doppler Shift 
+% =====================
+
+Consider a \ac{TX} transmitting a baseband signal $x(t)$, modulated onto a carrier of frequency $f_c$.
+The signal reaches the \ac{RX} after being reflected by a single scatterer, introducing an attenuation $a_\alpha$.
+For now, the \ac{RX} is assumed to be stationary, so the path length $d_0$ and hence the propagation delay $\tau_0 = d_0/c$ are constant.
+The received passband signal is given by
+\begin{equation}
+    r_{\mathrm{PB}}(t)
+    = \Re\!\left\{ a_\alpha\, x(t - \tau_0)\, e^{j2\pi f_c (t - \tau_0)} \right\}.
+\end{equation}
+
+Now suppose the \ac{RX} moves with velocity $v$, and let $\alpha$ denote the angle between the direction of motion and the direction of the incoming wave.
+The component of velocity along the propagation path is $v\cos(\alpha)$, so the path length, and hence the propagation delay, become time-varying.
+This scenario is illustrated in~\autoref{fig:doppler_shift}.
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/annex/C_rayleigh/doppler_shift.png}
+    \caption[Doppler shift]
+    {An illustration of the scenario where the receiver experiences a Doppler shift due to its motion relative to the incoming signal reflected by a scatterer.}
+    \label{fig:doppler_shift}
+\end{figure}
+
+The time-varying propagation delay is given by
+\begin{equation}
+\label{eq:time_varying_delay}
+    \tau(t)
+    = \frac{d_0 - v\cos(\alpha)\,t}{c}
+    = \tau_0 - \frac{v\cos(\alpha)}{c}\,t.
+\end{equation}
+Substituting~\eqref{eq:time_varying_delay} into the expression for the received
+passband signal and expanding the phase term gives
+\begin{equation}
+    r_{\mathrm{PB}}(t)
+    = \Re\!\left\{
+        a_\alpha \,
+        x\!\left((1 + \tfrac{v\cos(\alpha)}{c}) t - \tau_0\right) \,
+        e^{j2\pi (f_c + f_D\cos(\alpha))\, t} \,
+        e^{-j2\pi f_c \tau_0}
+      \right\},
+\end{equation}
+where $f_D = v / \lambda$ is the maximum Doppler frequency and $\lambda = c / f_c$ is the carrier wavelength.
+
+Two simplifying assumptions are now introduced to obtain a tractable baseband model.
+The first is the narrowband assumption: the bandwidth $B$ of $x(t)$ is assumed to be much smaller than the carrier frequency, $B \ll f_c$.
+Since $x(t)$ varies slowly compared to the carrier, the small time dilation $v\cos(\alpha)/c \ll 1$ causes negligible distortion of the baseband envelope.
+The second assumption is perfect synchronization at the \ac{RX}, so that the initial delay $\tau_0$ can be neglected as well.
+Together, these two approximations give
+\begin{equation}
+    x\!\left(\!\left(1 + \tfrac{v\cos(\alpha)}{c}\right) t - \tau_0\right)
+    \approx
+    x(t).
+\end{equation}
+
+Applying both approximations and downconverting to baseband yields the received signal
+\begin{equation}
+\label{eq:received_signal_single_scatterer}
+    y(t) = h(t) \; x(t),
+    \qquad \text{with} \quad
+    h(t) = a_\alpha\, e^{\,j2\pi f_D\cos(\alpha)\,t\; +\; j\phi_\alpha},
+\end{equation}
+where $\phi_\alpha = -2\pi f_c \tau_0$ is the initial carrier phase accumulated over
+the path length $d_0$.
+
+The channel $h(t)$ is a complex exponential with constant amplitude $|h(t)| = a_\alpha$ and a phase that advances linearly at the Doppler frequency $f_D \cos(\alpha)$.
+In practice, even sub-wavelength changes in $d_0$ cause variations of order $2\pi$ in $\phi_\alpha$, so it is customary to model $\phi_\alpha$ as uniformly distributed over $[0, 2\pi)$ and independent across different scatterers.
+
+\section{CS Complex Gaussian Channel Gain}
+\label{appendix_section:cs_complex_gaussian_channel_gain}
+% =========================================
+%    CS Complex Gaussian Channel Gain
+% =========================================
+
+Consider the general scenario in which the signal from the \ac{TX} reaches the \ac{RX} via $N$ independent scatterers.
+The scatterers are assumed to be uniformly distributed on a sphere around the \ac{RX}, so that the angles of arrival $\alpha_n$ are independent and identically distributed.
+Each scatterer $n$ is further characterized by an initial phase $\phi_n$, which is uniformly distributed over $[0, 2\pi)$ and independent across scatterers, as established in Section~\ref{appendix_section:doppler_shift}.
+The individual attenuations are set to $a_n = 1/\sqrt{N}$, so that the total expected received power remains normalized to unity for any value of $N$.
+By superposition of the single-scatterer result in~\eqref{eq:received_signal_single_scatterer}, the aggregate channel gain reads
+\begin{equation}
+\label{eq:aggregate_channel_gain}
+    h(t) = \sum_{n=1}^{N} a_n \, e^{\,j(2\pi f_D \cos(\alpha_n)\, t \;+\; \phi_n)}.
+\end{equation}
+
+To characterize the distribution of $h(t)$, the real and imaginary parts are analyzed separately.
+Let $\theta_n \triangleq 2\pi f_D \cos(\alpha_n)\, t$ denote the deterministic phase contribution of scatterer $n$ at time $t$, and define
+\begin{equation}
+    X(t) = \sum_{n=1}^{N} a_n \cos(\theta_n + \phi_n),
+    \qquad
+    Y(t) = \sum_{n=1}^{N} a_n \sin(\theta_n + \phi_n),
+\end{equation}
+so that $h(t) = X(t) + j\,Y(t)$.
+The mean, variance, and covariance of these components are computed below for a fixed time instant~$t$.
+
+\paragraph*{Mean:}~\\
+Since $\phi_n$ is uniformly distributed over $[0, 2\pi)$ and independent of $\alpha_n$, the expectation of each summand can be evaluated conditionally on $\alpha_n$ using the law of total expectation:
+\begin{subequations}
+\begin{align}
+    \mathbb{E}\!\left[X(t)\right]
+    &= \sum_{n=1}^{N} \mathbb{E}\!\left[a_n \cos(\theta_n + \phi_n)\right] \\
+    &= \sum_{n=1}^{N} \mathbb{E}\!\left[\mathbb{E}\!\left[a_n \cos(\theta_n + \phi_n) \mid \alpha_n\right]\right] \\
+    &= \sum_{n=1}^{N} \mathbb{E}\!\left[a_n \int_{0}^{2\pi} \cos(\theta_n + \phi_n)\,\frac{1}{2\pi}\,\mathrm{d}\phi_n\right] \\
+    &= \sum_{n=1}^{N} \mathbb{E}\!\left[a_n \; 0\right]
+\end{align}
+\end{subequations}
+Therefore, $\mathbb{E}[X(t)] = 0$.
+An identical argument with sine in place of cosine gives $\mathbb{E}[Y(t)] = 0$, and thus $\mathbb{E}[h(t)] = 0$.
+
+\paragraph*{Variance:}~\\
+Since $\mathbb{E}[X(t)] = 0$, the variance reduces to the second moment, which can be expanded as
+\begin{equation}
+    \mathrm{Var}[X(t)]
+    = \sum_{n=1}^{N}\sum_{m=1}^{N}
+      \mathbb{E}\!\left[\mathbb{E}\!\left[a_n \cos(\theta_n + \phi_n) \, a_m \cos(\theta_m + \phi_m) \mid \alpha_n, \alpha_m\right]\right],
+\end{equation}
+where the law of total expectation is applied again to evaluate the expectation of each summand conditionally on $\alpha_n$ and $\alpha_m$.
+For $n \neq m$, the independence of $\phi_n$ and $\phi_m$ allows the expectation to factorize into a product of two zero-mean terms, so the cross terms vanish.
+For $n = m$,
+\begin{equation}
+    \mathbb{E}\!\left[a_n^2 \cos^2(\theta_n + \phi_n) \mid \alpha_n\right]
+    = a_n^2 \int_{0}^{2\pi} \cos^2(\theta_n + \phi_n)\,\frac{1}{2\pi}\,\mathrm{d}\phi_n
+    = \frac{1}{2} \, a_n^2.
+\end{equation}
+Summing the diagonal terms and substituting $a_n = 1/\sqrt{N}$ gives $\mathrm{Var}[X(t)] = \frac{1}{2} \sum_{n=1}^{N} a_n^2 = 1/2$.
+An analogous calculation gives $\mathrm{Var}[Y(t)] = 1/2$.
+
+\paragraph*{Covariance:}~\\
+Since $\mathbb{E}[X(t)] = \mathbb{E}[Y(t)] = 0$, the covariance reduces to the cross moment, which can be expanded as
+\begin{equation}
+    \mathrm{Cov}[X(t),Y(t)]
+    = \sum_{n=1}^{N}\sum_{m=1}^{N}
+      \mathbb{E}\!\left[\mathbb{E}\!\left[a_n \cos(\theta_n + \phi_n) \, a_m \sin(\theta_m + \phi_m) \mid \alpha_n, \alpha_m\right]\right].
+\end{equation}
+Similarly to the variance calculation, the cross terms vanish for $n \neq m$, and for $n = m$,
+\begin{equation}
+    \mathbb{E}\!\left[a_n^2 \cos(\theta_n + \phi_n)\sin(\theta_n + \phi_n) \mid \alpha_n\right]
+    = \frac{1}{2} a_n^2 \int_{0}^{2\pi} \sin(2\theta_n + 2\phi_n)\,\frac{1}{2\pi}\,\mathrm{d}\phi_n
+    = 0.
+\end{equation}
+Hence, $\mathrm{Cov}[X(t),Y(t)] = 0$, confirming that the real and imaginary parts of the channel gain are uncorrelated.
+\bigskip
+
+Each summand in $X(t)$ is a bounded, zero-mean random variable, and the summands are mutually independent.
+By the Central Limit Theorem~\cite{central_limit_theorem_1935}, as the number of scatterers grows large ($N \to \infty$), the distribution of $X(t)$ converges to a Gaussian with mean $0$ and variance $1/2$.
+The same holds for $Y(t)$.
+Since $X(t)$ and $Y(t)$ are independent Gaussian random variables, they are jointly Gaussian, and the channel gain $h(t) = X(t) + j\,Y(t)$ is therefore a circularly symmetric complex Gaussian random variable with zero mean and unit variance:
+\begin{equation}
+\label{eq:channel_gain_distribution}
+    h(t) \sim \mathcal{CN}(0,\,1).
+\end{equation}
+A standard transformation to polar coordinates shows that the amplitude $|h(t)|$ follows a Rayleigh distribution, which is the origin of the model's name.
+The phase $\angle h(t)$ is uniformly distributed over $[0, 2\pi)$, as a direct consequence of the circular symmetry of $\mathcal{CN}(0,1)$.
+Finally, the instantaneous power $|h(t)|^2$ follows an exponential distribution with unit mean. 
+
+\section{Doppler Spectrum and Jakes' Model}
+\label{appendix_section:doppler_spectrum_jakes_model}
+% =========================================
+%    Doppler Spectrum and Jakes' Model
+% =========================================
+
+Section~\ref{appendix_section:cs_complex_gaussian_channel_gain} characterized the distribution of $h(t)$ at a fixed time instant $t$.
+To describe the temporal variation of the fading process, the \acf{acf} and the \acf{PSD} of $h(t)$ are derived in this section.
+
+As established in Section~\ref{appendix_section:cs_complex_gaussian_channel_gain}, the channel gain at time $t$ can be expressed as
+\begin{equation}
+    h(t) = \sum_{n=1}^{N} a_n \, e^{\,j(2\pi f_D \cos(\alpha_n)\, t \;+\; \phi_n)},
+\end{equation}
+where the expected power is normalized, i.e., $\sum_{n=1}^{N} \mathbb{E}[a_n^2] = 1$ and $\phi_n \sim \mathrm{Uniform}(0, 2\pi)$ are independent across scatterers.
+The scatterers are further assumed to be uniformly distributed on a sphere around the \ac{RX}, so that the angles of arrival are identically distributed as $\alpha_n \sim \mathrm{Uniform}(0, 2\pi)$.
+
+\subsection*{Autocorrelation Function}
+\label{appendix_section:acf_jakes_model}
+
+Let us calculate the \ac{acf} $R_h(\tau) = \mathbb{E}[h(t) h^*(t-\tau)]$ of the fading process:
+\begin{fleqn}[0em]
+\label{eq:acf_calculation}
+\begin{align*}
+    &R_h(\tau) \\
+    &\quad= \mathbb{E}\Big[ \big( \sum_{n=0}^{N} a_n \, \exp(j \, 2\pi \, f_D \cos(\alpha_n) \, t + j \phi_n) \big) \, \big( \sum_{m=0}^{N} a_m \, \exp(-j \, 2\pi \, f_D \cos(\alpha_m) \, (t-\tau) - j \phi_m) \big) \Big] \\
+    &\quad= \sum_{n=0}^{N} \sum_{m=0}^{N} \mathbb{E}\big[ a_n \,\exp(j \, 2\pi \, f_D \cos(\alpha_n) \, t + j \phi_n) \; a_m \, \exp(-j \, 2\pi \, f_D \cos(\alpha_m) \, (t-\tau) - j \phi_m) \big] \\
+    &\quad= \sum_{n=0}^{N} \sum_{m=0}^{N} \mathbb{E}\big[ a_n a_m \exp(j \, 2\pi \, f_D \left( \cos\alpha_n - \cos\alpha_m \right) t) \, \exp(j \, 2\pi \, f_D \cos(\alpha_m) \, \tau) \, \exp(j \phi_n) \, \exp(-j \phi_m) \big] \\
+    &\quad= \sum_{n=0}^{N} \sum_{m=0}^{N} \mathbb{E}\big[ a_n a_m \exp(j \, 2\pi \, f_D \left( \cos\alpha_n - \cos\alpha_m \right) t) \; \exp(j \, 2\pi \, f_D \cos(\alpha_m) \, \tau) \big] \; \mathbb{E}\big[ \exp(j (\phi_n - \phi_m)) \big] \\
+    & \qquad \bullet \; \mathbb{E}\big[ \exp(j (\phi_n - \phi_m)) \big] = 
+    \begin{cases}
+        \mathbb{E}\left[ e^{j (\phi_n - \phi_n)}\right] = 1 & \text{if } n = m \\
+        \mathbb{E}\left[ e^{j \phi_n}\right] \, \mathbb{E}\left[ e^{-j \phi_m}\right] = 0 & \text{if } n \neq m
+    \end{cases}\\
+    &\quad= \sum_{n=0}^{N} \mathbb{E}\big[ a_n^2 \, e^{j \, 2\pi \, f_D \cos(\alpha_n) \, \tau}\big] \\
+    &\quad= \sum_{n=0}^{N} \mathbb{E}\Big[ \mathbb{E}\big[ a^2_n \, e^{j \, 2\pi \, f_D \cos(\alpha_n) \, \tau} \big| \alpha_n \big] \Big] \\
+    &\quad= \sum_{n=0}^{N} \mathbb{E}\Big[ a_n^2 \int_{0}^{2\pi} e^{j \, 2\pi \, f_D \cos(\alpha_n) \, \tau} \, \frac{1}{2\pi} \, d\alpha_n \Big] \\
+    &\quad= \sum_{n=0}^{N} \, \mathbb{E}\big[ a_n^2 \big] \; \frac{1}{2\pi} \int_{0}^{2\pi} e^{j \, 2\pi \, f_D \cos(\alpha_n) \, \tau} \, d\alpha \\
+    &\quad= \frac{1}{2\pi} \int_{0}^{2\pi} e^{j \, 2\pi \, f_D \cos(\alpha) \, \tau} \, d\alpha \\
+    &\quad= J_0(2\pi f_D \tau).
+\end{align*}
+\end{fleqn}
+
+The \ac{acf} of the channel gain is therefore given by the zeroth-order Bessel function of the first kind, $J_0(2\pi f_D \tau)$, which quantifies the degree of correlation between the channel gain at two time instants separated by $\tau$.
+The \ac{acf} equals one at $\tau = 0$, since the channel gain is perfectly correlated with itself at zero lag, and decays as $\tau$ increases.
+The channel coherence time $T_c$ is defined as the lag at which the \ac{acf} drops to a prescribed threshold, here taken as $R_h(T_c) = 1/2$.
+For $\tau \ll T_c$, consecutive channel samples are highly correlated and the channel remains approximately constant over the interval.
+For $\tau \gg T_c$, the \ac{acf} approaches zero and the samples are approximately uncorrelated.
+Figure~\ref{fig:acf_jakes_model} illustrates the \ac{acf} as a function of the normalized time lag $\tau/T_c$.
+\begin{figure}[!htb]
+    \centering
+    \begin{subfigure}{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/annex/C_rayleigh/acf_jakes_model_25.png}
+        \caption{}
+    \end{subfigure}
+    \vfill
+    \begin{subfigure}{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/annex/C_rayleigh/acf_jakes_model_4.png}
+        \caption{}
+    \end{subfigure}
+    \caption[Autocorrelation function of Jakes' model]
+    {The autocorrelation function of the channel gain fading process, relative to the coherence time $T_c$. (a) shows the autocorrelation for a maximum time lag of $25 T_c$, while (b) zooms in on the region around the coherence time.}
+    \label{fig:acf_jakes_model}
+\end{figure}
+
+The relationship between $T_c$ and $f_D$ is obtained as follows:
+\begin{equation}
+\label{eq:relation_Tc_fD}
+    R_h(T_c) = J_0(2\pi f_D T_c) = \frac{1}{2} \quad \Rightarrow \quad T_c \approx \frac{0.25}{f_D}.
+\end{equation}
+The coherence time is therefore inversely proportional to the maximum Doppler frequency.
+This makes intuitive sense: the faster the \ac{RX} moves, and thus the higher the Doppler frequency $f_D = v/\lambda$, the more rapidly the channel fluctuates, and hence the shorter the coherence time.
+
+When the symbol duration is much smaller than the coherence time ($T_s \ll T_c$), the channel gain is approximately constant over many symbols.
+In this slow fading regime, it is common to adopt the block fading model, in which $h(t)$ is assumed to be constant over a block of $L$ symbols and drawn independently from $\mathcal{CN}(0,1)$ for each successive block.
+
+\subsection*{Power Spectral Density}
+\label{appendix_section:psd_jakes_model}
+
+By the Wiener-Khinchin theorem, the \ac{PSD} of a wide-sense stationary process equals the Fourier transform of its \ac{acf}.
+Let us compute the \ac{PSD} $S_h(f) = \mathcal{F}\{R_h(\tau)\}$ of the fading process:
+\begin{fleqn}[0em]
+\begin{align*}
+    &S_h(f) \\
+    &\quad= \int_{-\infty}^{+\infty} R_h(\tau) \; e^{-j 2 \pi f \tau} \, d\tau \\
+    &\quad= \int_{-\infty}^{+\infty} \left( \frac{1}{2\pi} \; \int_{0}^{2\pi} e^{j \, 2\pi \, f_D \cos(\alpha) \, \tau} \, d\alpha \right) \; e^{-j 2 \pi f \tau} \, d\tau \\
+    &\quad= \frac{1}{2\pi} \; \int_{0}^{2\pi} \left(\int_{-\infty}^{+\infty} e^{j \, 2\pi \, f_D \cos(\alpha) \, \tau} \; e^{-j 2 \pi f \tau} \, d\tau \right) \, d\alpha \\
+    &\quad= \frac{1}{2\pi} \; \int_{0}^{2\pi} \left(\int_{-\infty}^{+\infty} e^{-j \, 2\pi \, (f - f_D \cos(\alpha)) \, \tau} \, d\tau \right) \, d\alpha \\
+    & \qquad \bullet \; \text{definition Dirac delta function: } \\
+    & \qquad \qquad\delta(\xi) = \int_{-\infty}^{+\infty} e^{-j \, 2\pi \, \xi \, t} \, dt \iff \int_{-\infty}^{+\infty} e^{-j \, 2\pi \, (f - f_D \cos(\alpha)) \, \tau} \, d\tau = \delta(f - f_D \cos(\alpha)) \\
+    &\quad= \frac{1}{2\pi} \; \int_{0}^{\pi} \delta(f - f_D \cos(\alpha)) \, d\alpha \; + \; \frac{1}{2\pi} \; \int_{\pi}^{2\pi} \delta(f - f_D \cos(\alpha)) \, d\alpha \\ 
+    & \qquad \bullet \; \text{substitution: } \\
+    & \qquad \qquad u = f_D \cos(\alpha) \\
+    & \qquad \qquad \Leftrightarrow \; du = -f_D \sin(\alpha) \, d\alpha  \\
+    & \qquad \qquad \Leftrightarrow \; du = -f_D \; \; \text{sgn}(\sin\alpha) \, \sqrt{1 - \cos^2(\alpha)} \; d\alpha \\
+    & \qquad \qquad \Leftrightarrow \;du = -f_D \; \; \text{sgn}(\sin\alpha) \, \sqrt{1 - (\frac{u}{f_D})^2} \; d\alpha \\
+    & \qquad \qquad \alpha = 0, \alpha = 2\pi \implies u = f_D; \quad \alpha = \pi \implies u = -f_D \\
+    &\quad= \frac{1}{2\pi} \; \int_{f_D}^{-f_D} \frac{\delta(f - u)}{-f_D \sqrt{1 - (\frac{u}{f_D})^2}} \,du \; + \; \frac{1}{2\pi} \; \int_{-f_D}^{f_D} \frac{\delta(f - u)}{f_D \sqrt{1 - (\frac{u}{f_D})^2}} \, du \\
+    &\quad= \frac{1}{\pi} \; \int_{-f_D}^{f_D} \frac{\delta(f - u)}{f_D \sqrt{1 - (\frac{u}{f_D})^2}} \, du \\
+    &\quad= \frac{1}{\pi} \; \frac{1}{f_D \sqrt{1 - (\frac{u}{f_D})^2}} \Bigg|_{u=f} \;, \qquad \text{for} \quad |f| < f_D \\
+    &\quad= \frac{1}{\pi f_D \, \sqrt{1 - (\frac{f}{f_D})^2}} \;, \qquad \text{for} \quad |f| < f_D
+\end{align*}
+\end{fleqn}
+
+The resulting \ac{PSD} is known as the Doppler spectrum.
+It is nonzero only for $|f| \leq f_D$, confirming that the fading process is band-limited to the maximum Doppler frequency: since no scattering angle can produce a Doppler shift exceeding $\pm f_D$. The total Doppler spread equals $2f_D$.
+
+The spectrum exhibits a characteristic ``bathtub'' shape, which is a direct consequence of the mapping $f = f_D \cos(\alpha)$.
+Near $\alpha = 0$ and $\alpha = \pi$, $\cos(\alpha)$ varies slowly as a function of $\alpha$, so a wide range of angles maps to a narrow frequency band near $\pm f_D$, concentrating power at the spectral edges.
+Near $\alpha = \pi/2$, $\cos(\alpha)$ varies rapidly, so comparatively few angles contribute per unit frequency around $f = 0$.
+Figure~\ref{fig:doppler_spectrum} shows the resulting Doppler spectrum.
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/annex/C_rayleigh/doppler_spectrum.png}
+    \caption[Doppler spectrum of Jakes' model]
+    {The Doppler spectrum of Jakes' model.}
+    \label{fig:doppler_spectrum}
+\end{figure}
