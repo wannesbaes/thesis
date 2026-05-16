@@ -382,7 +382,7 @@ In other words, the maximum information rate design is just a special case of th
 The choice of the error weights $\mathbf{W}_{\mathrm{e}} = \mathbf{\Lambda}$ indicates that stronger eigen subchannels support higher rates compared to the weaker ones, and hence need to be more heavily weighted in the cost function. This is consistent with the waterfilling solution, which allocates more power to stronger subchannels.
 
 The maximum information rate design is particularly relevant in adaptive modulation systems, where more power and higher order modulation are used on eigen subchannels with higher gains to improve the total data rate.
-The performance of these systems will be evaluated in Section~\ref{section:unknown}, based on simulation results for different system configurations.
+The performance of these systems will be evaluated in Section~\ref{section:simulation_results}, based on simulation results for different system configurations.
 
 \subsection{Quality of Service Design}
 \label{section:quality_of_service_design}
@@ -472,4 +472,35 @@ Hence, the power allocation can be computed efficiently using Algorithm~\ref{alg
 As in the maximum-information-rate design, eigen subchannels whose gains fall below a threshold receive no power. 
 Among the remaining active subchannels, however, the weighting factor $\alpha_i = \lambda_i^{-1/2}$ gives relatively more emphasis to weaker subchannels than in the standard sum-rate case with $\alpha_i = 1$.
 This reflects the fact that the present design minimizes the total sum \ac{MSE}, rather than maximizing the information rate.
+
+\section{Simulation Results}
+\label{section:simulation_results}
+% =======================
+%   Simulation Results
+% =======================
+
+
+\subsection{Resource Allocation Strategies}
+\label{subsection:resource_allocation_strategies}
+% =====================================
+%    Resource Allocation Strategies
+% =====================================
+
+\subsection{Impact of the Data Rate}
+\label{subsection:impact_of_data_rate}
+% =====================================
+%    Impact of the Data Rate
+% =====================================
+
+\subsection{Impact of the Antenna Count}
+\label{subsection:impact_of_antenna_count}
+% =====================================
+%    Impact of the Antenna Count
+% =====================================
+
+\subsection{Analytical Validation}
+\label{subsection:analytical_results}
+% =====================================
+%    Analytical Validation
+% =====================================
 
