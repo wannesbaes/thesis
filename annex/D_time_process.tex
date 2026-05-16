@@ -1,0 +1,162 @@
+\chapter[Computer Simulation of Time--Correlated Processes]{Computer Simulation of Time--Correlated Random Processes}
+\label{appendix:time_correlated_processes}
+
+When generating channel realizations for a time-varying channel, it is necessary to simulate a zero-mean complex Gaussian random process with a prescribed correlation in time.
+This appendix presents two practical methods for simulating time--correlated random processes on a computer.
+The first method uses the autocorrelation function as input and is based on the Cholesky decomposition of the covariance matrix.
+The second method uses the power spectral density as input and is based on filtering a white Gaussian process with a linear time-invariant system.
+In the simulation framework developed for this dissertation, both methods are employed to generate time--correlated channel realizations.
+
+
+\section{Cholesky Decomposition Method}
+\label{appendix:cholesky_method}
+% =====================================
+%   Cholesky Decomposition Method
+% =====================================
+
+The Cholesky decomposition method for generating a zero-mean unit-variance complex Gaussian process $\mathbf{h}$ of length $N$ with a specified autocorrelation function $R_h(\tau)$ consists of the following steps:
+\begin{itemize}[label={}, leftmargin=0.5cm]
+    
+    \item \textbf{Step 1:} 
+    Build the $N \times N$ covariance matrix $\mathbf{C}$ with entries $C_{i,j} = R_h((i-j)T_s)$.
+    
+    \item \textbf{Step 2:} 
+    Compute the Cholesky decomposition of the covariance matrix $\mathbf{C} = \mathbf{L}\mathbf{L}^H$, where $\mathbf{L}$ is a lower triangular matrix.
+    
+    \item \textbf{Step 3:} 
+    Generate a column vector $\mathbf{w}$ of $N$ i.i.d. white complex Gaussian random variables with zero mean and unit variance.
+    
+    \item \textbf{Step 4:}
+    Obtain the desired Gaussian process as $\mathbf{h} = \mathbf{L}\mathbf{w}$.
+
+\end{itemize}
+
+We show that the Cholesky decomposition method effectively generates a zero-mean unit-variance complex Gaussian process $\mathbf{h}$ of length $N$ with a specified autocorrelation function $R_h(\tau)$.
+
+First, let us verify that the generated process $\mathbf{h}$ is a complex Gaussian process with zero mean and the specified autocorrelation function.
+
+Each element $h_n = \sum_{k=1}^n L_{k, n} w_k$ of the process $\mathbf{h}$ is a complex Gaussian random variable, since $w_k$ are \ac{i.i.d.} complex Gaussian random variables and the linear combination of complex Gaussian random variables is itself also a complex Gaussian random variable. Let us now calculate the mean and covariance matrix of the generated process $\mathbf{h}$.
+
+The expected value of each element $h_n$ is given by:
+\begin{equation}
+\label{eq:cholensky_mean_h}
+    \mathbb{E}[h_n] = \mathbb{E}\left[\sum_{k=1}^n L_{k, n} w_k\right] = \sum_{k=1}^n L_{k, n} \mathbb{E}[w_k] = 0
+\end{equation}
+
+The covariance matrix of $\mathbf{h}$ is given by:
+\begin{equation}
+\label{eq:cholensky_covariance_h}
+\begin{aligned}
+    \text{Cov}[\mathbf{h}] &= \mathbb{E}[(\mathbf{h} - \mathbb{E}[\mathbf{h}])(\mathbf{h} - \mathbb{E}[\mathbf{h}])^H] = \mathbb{E}[\mathbf{h}\mathbf{h}^H] \\
+    &= \mathbb{E}[(\mathbf{L}\mathbf{w})(\mathbf{L}\mathbf{w})^H] = \mathbb{E}[\mathbf{L}\mathbf{w}\mathbf{w}^H\mathbf{L}^H] = \mathbf{L} \,  \mathbb{E}[\mathbf{w}\mathbf{w}^H] \, \mathbf{L}^H \\
+    &= \mathbf{L} \, \mathbf{I}_N \, \mathbf{L}^H = \mathbf{L} \mathbf{L}^H = \mathbf{C}
+\end{aligned}
+\end{equation}
+
+From~\eqref{eq:cholensky_mean_h} and~\eqref{eq:cholensky_covariance_h}, the mean of the generated process $\mathbf{h}$ is zero and the covariance of $\mathbf{h}$ matches the specified autocorrelation function $R_h(\tau)$ by construction. This confirms that the Cholesky decomposition method effectively generates a zero-mean unit-variance complex Gaussian process with the desired correlation properties:
+\begin{equation}
+    \mathbf{h} \sim \mathcal{CN}(\mathbf{0}, \mathbf{C})
+\end{equation}
+
+Second, let us demonstrate that the Cholesky decomposition of the covariance matrix $\mathbf{C}$ always exists.
+It is well-known that the Cholesky decomposition of a matrix $\mathbf{C}$ exists and is unique if and only if $\mathbf{C}$ is an Hermitian matrix and a positive-definite matrix, i.e.:
+\begin{equation}
+    \exists ! \, \mathbf{L} : \mathbf{C} = \mathbf{L}\mathbf{L}^H \iff \mathbf{C} = \mathbf{C}^H \quad \text{and} \quad \forall \mathbf{x} \in \mathbb{C}^N \setminus \{\mathbf{0}\} : \, \mathbf{x}^H \mathbf{C} \mathbf{x} > 0
+\end{equation}
+
+Consider a autocorrelation function $R_h(\tau)$ of a wide-sense stationary process, i.e. $R_h$ does not depend on the absolute time $t$, but only on the time difference $\tau$.
+Therefore, the covariance matrix $\mathbf{C}$ is a real and symmetric Toeplitz matrix by construction. Thus, $\mathbf{C}$ is a Hermitian matrix.
+
+We prove that $\mathbf{C}$ is positive-definite by contradiction.
+First, let us simplify the expression $\mathbf{x}^H \mathbf{C} \mathbf{x}$:
+\begin{align}
+    \mathbf{x}^H \mathbf{C} \mathbf{x} &= \sum_{i=1}^N \sum_{j=1}^N x_i^* C_{i,j} x_j = \sum_{i=1}^N \sum_{j=1}^N x_i^* R_h((i-j)T_s) x_j \notag \\
+    &= \sum_{i=1}^N \sum_{j=1}^N x_i^* \left( \int_{-\infty}^{\infty} S_h(f) e^{j 2 \pi f (i-j)T_s} df \right) x_j \notag \\
+    &= \int_{-\infty}^{\infty} S_h(f) \left( \sum_{i=1}^N x_i^* e^{j 2 \pi f i T_s} \right) \left( \sum_{j=1}^N x_j e^{-j 2 \pi f j T_s} \right) df \displaybreak \notag \\
+    &= \int_{-\infty}^{\infty} S_h(f) \, \left|\sum_{i=1}^N x_i e^{-j 2 \pi f i T_s}\right|^2 \; df \notag \\
+    &= \int_{-\infty}^{\infty} S_h(f) \, |X(f)|^2 \; df
+    \label{eq:cholensky_positive_definite_C}
+\end{align}
+
+We consider a autocorrelation function $R_h(\tau)$ that corresponds to a power spectral density that makes physical sense, i.e. $S_h(f)$ is positive for all frequencies $f$ and strictly positive for a set of positive measure.
+Then, it is easy to see that $\mathbf{C}$ is positive semi-definite, since the integrand is non-negative for all frequencies $f$.
+
+Assume that $\mathbf{C}$ is not positive-definite, then there exists a non-zero vector $\mathbf{x} \in \mathbb{C}^N$ such that $\mathbf{x}^H \mathbf{C} \mathbf{x} = 0$.
+For that to be true, the integrand must be zero, which implies that $X(f) = 0$ for all frequencies $f$ where $S_h(f) > 0$, which is a set of positive measure. 
+$X(f)$ can be seen as the $\mathcal{Z}$-transform of $\mathbf{x}$ evaluated on the unit circle, which corresponds to a complex  polynomial of degree at most $N-1$. 
+By the Fundamental Theorem of Algebra, such a nonzero polynomial has at most $N-1$ roots. Therefore, $\mathbf{x}$ must be the zero vector, which contradicts the assumption. 
+Hence, $\mathbf{C}$ is positive-definite.
+
+\section{Linear Filtering Method}
+\label{appendix:psd_method}
+% ===============================
+%   Linear Filtering Method
+% ===============================
+
+The linear filtering method for generating a zero-mean unit-variance complex Gaussian process with a specified power spectral density $S_h(f)$ consists of the following steps:
+\begin{itemize}[label={}, leftmargin=0.5cm]
+
+    \item \textbf{Step 1:}
+    Evaluate the target \ac{PSD} $S_h(f)$ on an \acs{FFT} frequency grid of $N_g$ uniformly spaced normalized frequencies $\nu_k \in [-1/2, 1/2)$.
+    To avoid aliasing, the sampling period $T_s$ must satisfy the Nyquist condition $f_D T_s < 1/2$, where $f_D$ denotes the maximum Doppler frequency.
+
+    \item \textbf{Step 2:}
+    Construct the frequency-domain shaping response by taking the nonnegative square root of the sampled \ac{PSD}: $G[\nu_k] = \sqrt{S_h[\nu_k]}$.
+
+    \item \textbf{Step 3:}
+    Apply an inverse discrete Fourier transform to the shaping response $G[\nu_k]$ in order to obtain the impulse response of a finite-length \acs{FIR} filter, $g[n] = \mathcal{F}^{-1}\{G[\nu_k]\}$, and normalize this filter to unit energy.
+
+    \item \textbf{Step 4:}
+    Generate a sequence of white proper complex Gaussian random variables $w[n]$ with zero mean and unit variance per sample.
+
+    \item \textbf{Step 5:}
+    Obtain the desired time-correlated output process by convolving the white-noise sequence with the shaping filter: $h[n] = \sum_m g[m]\, w[n-m]$.
+
+\end{itemize}
+
+The underlying idea of this method is that passing white complex Gaussian noise through a linear time-invariant filter with frequency response $G(f)$ yields an output process whose power spectral density is equal to $|G(f)|^2$.
+Consequently, by choosing $G(f) = \sqrt{S_h(f)}$, the output process is shaped so as to have the desired power spectral density.
+The derivation below makes this argument precise.
+
+First, note that the output process $h(t)$ is a linear transformation of the white Gaussian input process $w(t)$ and is therefore itself a complex Gaussian process.
+Moreover, because the input process has zero mean and the filter is linear, the mean of the output process is also zero.
+
+Let us now determine the autocorrelation function of the output process $h(t)$:
+\begin{fleqn}[0.75cm]
+\begin{align}
+    R_h(\tau) 
+    &= \mathbb{E}[h(t) \, h^*(t-\tau)] \notag \\
+    &= \mathbb{E}\left[ \int_{-\infty}^{+\infty} g(u) \, w(t-u) \, du \, \int_{-\infty}^{+\infty} g(v) \, w^*(t-\tau-v) \, dv \right] \notag \\
+    &= \int_{-\infty}^{+\infty} \int_{-\infty}^{+\infty} g(u) \, g^*(v) \, \mathbb{E}\big[w(t-u) \, w^*(t-\tau-v)\big] \, du \, dv \notag \\
+    & \qquad \bullet \quad \mathbb{E}\big[w(t-u) \, w^*(t-\tau-v)\big] \notag \\
+    & \qquad \quad \quad = \mathbb{E}\big[w(t-u) \, w^*((t-u) - (\tau-v-u))\big] = R_w(\tau + v - u) = \delta(\tau + v - u) \notag \\
+    &= \int_{-\infty}^{+\infty} \int_{-\infty}^{+\infty} g(u) \, g^*(v) \, \delta(\tau + v - u) \, du \, dv \notag \\
+    &= \int_{-\infty}^{+\infty} g(u) \, g^*(u-\tau) \, du \notag \\
+    &= R_g(\tau) \label{eq:psd_autocorrelation_output_h}
+\end{align}
+\end{fleqn}
+
+Equation~\eqref{eq:psd_autocorrelation_output_h} shows that the autocorrelation function of the output process is equal to the autocorrelation function of the shaping filter.
+In particular, because the filter is normalized to unit energy, the variance of the output process is given by $R_h(0) = R_g(0) = \int_{-\infty}^{+\infty} |g(u)|^2 du = 1$.
+Hence, the generated process has unit variance.
+
+Next, we compute the Fourier transform of the autocorrelation function in order to obtain the power spectral density of the output process:
+\begin{fleqn}[0.75cm]
+\begin{align}
+    S_h(f) 
+    &= \int_{-\infty}^{+\infty} R_g(\tau) \, e^{-j 2 \pi f \tau} \, d\tau \notag \\
+    &= \int_{-\infty}^{+\infty} \left( \int_{-\infty}^{+\infty} g(u) \, g^*(u-\tau) \, du \right) \, e^{-j 2 \pi f \tau} \, d\tau \notag \\
+    &= \int_{-\infty}^{+\infty} \int_{-\infty}^{+\infty} g(u) \, g^*(u-\tau) \, e^{-j 2 \pi f \tau} \, du \, d\tau \notag \\
+    &= \int_{-\infty}^{+\infty} \int_{-\infty}^{+\infty} g(u) \, g^*(v) \, e^{-j 2 \pi f (u-v)} \, du \, dv \notag \\
+    &= \left( \int_{-\infty}^{+\infty} g(u) \, e^{-j 2 \pi f u} \, du \right) \, \left( \int_{-\infty}^{+\infty} g^*(v) \, e^{j 2 \pi f v} \, dv \right) \notag \\
+    &= G(f) \, G^*(f) \notag \\
+    &= \left|G(f)\right|^2 \label{eq:psd_output_h}
+\end{align}
+\end{fleqn}
+
+Equation~\eqref{eq:psd_output_h} confirms that the power spectral density of the output process equals the squared magnitude of the filter's frequency response.
+Therefore, choosing the shaping filter such that $G(f) = \sqrt{S_h(f)}$ ensures that the generated process has the desired power spectral density.
+
+In a practical computer implementation, the process cannot be generated in continuous time and with an infinite-length filter.
+Instead, the shaping filter is approximated by a finite-length discrete-time filter obtained from sampled values of the target \ac{PSD} via the inverse \ac{DFT}.
+It is important to choose the filter length $N_g$ sufficiently large, so that truncation effects become negligible and the finite-length filter accurately approximates the target correlation properties of the process.
