@@ -1,6 +1,10 @@
 \chapter{Precoding for SU-MIMO systems}
 \label{chapter:precoding_for_su_mimo}
 
+This chapter develops linear precoding strategies for \ac{SU}-\ac{MIMO} systems under a total transmit--power constraint.
+First, we analyze the capacity in greater detail. Next, a generalized \acs{WMMSE} design framework for the joint optimization of the precoder and combiner is derived.
+Finally, the performance is evaluated through Monte-Carlo simulations for different system configurations.
+
 \section{Capacity Achieving Precoding}
 \label{section:capacity_achieving_precoding}
 % ==========================================
@@ -228,6 +232,7 @@ It is worth noting that uniform power allocation does not require knowledge of t
 
     \label{fig:waterfilling_power_allocation_SNR_extremes}
 \end{figure}
+
 
 \section{Joint Design for Linear Precoder and Combiner}
 \label{section:joint_design_for_linear_precoder_and_combiner}
@@ -473,24 +478,156 @@ As in the maximum-information-rate design, eigen subchannels whose gains fall be
 Among the remaining active subchannels, however, the weighting factor $\alpha_i = \lambda_i^{-1/2}$ gives relatively more emphasis to weaker subchannels than in the standard sum-rate case with $\alpha_i = 1$.
 This reflects the fact that the present design minimizes the total sum \ac{MSE}, rather than maximizing the information rate.
 
-\section{Simulation Results}
-\label{section:simulation_results}
-% =======================
-%   Simulation Results
-% =======================
 
+\section{Performance Evaluation}
+\label{section:performance_evaluation}
+% ===========================
+%   Performance Evaluation
+% ===========================
 
-\subsection{Resource Allocation Strategies}
-\label{subsection:resource_allocation_strategies}
+The preceding section derived optimal linear precoders and combiners for the \ac{SU}-\ac{MIMO} channel under several design criteria.
+This section evaluates the performance of the maximum information rate design through Monte Carlo simulations.
+As established in Section~\ref{section:maximum_information_rate_design}, this design is equivalent to the capacity-achieving \ac{SVD}-based precoder and combiner with waterfilling power allocation.
+
+All simulations are conducted under the following assumptions.
+The channel is modeled as an i.i.d. Rayleigh block fading channel, whose statistical model is derived in Appendix~\ref{appendix:rayleigh_channel}.
+Each entry of the channel matrix $\mathbf{H}$ is drawn independently from $\mathcal{CN}(0,1)$, and the channel is held constant within a transmission block and drawn independently across blocks.
+The reported performance metrics are averaged over at least $100$ independent channel realizations.
+Perfect \ac{CSI} is assumed at both the \ac{TX} and the \ac{RX}, so that the precoder and combiner are computed from the exact channel matrix.
+
+The following subsections examine the effect of different system configurations and design parameters on the system performance.
+At the end of this section, analytical results are included to serve as a cross-check for the simulation curves.
+All results are presented as a function of the \ac{SNR}, in terms of the total \acf{BER} and the total \acf{IBR} of the system.
+
+\subsection{Bit Allocation Strategies}
+\label{subsection:bit_allocation_strategies}
 % =====================================
-%    Resource Allocation Strategies
+%    Bit Allocation Strategy
 % =====================================
+
+As a first experiment, the \ac{BER} is evaluated as a function of the \ac{SNR} for a $2 \times 2$ \ac{SU}-\ac{MIMO} system using three modulation schemes: \ac{QAM}, \ac{PSK}, and \ac{PAM}, each carrying the same number of bits per symbol.
+Figure~\ref{fig:impact_constellation_2x2_fixed_ba_ber_vs_snr} shows the results under a fixed bit allocation, where the same modulation order is applied on all eigen subchannels across the entire \ac{SNR} range.
+As expected, the \ac{BER} decreases monotonically with increasing \ac{SNR} for all three constellations.
+The \ac{BER} curve falls most steeply for \ac{QAM}, followed by \ac{PSK} and then \ac{PAM}, confirming that \ac{QAM} reaches any given target \ac{BER} at a strictly lower \ac{SNR} than the other two schemes at equal spectral efficiency.
+\ac{QAM} is therefore adopted as the modulation scheme throughout this dissertation, unless otherwise stated.
+The number of bits per symbol is always chosen to be even, so that the \ac{QAM} constellation forms a regular square grid.
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.55\linewidth]
+    {figures/background_material/03_su_mimo_precoding/impact_constellation/2x2_fixed_ba_ber_vs_snr.png}
+    \caption[System performance with fixed bit allocation]
+    {\ac{BER} as a function of \ac{SNR} for three \ac{SU}-\ac{MIMO} systems with $2$ transmit and $2$ receive antennas, each using a different modulation constellations on each stream: 16--\ac{PAM}, 16--\ac{PSK}, and 16--\ac{QAM}.}
+    \label{fig:impact_constellation_2x2_fixed_ba_ber_vs_snr}
+\end{figure}
+
+As established in Section~\ref{section:maximum_information_rate_design}, the maximum information rate design is particularly relevant in adaptive modulation systems, where the number of bits per symbol is not fixed but adapted to the instantaneous capacity of each eigen subchannel.
+Specifically, the bit allocation on subchannel $i$ is set to the largest even integer not exceeding its capacity.
+Figure~\ref{fig:adaptive_ba_4x4_QAM_optimal_pa_r_100} illustrates the resulting bit allocations for a $4 \times 4$ system at two different \ac{SNR} values.
+At low \ac{SNR}, the waterfilling solution concentrates almost all power on the strongest eigen subchannel, which is the only one capable of supporting a non-zero bit allocation.
+Because waterfilling maximizes the mutual information without accounting for the discrete nature of the bit allocation, a small amount of power is still directed to the weaker subchannels.
+Since their capacities fall below the $2$-bit threshold, however, their bit allocations remain zero and the corresponding power is wasted.
+Jointly optimizing the power and bit allocation to avoid this inefficiency has been studied in~\cite{mercury_waterfilling, practical_bit_loading}, but is not considered in this dissertation.
+At high \ac{SNR}, more subchannels become active and support higher-order constellations, increasing the total \ac{IBR}.
+
+\begin{figure}[htb]
+    \centering
+    \begin{subfigure}[c]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]
+        {figures/background_material/03_su_mimo_precoding/adaptive_ba/4x4_QAM_optimal_pa_r_100_snr_0dB.png}
+        \caption{$0 \, \mathrm{dB}$}
+        \label{subfig:adaptive_ba_4x4_QAM_optimal_pa_r_100_snr_0dB}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]
+        {figures/background_material/03_su_mimo_precoding/adaptive_ba/4x4_QAM_optimal_pa_r_100_snr_20dB.png}
+        \caption{$20 \, \mathrm{dB}$}
+        \label{subfig:adaptive_ba_4x4_QAM_optimal_pa_r_100_snr_20dB}
+    \end{subfigure}
+    \caption[Adaptive bit allocation in different SNR regimes]
+    {Adaptive bit allocation in different \ac{SNR} regimes for a system with $4$ transmit and $4$ receive antennas. The number of bits per symbol on each stream is the largest even integer not exceeding the capacity of the corresponding eigen subchannel.}
+    \label{fig:adaptive_ba_4x4_QAM_optimal_pa_r_100}
+\end{figure}
+
+Figure~\ref{fig:impact_constellation_4x4_adaptive_ba} shows the \ac{BER} and \ac{IBR} as a function of \ac{SNR} for this adaptive bit allocation strategy.
+In contrast to the fixed bit allocation case, the \ac{BER} remains approximately constant across the entire \ac{SNR} range, while the \ac{IBR} increases steadily with \ac{SNR}, as expected.
+
+\begin{figure}[htb]
+    \centering
+    \begin{subfigure}[c]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]
+        {figures/background_material/03_su_mimo_precoding/impact_constellation/4x4_adaptive_ba_ber_vs_snr.png}
+        \caption{}
+        \label{subfig:impact_constellation_4x4_adaptive_ba_ber_vs_snr}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]
+        {figures/background_material/03_su_mimo_precoding/impact_constellation/4x4_adaptive_ba_ibr_vs_snr.png}
+        \caption{}
+        \label{subfig:impact_constellation_4x4_adaptive_ba_ibr_vs_snr}
+    \end{subfigure}
+    \caption[System performance with adaptive bit allocation]
+    {System performance with adaptive bit allocation for a system with $4$ transmit and $4$ receive antennas. The \ac{BER} and \ac{IBR} are shown as a function of \ac{SNR}.}
+    \label{fig:impact_constellation_4x4_adaptive_ba}
+\end{figure}
 
 \subsection{Impact of the Data Rate}
-\label{subsection:impact_of_data_rate}
-% =====================================
+\label{subsection:impact_of_information_bit_rate}
+% =========================================
 %    Impact of the Data Rate
-% =====================================
+% =========================================
+
+The previous subsection assigned to each eigen subchannel the largest even number of bits not exceeding its full capacity, so that the system operated at approximately the maximum achievable rate.
+In practice, however, it may be preferable to transmit at a lower rate in exchange for a reduced \ac{BER}.
+To quantify this tradeoff, we introduce a rate factor $r_f \in (0, 1]$ that specifies which fraction of the subchannel capacity is used for transmission.
+The bit allocation on subchannel $i$ is then generalized to the largest even integer not exceeding $r_f \, C_i$, where $C_i$ denotes the instantaneous capacity of that subchannel.
+The case $r_f = 1$ recovers the maximum-rate allocation of the previous subsection.
+
+\begin{figure}[bht]
+    \centering
+    \begin{subfigure}[c]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]
+        {figures/background_material/03_su_mimo_precoding/impact_ibr/4x4_adaptive_ba_ber_vs_snr.png}
+        \caption{}
+        \label{subfig:impact_ibr_4x4_adaptive_ba_ber_vs_snr}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]
+        {figures/background_material/03_su_mimo_precoding/impact_ibr/4x4_adaptive_ba_ibr_vs_snr.png}
+        \caption{}
+        \label{subfig:impact_ibr_4x4_adaptive_ba_ibr_vs_snr}
+    \end{subfigure}
+    \caption[Impact of the IBR on the system performance (adaptive bit allocation)]
+    {Illustration of the impact of the data rate on the system performance for a system with $4$ transmit and $4$ receive antennas using adaptive bit allocation. The (a) \ac{BER} and (b) \ac{IBR} are shown as a function of \ac{SNR}, for three different rate factors.}
+    \label{fig:impact_ibr_4x4_adaptive_ba}
+\end{figure}
+
+Figure~\ref{fig:impact_ibr_4x4_adaptive_ba} shows the \ac{BER} and \ac{IBR} as a function of \ac{SNR} for several values of $r_f$ on a $4 \times 4$ system.
+As expected, reducing $r_f$ lowers the \ac{IBR}, because fewer bits are assigned to each subchannel.
+At the same time, the \ac{BER} decreases, since the chosen modulation order moves further below the subchannel capacity and the link operates with a larger margin.
+This illustrates an important tradeoff between throughput and reliability: operating below capacity sacrifices data rate in exchange for improved error performance.
+
+For completeness, Figure~\ref{fig:impact_ibr_2x2_fixed_ba_ber_vs_snr} shows the analogous experiment under fixed bit allocation on a $2 \times 2$ system, where the same modulation order is applied on all eigen subchannels across the entire \ac{SNR} range.
+The behavior is consistent: a smaller constellation size yields a lower \ac{BER} at any given \ac{SNR}.
+The slope of the \ac{BER} curve is essentially unchanged by the constellation order.
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.55\linewidth]
+    {figures/background_material/03_su_mimo_precoding/impact_ibr/2x2_fixed_ba_ber_vs_snr.png}
+    \caption[Impact of the IBR on the system performance (fixed bit allocation)]
+    {Illustration of the impact of the data rate on the system performance for a system with $2$ transmit and $2$ receive antennas using fixed bit allocation. The \ac{BER} is shown as a function of \ac{SNR} for three different modulation orders.}
+    \label{fig:impact_ibr_2x2_fixed_ba_ber_vs_snr}
+\end{figure}
 
 \subsection{Impact of the Antenna Count}
 \label{subsection:impact_of_antenna_count}
@@ -498,9 +635,114 @@ This reflects the fact that the present design minimizes the total sum \ac{MSE},
 %    Impact of the Antenna Count
 % =====================================
 
+
+This subsection examines how the number of transmit and receive antennas affects system performance, keeping the rate factor fixed at $r_f = 1$.
+Figure~\ref{fig:impact_antennas_variable_ibr_4x4_adaptive_ba} shows the \ac{BER} and \ac{IBR} as a function of \ac{SNR} for several antenna configurations.
+The \ac{BER} remains approximately constant across all configurations, consistent with the behavior observed in Section~\ref{subsection:bit_allocation_strategies}.
+By contrast, the maximum achievable rate, and thus the \ac{IBR}, markedly with antenna count.
+Three distinct effects can be observed.
+
+\begin{figure}[htb]
+    \centering
+    \begin{subfigure}[c]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]
+        {figures/background_material/03_su_mimo_precoding/impact_antennas/variable_ibr_ber_vs_snr.png}
+        \caption{}
+        \label{subfig:impact_antennas_variable_ibr_4x4_adaptive_ba_ber_vs_snr}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]
+        {figures/background_material/03_su_mimo_precoding/impact_antennas/variable_ibr_ibr_vs_snr.png}
+        \caption{}
+        \label{subfig:impact_antennas_variable_ibr_4x4_adaptive_ba_ibr_vs_snr}
+    \end{subfigure}
+    \caption[Impact of the antenna count on the system performance (constant BER comparison)]
+    {Illustration of the impact of the antenna count on the system performance for a system adaptive bit allocation. The (a) \ac{BER} and (b) \ac{IBR} are shown as a function of \ac{SNR}, for five different antenna configurations.}
+    \label{fig:impact_antennas_variable_ibr_4x4_adaptive_ba}
+\end{figure}
+
+The first effect is a change in the slope of the \ac{IBR} curve, which is determined by $\min(N_T, N_R)$.
+This follows directly from the channel rank: for an i.i.d. Rayleigh fading channel, $R_H \leq \min(N_T, N_R)$, so the number of parallel eigen subchannels cannot exceed the smaller antenna count.
+Consequently, adding antennas on both sides creates additional parallel streams and therefore increases the slope of the maximum achievable rate in function of the \ac{SNR}
+
+The second effect is a vertical upward shift of the \ac{IBR} curve when antennas are added only on the side with a larger antenna count while $\min(N_T, N_R)$ remains unchanged.
+This shift occurs because, for a fixed smaller dimension, the expected squared singular values of an $N_R \times N_T$ i.i.d. Gaussian matrix increase with the larger dimension~\cite{singular_values_distribution}.
+The eigen subchannels thus experience better average channel conditions, yielding a higher \ac{IBR} at the same \ac{SNR} while leaving the slope unchanged.
+
+Finally, configurations with the same $\min(N_T, N_R)$ and the same total number of antennas show no performance difference when the excess antennas are placed at the \ac{TX} or at the \ac{RX}.
+This symmetry follows since $\mathbf{H}\mathbf{H}^H$ and $\mathbf{H}^H\mathbf{H}$ have the same non-zero eigenvalues, so the singular-value distribution of an $N_R \times N_T$ i.i.d. Rayleigh channel is identical to that of its transpose.
+
+As in the previous subsection, the rate--reliability tradeoff also applies here.
+Figure~\ref{fig:impact_antennas_variable_ber_4x4_adaptive_ba} illustrates this by adjusting the rate factor of each configuration so that all systems achieve approximately the same \ac{IBR} at each \ac{SNR}.
+Under this equal-rate comparison, systems with more antennas consistently achieve lower \ac{BER}, because the additional spatial degrees of freedom support the same throughput with larger margins on the individual eigen subchannels.
+
+\begin{figure}[htb]
+    \centering
+    \begin{subfigure}[c]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]
+        {figures/background_material/03_su_mimo_precoding/impact_antennas/variable_ber_ber_vs_snr.png}
+        \caption{}
+        \label{subfig:impact_antennas_variable_ber_4x4_adaptive_ba_ber_vs_snr}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]
+        {figures/background_material/03_su_mimo_precoding/impact_antennas/variable_ber_ibr_vs_snr.png}
+        \caption{}
+        \label{subfig:impact_antennas_variable_ber_4x4_adaptive_ba_ibr_vs_snr}
+    \end{subfigure}
+    \caption[Impact of the antenna count on the system performance (constant IBR comparison)]
+    {Illustration of the impact of the antenna count on the system performance for a system adaptive bit allocation. The (a) \ac{BER} and (b) \ac{IBR} are shown as a function of \ac{SNR}, for five different antenna configurations. The rate factor of each configuration is adjusted so that all systems achieve approximately the same \ac{IBR} at each \ac{SNR}.}
+    \label{fig:impact_antennas_variable_ber_4x4_adaptive_ba}
+\end{figure}
+
+In summary, equipping both the \ac{TX} and \ac{RX} with more antennas enables either higher throughput or higher reliability, at the cost of increased hardware complexity and computational load.
+
 \subsection{Analytical Validation}
 \label{subsection:analytical_results}
-% =====================================
+% ===============================
 %    Analytical Validation
-% =====================================
+% ===============================
 
+As established in Section~\ref{subsection:optimal_precoder_design}, the \ac{SVD}-based precoder and combiner decouple the \ac{SU}-\ac{MIMO} channel into $R_H$ parallel eigen subchannels, each of which can be treated as an independent \ac{SISO} link.
+This decomposition enables an analytical evaluation of the total system \ac{BER}.
+
+Because the number of transmitted bits can differ across eigen subchannels, the total \ac{BER} is computed as a weighted average of the subchannel \acp{BER}, with weights proportional to the corresponding \acp{IBR}:
+\begin{equation}
+\label{eq:analytical_ber_su_mimo}
+    \mathrm{BER} = \frac{1}{\mathrm{IBR}} \sum_{i=1}^{R_H} \mathrm{IBR}_i \, \mathrm{BER}_i.
+\end{equation}
+
+The \ac{BER} on each eigen subchannel equals the \ac{BER} of a scalar \ac{AWGN} channel.
+For subchannel $i$, the effective signal power is determined by the allocated transmit power scaled by the corresponding subchannel gain, while the noise power remains unchanged.
+The \ac{BER} of a general scalar \ac{AWGN} channel is derived in Appendix~\ref{appendix:analytical_ber} under the union upper bound and the nearest-neighbour approximation.
+
+Figure~\ref{fig:analytical_validation} compares the analytical expressions with the simulated \ac{BER} curves for a $4 \times 4$ system under adaptive and fixed bit allocation.
+In both cases, the nearest-neighbour approximation and the union upper bound closely track the simulation results, which validates the simulation implementation.
+
+\begin{figure}[htb]
+    \centering
+    \begin{subfigure}[c]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]
+        {figures/background_material/03_su_mimo_precoding/analytical_validation/adaptive_ba_ber_vs_snr.png}
+        \caption{adaptive bit allocation}
+        \label{subfig:analytical_validation_adaptive_ba_ber_vs_snr}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.495\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]
+        {figures/background_material/03_su_mimo_precoding/analytical_validation/4x4_4QAM_fixed_ba_ber_vs_snr.png}
+        \caption{fixed bit allocation}
+        \label{subfig:analytical_validation_fixed_ba_ber_vs_snr}
+    \end{subfigure}
+    \caption[Analytical validation of the system performance]
+    {Analytical validation of the system performance simulation results for a system with $4$ transmit and $4$ receive antennas. The \ac{BER} is shown as a function of \ac{SNR} for two different bit allocation strategies: (a) adaptive bit allocation with a unit rate factor; and (b) fixed bit allocation, where all subchannels use 4--\ac{QAM} across the entire \ac{SNR} range. In both cases, the simulation results are compared with the union upper bound and nearest neighbour approximation derived in Appendix~\ref{appendix:analytical_ber}.}
+    \label{fig:analytical_validation}
+\end{figure}
