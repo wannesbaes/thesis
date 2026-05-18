@@ -1,5 +1,5 @@
 \chapter{Precoding for SU-MIMO systems}
-\label{chapter:precoding_for_su_mimo}
+\label{chapter:su_mimo_precoding}
 
 This chapter develops linear precoding strategies for \ac{SU}-\ac{MIMO} systems under a total transmit--power constraint.
 First, we analyze the capacity in greater detail. Next, a generalized \acs{WMMSE} design framework for the joint optimization of the precoder and combiner is derived.
@@ -192,19 +192,21 @@ No general closed-form expression exists for the optimal water level $\mu_{\math
     \qquad \text{and} \qquad
     p_i = \left(\mu_{\mathrm{w}} - \frac{N_0}{\sigma^2_i}\right)_{+}.
 \end{equation}
-Since the total allocated power is a monotonically increasing function of the water level, the latter can be determined numerically by means of a bisection method.
-A more efficient approach exploits the geometric interpretation of the waterfilling solution.
-In the present \ac{SU}-\ac{MIMO} setting, each eigen subchannel can be represented as a container with unit width and floor level $N_0 / \sigma_i^2$, while the total transmit power is interpreted as water that is poured into these containers until a common water level is reached.
-The complete procedure is summarized in Appendix~\ref{appendix_section:waterfilling_algorithm}.
-The structure of the optimal power allocation is illustrated in Fig.~\ref{fig:waterfilling_power_allocation} for a \ac{SU}-\ac{MIMO} system with four transmit and four receive antennas operating at an \ac{SNR} of $5$ dB: eigen subchannels with stronger channel
-conditions, i.e. larger gains $\sigma_i$, receive more power than weaker ones.
-\begin{figure}[!hbt]
+
+\begin{figure}[!bt]
     \centering
     \includegraphics[width=0.6\linewidth]{figures/background_material/03_su_mimo_precoding/waterfilling/4x4__SNR_5dB.png}
     \caption[Waterfilling power allocation]
     {Optimal power allocation for a \ac{SU}-\ac{MIMO} system with 4 transmit and 4 receive antennas and a total transmit power $P_t$ of $\SI{1}{\watt}$ per channel use. The system operates at an \ac{SNR} of $5$ dB.}
     \label{fig:waterfilling_power_allocation}
 \end{figure}
+
+Since the total allocated power is a monotonically increasing function of the water level, the latter can be determined numerically by means of a bisection method.
+A more efficient approach exploits the geometric interpretation of the waterfilling solution.
+In the present \ac{SU}-\ac{MIMO} setting, each eigen subchannel can be represented as a container with unit width and floor level $N_0 / \sigma_i^2$, while the total transmit power is interpreted as water that is poured into these containers until a common water level is reached.
+The complete procedure is summarized in Appendix~\ref{appendix_section:waterfilling_algorithm}.
+The structure of the optimal power allocation is illustrated in Fig.~\ref{fig:waterfilling_power_allocation} for a \ac{SU}-\ac{MIMO} system with four transmit and four receive antennas operating at an \ac{SNR} of $5$ dB: eigen subchannels with stronger channel
+conditions, i.e. larger gains $\sigma_i$, receive more power than weaker ones.
 
 At extremely low \ac{SNR}, the waterfilling solution corresponds to the eigenbeamforming power allocation strategy, which concentrates all available power on the strongest eigen subchannel. As a result, only a single data stream is transmitted in this \ac{SNR} regime. This behavior is illustrated in Fig.~\ref{subfig:waterfilling_power_allocation_low_SNR}.
 Conversely, at an extremely high \ac{SNR}, the optimal power allocation strategy reduces to the uniform power allocation, which distributes power equally across all eigen subchannels, as illustrated in Fig.~\ref{subfig:waterfilling_power_allocation_high_SNR}.
@@ -387,7 +389,7 @@ In other words, the maximum information rate design is just a special case of th
 The choice of the error weights $\mathbf{W}_{\mathrm{e}} = \mathbf{\Lambda}$ indicates that stronger eigen subchannels support higher rates compared to the weaker ones, and hence need to be more heavily weighted in the cost function. This is consistent with the waterfilling solution, which allocates more power to stronger subchannels.
 
 The maximum information rate design is particularly relevant in adaptive modulation systems, where more power and higher order modulation are used on eigen subchannels with higher gains to improve the total data rate.
-The performance of these systems will be evaluated in Section~\ref{section:simulation_results}, based on simulation results for different system configurations.
+The performance of these systems will be evaluated in Section~\ref{section:performance_evaluation}, based on simulation results for different system configurations.
 
 \subsection{Quality of Service Design}
 \label{section:quality_of_service_design}
@@ -583,7 +585,7 @@ In contrast to the fixed bit allocation case, the \ac{BER} remains approximately
 %    Impact of the Data Rate
 % =========================================
 
-The previous subsection assigned to each eigen subchannel the largest even number of bits not exceeding its full capacity, so that the system operated at approximately the maximum achievable rate.
+The previous subsection assigned to each eigen subchannel the largest even number of bits not exceeding the subchannel capacity, so that the system operated at approximately the maximum achievable rate.
 In practice, however, it may be preferable to transmit at a lower rate in exchange for a reduced \ac{BER}.
 To quantify this tradeoff, we introduce a rate factor $r_f \in (0, 1]$ that specifies which fraction of the subchannel capacity is used for transmission.
 The bit allocation on subchannel $i$ is then generalized to the largest even integer not exceeding $r_f \, C_i$, where $C_i$ denotes the instantaneous capacity of that subchannel.

@@ -125,7 +125,7 @@ It is evident that, whenever the transfer matrix is not diagonal, the data symbo
 \subsection{MU-MIMO System Model}
 \label{subsection:mu_mimo_system_model}
 
-When multiple receivers are served simultaneously by a single multi-antenna transmitter, the system is referred to as a \ac{MU} \ac{MIMO} system. In this context, the transmitter is called the \ac{BS} and the individual receivers are referred to as \acp{UT}. A block diagram is shown in Fig.~\ref{fig:mu_mimo_block_diagram}.
+When multiple receivers are served simultaneously by a single multi-antenna transmitter, the system is referred to as a downlink \ac{MU} \ac{MIMO} system. In this context, the transmitter is called the \ac{BS} and the individual receivers are referred to as \acp{UT}. A block diagram is shown in Fig.~\ref{fig:mu_mimo_block_diagram}.
 
 \begin{figure}[!ht]
     \centering
@@ -199,6 +199,7 @@ The overall input-output relation of the \ac{MU}-\ac{MIMO} Gaussian channel can 
     \quad \mathbf{a} = \begin{bmatrix} \mathbf{a}_1 \\ \vdots \\ \mathbf{a}_K \end{bmatrix}. \notag
 \end{gather}
 where $\mathbf{G} \in \mathbb{C}^{K N_S \times K N_R}$ denotes the compound combining matrix, $\mathbf{H} \in \mathbb{C}^{K N_R \times N_T}$ the compound channel matrix, and $\mathbf{F} \in \mathbb{C}^{N_T \times K N_S}$ the compound precoding matrix.
+The block-diagonal structure of $\mathbf{G}$ indicates that each \ac{UT} processes only its own received signal vector, i.e., no cooperation is assumed between different \acp{UT}.
 
 
 \section{Information Theory Concepts}
