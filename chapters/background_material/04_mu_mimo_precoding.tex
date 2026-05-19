@@ -2,7 +2,7 @@
 \label{chapter:mu_mimo_precoding}
 
 Consider the downlink \ac{MU}-\ac{MIMO} system introduced in Section~\ref{subsection:mu_mimo_system_model}.
-The key difference from the \ac{SU}-\ac{MIMO} system of the previous chapter is the presence of inter-user interference: the signal intended for one user leaks into the receive antennas of the other users.
+The key difference from the \ac{SU}-\ac{MIMO} system of the previous chapter is the presence of inter--user interference: the signal intended for one user leaks into the receive antennas of the other users.
 
 The preceding chapter restricted attention to linear precoding, in which the transmitted signal is obtained by applying a linear transformation, represented by a matrix, to the data symbol vector.
 Nonlinear precoding techniques, on the other hand, apply nonlinear processing to the data symbols before transmission.
@@ -10,7 +10,7 @@ While linear precoding can achieve the capacity of the \ac{SU}-\ac{MIMO} channel
 
 Two well-known nonlinear precoding techniques are \acf{DPC}~\cite{dirty_paper_costa} and \acf{THP}~\cite{THP_harashima, THP_MIMO}.
 \ac{DPC} is an information-theoretic technique that achieves the capacity region of the Gaussian broadcast channel by encoding each data stream such that interference from all previously encoded streams is pre-subtracted at the transmitter.
-\ac{THP} approximates \ac{DPC} at reduced complexity by successively canceling inter-user interference at the transmitter using modulo arithmetic.
+\ac{THP} approximates \ac{DPC} at reduced complexity by successively canceling inter--user interference at the transmitter using modulo arithmetic.
 Despite their superior capacity, nonlinear techniques incur a significantly higher computational cost.
 Linear precoding, by contrast, offers near-optimal performance at a fraction of the complexity, and therefore remains the preferred approach in practice.
 This chapter accordingly focuses on linear precoding techniques.
@@ -26,7 +26,7 @@ In line with the previous chapter, the design is focused on maximizing the total
 %     Zero-Forcing
 % =============================
 
-The objective of \acf{ZF} precoding is to cancel all interference, both inter-user and inter-stream.
+The objective of \acf{ZF} precoding is to cancel all interference, both inter--user and inter-stream.
 Moreover, no receiver-side combining is applied. Instead, all processing is done by the precoder and each \ac{UT} forwards its received samples directly for detection.
 
 Considering these restrictions, we obtain that
@@ -85,31 +85,30 @@ An alternative, more fair approach is to divide the total transmit power equally
 
 To summarize, the steps required for computing the \ac{ZF} compound precoder matrix for total \ac{SR} maximization across all \acp{UT} are described in Algorithm~\ref{alg:zf_precoding}.
 \begin{algorithm}[!htbp]
-\caption{ZF Precoding}
+\caption{\ac{ZF} Precoding}
 \label{alg:zf_precoding}
 \begin{algorithmic}[1]
     
     \Require 
-    \Statex \hspace{-\algorithmicindent} \textbullet \, The channel matrix: $\mathbf{H}$;
-    \Statex \hspace{-\algorithmicindent} \textbullet \, The total transmit power: $P_t$.
+    \Statex \hspace{-\algorithmicindent} \textbullet \, The compound channel matrix $\mathbf{H}$;
+    \Statex \hspace{-\algorithmicindent} \textbullet \, The total transmit power $P_t$ and the received noise power $N_0$.
     
-    \Ensure  The compound precoder matrix $\mathbf{F}$ and the combiner matrix $\mathbf{G}_k$ for each \ac{UT}.
+    \Ensure  The compound precoder matrix $\mathbf{F}$.
 
     \medskip
-    \State Compute $p_i$ for $i = 1, \dots, K\,N_S$ using the waterfilling algorithm (Algorithm~\ref{alg:waterfilling}) with
-    \Statex $P_t = P_t, \quad \alpha_n = 1, \quad \text{and} \quad  \gamma_n = 1 / \big((\mathbf{H}^H \mathbf{H})^{-1}\big)_{n,\,n}.$
-
+    \State Compute $p_i$ for $i = 1, \dots, K\,N_S$ using the waterfilling algorithm (Alg.~\ref{alg:waterfilling}) with inputs
+    \Statex $P_t = P_t, \quad \alpha_n = 1, \quad \text{and} \quad  \gamma_n = \big(N_0 \, \big((\mathbf{H}^H \mathbf{H})^{-1}\big)_{n,\,n}\big)^{-1}.$
+    
+    \vspace{0.4\baselineskip}
     \State Compute the entries of the scaling matrix as
     \Statex $q_{k, i} = p_n \, \big((\mathbf{H}^H \mathbf{H})^{-1}\big)_{n,\,n} \quad \text{with} \quad n = (k-1)\,N_S + i, \quad \text{for  } k = 1, \dots, K \text{  and  } i = 1, \dots, N_S.$
 
+    \vspace{0.4\baselineskip}
     \State Compute the compound precoder matrix as
     \Statex $\mathbf{F} = \mathbf{H}^H (\mathbf{H} \mathbf{H}^H)^{-1} \, \sqrt{\mathbf{Q}}$
 
-    \State Set the combiner matrices equal the (rectangular) identity matrices
-    \Statex $\mathbf{G}_k = \mathbf{I}_{N_S \times N_R} \quad \text{for  } k = 1, \dots, K.$
-    
     \medskip
-    \Statex \hspace{-\algorithmicindent}\textbf{Return} \; $\mathbf{F}$, \; $\mathbf{G}_k$ for $k=0, \dots, K$
+    \Statex \hspace{-\algorithmicindent}\textbf{Return} \; $\mathbf{F}$
 
 \end{algorithmic}
 \end{algorithm}
@@ -118,7 +117,7 @@ To summarize, the steps required for computing the \ac{ZF} compound precoder mat
 To build an intuitive understanding of \ac{ZF} precoding, consider a downlink \ac{MU}-\ac{MIMO} system with two single-antenna \acp{UT} and a \ac{BS} with two transmit antennas.
 In this case, the channel matrix is formed by two row vectors, each describing the channel direction toward one user, while the precoder consists of two column vectors, each defining the transmit direction of the data stream intended for a specific \ac{UT}.
 The \ac{ZF} design chooses each precoding vector to be orthogonal to the channel vector of the non-intended user.
-This ensures that the signal intended for one \ac{UT} does not leak into the receive antenna of the other \ac{UT}, thereby eliminating inter-user interference.
+This ensures that the signal intended for one \ac{UT} does not leak into the receive antenna of the other \ac{UT}, thereby eliminating inter--user interference.
 This geometry is illustrated in Figure~\ref{fig:mu_mimo_zf_precoding_2x2}, where Figure~\ref{fig:mu_mimo_zf_precoding_2x2_fav} corresponds to favorable channel conditions and Figure~\ref{fig:mu_mimo_zf_precoding_2x2_unfav} to unfavorable channel conditions.
 
 In the favorable case, the channel directions for the two \acp{UT} are nearly orthogonal.
@@ -183,34 +182,186 @@ This maximizes the effective channel gain for each data stream, since it allows 
     \label{fig:mu_mimo_zf_precoding_3x2}
 \end{figure}
 
-The performance of the \ac{ZF} precoding technique, in terms of the maximum sum--rate, will be discussed in the next section.
-
 \section{Zero-Forcing Precoding with Heuristic LSV Combiner}
-\label{section:mu_mimo_zf_lsv}
+\label{section:mu_mimo_zf_lsv_precoding}
 % =================================================
 %     Zero-Forcing with Heuristic LSV Combiner
 % =================================================
 
+Pure \ac{ZF} precoding is clearly suboptimal because it does not exploit receiver-side combining at the \acp{UT}.
+A practical extension is therefore to equip each \ac{UT} with a heuristic \acf{LSV} combiner, while keeping the \ac{BS} precoder design based on \ac{ZF}.
+The key idea is to improve the effective channel gains seen without increasing the signaling overhead.
+Unlike coordinated designs, where the \ac{BS} jointly computes the compound precoder and the combiners and then broadcasts the combiners to the \acp{UT}, this approach is non-coordinated: each \ac{UT} computes its own combiner locally.
+
+The procedure is as follows.
+First, the \ac{BS} transmits pilot symbols, from which each \ac{UT} estimates its downlink channel matrix $\mathbf{H}_k$.
+Next, each \ac{UT} constructs its heuristic combiner matrix $\mathbf{G}_k$ from the $N_S$ dominant left singular vectors of $\mathbf{H}_k$, analogous to combiner for capacity-achieving precoding in the \ac{SU}-\ac{MIMO} scenario.
+Each \ac{UT} then forms its virtual channel $(\mathbf{G}_k \mathbf{H}_k)$ and feeds this matrix back to the \ac{BS}.
+Finally, the \ac{BS} stacks these virtual channels and applies the standard \ac{ZF} precoding procedure from the previous section on the virtual channel.
+
+This method was proposed by Sander Cornelis in~\cite{cornelis_2025} and is particularly attractive in feedforward-limited scenarios.
+The complete procedure is summarized in Algorithm~\ref{alg:zf_lsv_precoding}.
+\begin{algorithm}[!htbp]
+\caption{\ac{ZF} Precoding with Heuristic \acs{LSV} combiner}
+\label{alg:zf_lsv_precoding}
+\begin{algorithmic}[1]
+    
+    \Require 
+    \Statex \hspace{-\algorithmicindent} \textbullet \, The compound channel matrix $\mathbf{H}$;
+    \Statex \hspace{-\algorithmicindent} \textbullet \, The total transmit power $P_t$ and the received noise power $N_0$.
+    
+    \Ensure  The compound precoder matrix $\mathbf{F}$ and the combiner matrices $\mathbf{G}_k$ for each \ac{UT}.
+
+    \medskip
+    \State Compute the combiner matrices $\mathbf{G}_k$ for each \ac{UT} as
+    \Statex $\mathbf{G}_k = \begin{bmatrix} \mathbf{u}_{k, 1} & \dots & \mathbf{u}_{k, N_S} \end{bmatrix}^H, \quad \text{with} \quad \mathbf{H}_k = \mathbf{U}_k \mathbf{\Sigma}_k \mathbf{V}^H_k$
+
+    \vspace{0.4\baselineskip}
+    \State Compute the compound precoder matrix $\mathbf{F}$ as using the \ac{ZF} algorithm (Alg.~\ref{alg:zf_precoding}) with inputs
+    \Statex $\mathbf{H} = (\mathbf{G}\mathbf{H}), \quad P_t = P_t, \quad N_0 = N_0.$
+    
+    \medskip
+    \Statex \hspace{-\algorithmicindent}\textbf{Return} \; $\mathbf{F}$, \; $\mathbf{G}_k$ for $k=1, \dots, K$
+
+\end{algorithmic}
+\end{algorithm}
 
 
 
 %% TO DO %%
-% ZF+LSV precoder + In summary: algorithm for ZF+LSV precoder
-% rate performance
+% comparison with ZF without LSV combiner distributions of gamma!
+% BER to confirm that the SNR distribution is indeed improved by the LSV combiner
 
-\section{Block Diagonalization}
-\label{section:mu_mimo_bd}
+\section{Block Diagonalization Precoding}
+\label{section:mu_mimo_bd_precoding}
 % =================================================
-%     Block Diagonalization
+%     Block Diagonalization Precoding
 % =================================================
 
-% Coordinated vs Non-Coordinated precoding
+The last precoding technique in the class of \ac{ZF} precoders is a coordinated technique called \acf{BD} precoding~\cite{BD_precoding_0}.
+In contrast to pure \ac{ZF}, which cancels both inter--user and inter-stream interference, \ac{BD} only suppresses the inter--user interference.
+As a result, the compound transfer matrix is no longer required to be diagonal, but only block-diagonal, so that each \ac{UT} receives a signal vector free of contributions of data streams intended for other \acp{UT}.
+The downlink \ac{MU}-\ac{MIMO} channel is thereby decomposed into $K$ parallel \ac{SU}-\ac{MIMO} channels.
+Once this first step is completed, the \ac{SU}-\ac{MIMO} precoding and combining techniques developed in Chapter~\ref{chapter:su_mimo_precoding} can be applied independently to each subsystem.
 
-\section{Weighted Minimum Mean Square Error}
-\label{section:mu_mimo_wmmse}
-% =================================================
-%     Weighted Minimum Mean Square Error
-% =================================================
+The zero inter--user interference condition requires that the precoder $\mathbf{F}_k$ intended for \ac{UT} $k$ lie in the null space of the channel matrices of all other users.
+This leads to the constraints
+\begin{equation}
+\label{eq:bd_constraint}
+    \forall \, k' \neq k : \qquad \mathbf{H}_{k'} \mathbf{F}_k = \mathbf{0}, \qquad \text{for} \quad k = 1, \dots, K.
+\end{equation}
+To characterize these constraints more explicitly, define the interfering channel matrix $\mathring{\mathbf{H}}_k$ of \ac{UT} $k$ as the vertically stacked channel matrices of all other users:
+\begin{equation}
+\label{eq:interfering_channel_matrix}
+    \mathring{\mathbf{H}}_k = \begin{bmatrix} \mathbf{H}_1^H & \dots & \mathbf{H}_{k-1}^H & \mathbf{H}_{k+1}^H & \dots & \mathbf{H}_K^H \end{bmatrix}^H \; \in \mathbb{C}^{(K-1)N_R \times N_T}.
+\end{equation}
+The constraint in~\eqref{eq:bd_constraint} is then equivalent to forcing the transmit directions for \ac{UT} $k$ to lie within the null-space of its interfering channel matrix.\\
+To obtain a basis for this null space, consider the \ac{SVD} of the interfering channel matrix:
+\begin{equation}
+\label{eq:svd_interfering_channel_matrix}
+    \mathring{\mathbf{H}}_k = \mathring{\mathbf{U}}_k \, \mathring{\boldsymbol{\Sigma}}_k \, \begin{bmatrix} \mathring{\mathbf{V}}_{k}^{(1)} & \mathring{\mathbf{V}}_{k}^{(0)} \end{bmatrix}^H.
+\end{equation}
+The first $R_{\mathring{H}_k}$ right singular vectors of $\mathring{\mathbf{H}}_k$, collected in $\mathring{\mathbf{V}}_{k}^{(1)}$, span the row space of $\mathring{\mathbf{H}}_k$, whereas the remaining $(N_T - R_{\mathring{H}_k})$ right singular vectors, collected in $\mathring{\mathbf{V}}_{k}^{(0)}$, span its null space.
+By $R_{\mathring{H}_k}$ we denote the rank of the interfering channel matrix $\mathring{\mathbf{H}}_k$.
+Therefore, any precoder of the form
+\begin{equation}
+    \mathbf{F}_k^{\mathrm{MU}} = \mathring{\mathbf{V}}_{k}^{(0)}
+\end{equation}
+automatically satisfies the zero inter--user interference condition.
+
+Data transmission to \ac{UT} $k$ is only possible if the null space of $\mathring{\mathbf{H}}_k$ is non-empty, i.e. it has a dimension greater than zero.
+This condition is satisfied if $R_{\mathring{H}_k} < N_T$, which is guaranteed under the standing assumption that the number of transmit antennas is greater than or equal to the total number of receive antennas across all users, i.e. $N_T \geq K N_R$.
+In addition, the channel as seen after the projection of $\mathbf{F}_k^{\mathrm{MU}}$, i.e. $(\mathbf{H}_k \mathring{\mathbf{V}}_{k}^{(0)})$, must still retain useful spatial dimensions.
+In other words, the channel directions of \ac{UT} $k$ should not be entirely contained in the row space of the interfering \acp{UT}.
+A sufficient condition is that at least one row of $\mathbf{H}_k$ is linearly independent of the rows of $\mathring{\mathbf{H}}_k$~\cite{matrix_analysis_horn_johnson_1985}.
+This shows that \ac{BD}, like \ac{ZF}, benefits from users with sufficiently distinct spatial signatures, i.e. \acp{UT} without highly correlated channel directions.
+Note that pure \ac{ZF} imposes the stronger requirement that all rows of $\mathbf{H}_k$ are linearly independent of $\mathring{\mathbf{H}}_k$.
+While this is not necessary for \ac{BD}, it would result in a higher rank of $(\mathbf{H}_k \mathring{\mathbf{V}}_{k}^{(0)})$, and therefore greater degrees of freedom in the subsequent \ac{SU}--\ac{MIMO} design step.
+
+\begin{algorithm}[b!]
+\caption{\ac{BD} Precoding}
+\label{alg:bd_precoding}
+\begin{algorithmic}[1]
+    
+    \Require 
+    \Statex \hspace{-\algorithmicindent} \textbullet \, The compound channel matrix $\mathbf{H}$;
+    \Statex \hspace{-\algorithmicindent} \textbullet \, The total transmit power $P_t$ and the received noise power $N_0$.
+    
+    \Ensure  The compound precoder matrix $\mathbf{F}$ and the combiner matrices $\mathbf{G}_k$ for each \ac{UT}.
+
+    \medskip
+    \State Construct the interfering channel matrix for each \ac{UT} $k$ as
+    \Statex $\mathring{\mathbf{H}}_k = \begin{bmatrix} \mathbf{H}_1^H & \dots & \mathbf{H}_{k-1}^H & \mathbf{H}_{k+1}^H & \dots & \mathbf{H}_K^H \end{bmatrix}^H \in \mathbb{C}^{(K-1)N_R \, \times \, N_T}.$
+    
+    \vspace{0.4\baselineskip}
+    \State Compute the \ac{MU} precoder matrix for each \ac{UT} $k$ as
+    \Statex $\mathbf{F}_k^{\mathrm{MU}} = \mathring{\mathbf{V}}_{k}^{(0)}, \quad \text{with} \quad \mathring{\mathbf{H}}_k  = \mathring{\mathbf{U}}_k \, \mathring{\boldsymbol{\Sigma}}_k \, \begin{bmatrix} \mathring{\mathbf{V}}_{k}^{(1)} & \mathring{\mathbf{V}}_{k}^{(0)} \end{bmatrix}^H.$
+
+    \vspace{0.4\baselineskip}
+    \State Compute the \ac{SU} precoder and combiner matrix for each \ac{UT} $k$ as
+    \Statex $\mathbf{F}_k^{\mathrm{SU}} = \begin{bmatrix} \bar{\mathbf{v}}_{k, \, 1} & \dots & \bar{\mathbf{v}}_{k, \, N_S} \end{bmatrix} \text{  and  } \mathbf{G}_k = \begin{bmatrix} \bar{\mathbf{u}}_{k, \, 1} & \dots & \bar{\mathbf{u}}_{k, \, N_S} \end{bmatrix}^H,  \quad \text{with} \quad (\mathbf{H}_k \mathring{\mathbf{V}}_{k}^{(0)}) = \bar{\mathbf{U}}_k \bar{\mathbf{\Sigma}}_k \bar{\mathbf{V}}_k^H$
+
+    \vspace{0.4\baselineskip}
+    \State Extract the eigen subchannel gains as
+    \Statex $\sigma_n = \big(\bar{\mathbf{\Sigma}}_k\big)_{i,\,i} \quad \text{with} \quad n = (k-1)\,N_S + i, \quad \text{for  } k = 1, \dots, K \text{  and  } i = 1, \dots, N_S.$
+
+    \vspace{0.4\baselineskip}
+    \State Compute the optimal power allocation $p_i$ using the waterfilling algorithm (Alg.~\ref{alg:waterfilling}) with inputs
+    \Statex $P_t = P_t, \quad \alpha_n = 1, \quad \text{and} \quad  \gamma_n = \sigma_n^2 / N_0.$
+
+    \vspace{0.4\baselineskip}
+    \State Form the compound precoder matrix as
+    \Statex $\mathbf{F} = \begin{bmatrix} \mathbf{F}_1^{\mathrm{MU}} \, \mathbf{F}_1^{\mathrm{SU}} & \dots & \mathbf{F}_K^{\mathrm{MU}} \, \mathbf{F}_K^{\mathrm{SU}} \end{bmatrix} \, \sqrt{\mathbf{P}} \quad \text{with} \quad \mathbf{P} = \mathrm{diag}(p_1, \dots, p_{K\,N_S})$
+
+    \medskip
+    \Statex \hspace{-\algorithmicindent}\textbf{Return} \; $\mathbf{F}$, \; $\mathbf{G}_k$ for $k=1, \dots, K$
+
+\end{algorithmic}
+\end{algorithm}
+
+If, in a first step, the receiver combiners are ignored and the multi--user precoder is chosen as $\mathbf{F}_k^{\mathrm{MU}} = \mathring{\mathbf{V}}_{k}^{(0)}$, then the compound \ac{MU}--\ac{MIMO} input-output relation simplifies to
+\begin{equation}
+\label{eq:bd_io_after_first_step}
+    \mathbf{y}_k = (\mathbf{H}_k \mathring{\mathbf{V}}_{k}^{(0)}) \; \mathbf{a}_k + \mathbf{n}_k, \qquad \text{for} \quad k = 1, \dots, K.
+\end{equation}
+Hence, the original downlink \ac{MU}--\ac{MIMO} system is transformed into $K$ parallel \ac{SU}--\ac{MIMO} subsystems, each with $(N_T - R_{\mathring{H}_k})$ effective transmit antennas, $N_R$ receive antennas, and an effective channel matrix $\mathbf{H}_k \mathring{\mathbf{V}}_{k}^{(0)}$.
+The second step is then to apply a \ac{SU}--\ac{MIMO} precoder and combiner design to each of these effective channels.
+In this dissertation, the focus is on maximum--information--rate design. Therefore, we adapt the capacity--achieving precoding technique from Section~\ref{subsection:optimal_precoder_design}, so that each effective channel is diagonalized by means of its \ac{SVD}, followed by a global waterfilling power allocation across all resulting eigen subchannels.
+The full \ac{BD} procedure is summarized in Algorithm~\ref{alg:bd_precoding}.
+
+As with pure \ac{ZF}, the chosen power allocation may devote very little power to users whose effective channels are weak.
+A more balanced alternative is to divide the total transmit power equally across the users and then apply waterfilling separately over the eigen subchannels of each \ac{SU}-\ac{MIMO} subsystem.
+More generally, the second stage of the \ac{BD} design need not be based on maximum sum-rate.
+Other \ac{SU}-\ac{MIMO} design criteria, such as \ac{QoS}-based or \ac{MMSE}-based precoding, can equally be applied to the parallel channels obtained after the block-diagonalization step.
+\bigskip
+
+To conclude this section, Figure~\ref{fig:BD_vs_SVD} compares the achievable-rate performance of \ac{BD} precoding in a downlink \ac{MU}-\ac{MIMO} setting with the capacity-achieving \ac{SVD} precoding benchmark in a corresponding \ac{SU}-\ac{MIMO} setting.
+The reference system is a $6 \times 2$ \ac{SU}-\ac{MIMO} link, whereas the multi-user system is an $8 \times \{2,2\}$ \ac{MU}-\ac{MIMO} link with two \acp{UT}, each equipped with two receive antennas.
+The \ac{BD} algorithm decouples the \ac{MU}--\ac{MIMO} system into $2$ parallel \ac{SU}-\ac{MIMO} subsystems with, on average, each 6 effective transmit antennas and 2 receive antennas.
+The rates are averaged over $1000$ \ac{i.i.d.} Rayleigh channel realizations.
+
+\begin{figure}[!hbt]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/background_material/04_mu_mimo_precoding/BD_vs_SVD/SVD - BD -- UT R comparison -- Sim Config 1.png}
+    \caption[Comparison between \acs{BD} precoding for \acs{MU} and \acs{SVD} precoding for \acs{SU} scenarios]
+    {Comparison between the achievable rate of a $6 \times 2$ \acs{SU}-\acs{MIMO} system using \acs{SVD} precoding and the achievable rates of both \acp{UT} in an $8 \times \{2,2\}$ \acs{MU}-\acs{MIMO} system using \acs{BD} precoding.
+    Results are averaged over $1000$ i.i.d. Rayleigh channel realizations.
+    The \acs{SNR} is defined as the ratio between the total transmit power $P_t$ at the \acs{BS} and the noise power per receive antenna $N_0$.}
+    \label{fig:BD_vs_SVD}
+\end{figure}
+
+The curves show that the achievable--rate slope as a function of \ac{SNR} is essentially the same for all users.
+In addition, the \ac{SU} benchmark exhibits only a small \ac{SNR} advantage over each user in the \acf{MU} scenario.
+The two users in the \ac{MU} scenario achieve nearly identical rates, which is expected because the \ac{MU} system is statistically symmetric with respect to the users and the results are averaged over multiple channel realizations.
+
+This comparison indicates that, on average, adding two transmit antennas at the \ac{BS} and switching from \ac{SVD} precoding in \ac{SU}-\ac{MIMO} to \ac{BD} precoding in \ac{MU}-\ac{MIMO} enables serving an additional two-stream user with only a minor per-user rate penalty.
+From a system-design perspective, this highlights the practical value of \ac{BD}: it substantially increases spatial multiplexing capability while preserving nearly the same per-user throughput trend.
+
+\section{Weighted Minimum Mean Square Error Precoding}
+\label{section:mu_mimo_wmmse_precoding}
+% ===================================================
+%     Weighted Minimum Mean Square Error Precoding
+% ===================================================
 
 
 \section{Performance Comparison}
@@ -218,3 +369,10 @@ The performance of the \ac{ZF} precoding technique, in terms of the maximum sum-
 % =============================
 %     Performance Comparison
 % =============================
+
+% what are we going to compare?
+% different system configurations -> same conclusions as established in chapter 3.
+
+% comparison distribution eff ch gains ZF class
+
+% comparisom SR fully loaded system.
