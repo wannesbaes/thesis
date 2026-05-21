@@ -63,7 +63,7 @@
 % eigen subchannel 1.
 \node (x1) at (0,0) {$a_1$};
 \node[multiplier, right=\InputToPowerAllocator of x1] (p1) {$\sqrt{p_1}$};
-\node[multiplier, right=\PowerAllocatorToChannelGain of p1] (ch1) {$\sigma_1^2$};
+\node[multiplier, right=\PowerAllocatorToChannelGain of p1] (ch1) {$\sigma_1$};
 \node[adder, right=\ChannelGainToNoiseAdder of ch1] (add1) {};
 \draw ($(add1) + (-\AdderRadius, 0)$) -- ($(add1) + (\AdderRadius, 0)$);
 \draw ($(add1) + (0, -\AdderRadius)$) -- ($(add1) + (0, \AdderRadius)$);
@@ -79,7 +79,7 @@
 % eigen subchannel 2.
 \node (x2) at (0,-\ChannelSep) {$a_2$};
 \node[multiplier, below=\ChannelSep of p1.north] (p2) {$\sqrt{p_2}$};
-\node[multiplier, below=\ChannelSep of ch1.north] (ch2) {$\sigma_2^2$};
+\node[multiplier, below=\ChannelSep of ch1.north] (ch2) {$\sigma_2$};
 \node[adder, below=\ChannelSep of add1.north] (add2) {};
 \draw ($(add2) + (-\AdderRadius, 0)$) -- ($(add2) + (\AdderRadius, 0)$);
 \draw ($(add2) + (0, -\AdderRadius)$) -- ($(add2) + (0, \AdderRadius)$);
@@ -95,7 +95,7 @@
 % eigen subchannel R_H.
 \node (xNs) at (0,-2.5*\ChannelSep) {$a_{N_s}$};
 \node[multiplier, below=2.5*\ChannelSep of p1.north] (pNs) {$\sqrt{p_{N_s}}$};
-\node[multiplier, below=2.5*\ChannelSep of ch1.north] (chNs) {$\sigma_{N_s}^2$};
+\node[multiplier, below=2.5*\ChannelSep of ch1.north] (chNs) {$\sigma_{N_s}$};
 \node[adder, below=2.5*\ChannelSep of add1.north] (addNs) {};
 \draw ($(addNs) + (-\AdderRadius, 0)$) -- ($(addNs) + (\AdderRadius, 0)$);
 \draw ($(addNs) + (0, -\AdderRadius)$) -- ($(addNs) + (0, \AdderRadius)$);

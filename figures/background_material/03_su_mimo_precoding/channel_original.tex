@@ -18,11 +18,12 @@
 \newcommand{\CombinerToOutput}{1cm}
 
 % Vertical spacing
-\newcommand{\NoiseHeight}{0.8cm}
+\newcommand{\StreamSpacing}{1.1cm}
+\newcommand{\NoiseHeight}{1.1cm}
 
 % Multiplier size
 \newcommand{\MultiplierWidth}{0.75cm}
-\newcommand{\MultiplierHeight}{0.75cm}
+\newcommand{\MultiplierHeight}{1.6cm}
 
 % Adder size
 \newcommand{\AdderRadius}{0.25cm}
@@ -60,23 +61,34 @@
 % Figure Components
 % =================
 
-\node (a) at (0,0) {$\mathbf{a}$};
-\node[multiplier] (precoder) at ($(a.east) + (\InputToPrecoder,0) + 0.5*(\MultiplierWidth,0)$) {$\mathbf{F}$};
+\node (a1) at (0,0) {$a_1$};
+\node (aNS) at (0,-\StreamSpacing) {$a_{N_S}$};
+\node (a_fantom) at (0,-0.5*\StreamSpacing) {$\vdots$};
+
+\node[multiplier] (precoder) at ($(a_fantom.east) + (\InputToPrecoder,0) + 0.5*(\MultiplierWidth,0)$) {$\mathbf{F}$};
+
 \node[multiplier] (channel) at ($(precoder.east) + (\PrecoderToChannel,0) + 0.5*(\MultiplierWidth,0)$) {$\mathbf{H}$};
+
 \node[adder] (noise_adder) at ($(channel.east) + (\ChannelToNoiseAdder,0) + (\AdderRadius,0)$) {};
 \draw ($(noise_adder) + (-\AdderRadius, 0)$) -- ($(noise_adder) + (\AdderRadius, 0)$);
 \draw ($(noise_adder) + (0, -\AdderRadius)$) -- ($(noise_adder) + (0, \AdderRadius)$);
 \node (n1) at ($(noise_adder) + (0,\NoiseHeight)$) {$\mathbf{n}$};
-\node[multiplier] (combiner) at ($(noise_adder.east) + (\NoiseAdderToCombiner,0) + 0.5*(\MultiplierWidth,0)$) {$\mathbf{G}$};
-\node (y1) at ($(combiner.east) + (\CombinerToOutput,0)$) {$\mathbf{y}$};
 
-\draw[signal] (a) -- (precoder);
+\node[multiplier] (combiner) at ($(noise_adder.east) + (\NoiseAdderToCombiner,0) + 0.5*(\MultiplierWidth,0)$) {$\mathbf{G}$};
+
+\node (z1) at ($(combiner.east |- a1) + (\CombinerToOutput,0)$) {$z_1$};
+\node (zNS) at ($(combiner.east |- aNS) + (\CombinerToOutput,0)$) {$z_{N_S}$};
+\node (z_fantom) at ($(combiner.east |- a_fantom) + (\CombinerToOutput,0)$) {$\vdots$};
+
+
+\draw[signal] (a1) -- (precoder.west |- a1);
+\draw[signal] (aNS) -- (precoder.west |- aNS);
 \draw[signal] (precoder) -- (channel);
 \draw[signal] (channel) -- (noise_adder);
 \draw[signal] (n1) -- (noise_adder);
 \draw[signal] (noise_adder) -- (combiner);
-\draw[signal] (combiner) -- (y1);
-
+\draw[signal] (combiner.east |- z1) -- (z1);
+\draw[signal] (combiner.east |- zNS) -- (zNS);
 
 \end{tikzpicture}
 

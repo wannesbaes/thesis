@@ -722,6 +722,7 @@ Because the number of transmitted bits can differ across eigen subchannels, the 
 
 The \ac{BER} on each eigen subchannel equals the \ac{BER} of a scalar \ac{AWGN} channel.
 For subchannel $i$, the effective signal power is determined by the allocated transmit power scaled by the corresponding subchannel gain, while the noise power remains unchanged.
+Although the subchannel gains are random variables~\cite{singular_values_distribution}, they are treated as fixed within each analytical evaluation, and the resulting \ac{BER} is then averaged over multiple channel realizations.
 The \ac{BER} of a general scalar \ac{AWGN} channel is derived in Appendix~\ref{appendix:analytical_ber} under the union upper bound and the nearest-neighbour approximation.
 
 Figure~\ref{fig:analytical_validation} compares the analytical expressions with the simulated \ac{BER} curves for a $4 \times 4$ system under adaptive and fixed bit allocation.

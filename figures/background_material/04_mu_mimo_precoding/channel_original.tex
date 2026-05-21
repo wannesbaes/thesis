@@ -1,0 +1,167 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\usetikzlibrary{arrows.meta, positioning, fit, calc, shapes.geometric}
+
+\begin{document}
+
+% ===================
+%  Layout Parameters
+% ===================
+
+% Vertical spacing between eigen subchannels
+\newcommand{\StraemSep}{1.2cm}
+\newcommand{\NoiseHeight}{1.05cm}
+
+% Horizontal spacing
+\newcommand{\InputToPrecoder}{1cm}
+\newcommand{\PrecoderToSum}{0.25cm}
+\newcommand{\SumToChannels}{1.5cm}
+\newcommand{\ChannelToNoise}{0.5cm}
+\newcommand{\NoiseToCombiner}{0.5cm}
+\newcommand{\CombinerToOutput}{1cm}
+
+% Multiplier size
+\newcommand{\MultiplierWidth}{1cm}
+\newcommand{\MultiplierHeight}{0.75cm}
+
+% Adder size
+\newcommand{\AdderRadius}{0.25cm}
+
+% ===================
+% ===================
+
+\begin{tikzpicture}
+
+
+% Component Styles
+% ================
+
+\tikzset{
+    single stream multiplier/.style = {
+        draw, 
+        rectangle,
+        minimum width=\MultiplierWidth,
+        minimum height=\MultiplierHeight,
+        align=center
+    },
+    single user multiplier/.style = {
+        draw, 
+        rectangle,
+        minimum width=\MultiplierWidth,
+        minimum height=\MultiplierHeight + \StraemSep,
+        align=center
+    },
+    total system multiplier/.style = {
+        draw, 
+        rectangle,
+        minimum width=0.5*\MultiplierWidth,
+        minimum height=\MultiplierHeight + 3.5*\StraemSep,
+        align=center
+    },
+    adder/.style = {
+        draw, 
+        circle,
+        minimum size=2*\AdderRadius,
+        align=center
+    },
+    signal/.style = {
+        ->,
+    }
+}
+% =================
+
+
+% Figure Components
+% =================
+
+% user 1, inputs and precoder.
+\node (a11) at (0,0) {$a_{1, 1}$};
+\node (a1Ns) at (0,-1*\StraemSep) {$a_{1, N_S}$};
+\node (a1_fantom) at ($(a11)!0.5!(a1Ns)$) {$\vdots$};
+\node[single user multiplier, right=\InputToPrecoder of a1_fantom] (F1) {$\mathbf{F}_1$};
+\draw[signal] (a11) -- (F1.west |- a11);
+\draw[signal] (a1Ns) -- (F1.west |- a1Ns);
+
+% user K, inputs and precoder.
+\node (aK1) at (0,-2.5*\StraemSep) {$a_{K, 1}$};
+\node (aKNs) at (0,-3.5*\StraemSep) {$a_{K, N_S}$};
+\node (aK_fantom) at ($(aK1)!0.5!(aKNs)$) {$\vdots$};
+\node[single user multiplier, right=\InputToPrecoder of aK_fantom] (FK) {$\mathbf{F}_K$};
+\draw[signal] (aK1) -- (FK.west |- aK1);
+\draw[signal] (aKNs) -- (FK.west |- aKNs);
+
+% fantom users, inputs and precoder.
+\node (a_user_fantom) at ($(a11)!0.5!(aKNs)$) {$\vdots$};
+
+% superposition of all user signals.
+\node[total system multiplier] at ($ (a_user_fantom) + (1.5*\MultiplierWidth + \InputToPrecoder + \PrecoderToSum, 0) $) (Sum) {$\Sigma$};
+\draw[signal] (F1) -- (Sum.west |- F1);
+\draw[signal] (FK) -- (Sum.west |- FK);
+
+% user channels
+\node[single user multiplier] at ($(F1) + (1*\MultiplierWidth + \PrecoderToSum + \SumToChannels, 0)$) (H1) {$\mathbf{H}_1$};
+\node[single user multiplier] at ($(FK) + (1*\MultiplierWidth + \PrecoderToSum + \SumToChannels, 0)$) (HK) {$\mathbf{H}_K$};
+
+% split up transmitted signal.
+
+% Split Sum output into K=2 branches (up/down), then route to channel blocks
+\coordinate (sum_out) at (Sum.east);
+\coordinate (sum_bus) at ($(sum_out) + (\SumToChannels, 0) - (\MultiplierWidth, 0)$);
+
+% First horizontal segment from Sum
+\draw[-] (sum_out) -- (sum_bus);
+
+% Vertical split points aligned with each channel block
+\coordinate (sum_to_H1) at (sum_bus |- H1.west);
+\coordinate (sum_to_HK) at (sum_bus |- HK.west);
+
+% Vertical branches (one up, one down)
+\draw[-] (sum_bus) -- (sum_to_H1);
+\draw[-] (sum_bus) -- (sum_to_HK);
+
+% Final horizontal segments into the channel blocks
+\draw[signal] (sum_to_H1) -- (H1.west);
+\draw[signal] (sum_to_HK) -- (HK.west);
+
+
+
+% noise
+\node[adder, right=\ChannelToNoise of H1] (add1) {};
+\draw ($(add1) + (-\AdderRadius, 0)$) -- ($(add1) + (\AdderRadius, 0)$);
+\draw ($(add1) + (0, -\AdderRadius)$) -- ($(add1) + (0, \AdderRadius)$);
+\node (n1) at ($(add1) + (0,\NoiseHeight)$) {$\mathbf{n}_1$};
+\draw[signal] (H1) -- (add1);
+\draw[signal] (n1) -- (add1);
+
+\node[adder, right=\ChannelToNoise of HK] (addK) {};
+\draw ($(addK) + (-\AdderRadius, 0)$) -- ($(addK) + (\AdderRadius, 0)$);
+\draw ($(addK) + (0, -\AdderRadius)$) -- ($(addK) + (0, \AdderRadius)$);
+\node (nK) at ($(addK) + (0,\NoiseHeight)$) {$\mathbf{n}_K$};
+\draw[signal] (HK) -- (addK);
+\draw[signal] (nK) -- (addK);
+
+% combiner
+\node[single user multiplier, right=\NoiseToCombiner of add1] (G1) {$\mathbf{G}_1$};
+\node[single user multiplier, right=\NoiseToCombiner of addK] (GK) {$\mathbf{G}_K$};
+\draw[signal] (add1) -- (G1);
+\draw[signal] (addK) -- (GK);
+
+% outputs
+\node (z11) at ($(G1.east |- a11) + (\CombinerToOutput, 0)$) {$z_{1, 1}$};
+\node (z1Ns) at ($(G1.east |- a1Ns) + (\CombinerToOutput, 0)$) {$z_{1, N_S}$};
+\node (z1_fantom) at ($(z11)!0.5!(z1Ns)$) {$\vdots$};
+\node (zK1) at ($(GK.east |- aK1) + (\CombinerToOutput, 0)$) {$z_{K, 1}$};
+\node (zKNs) at ($(GK.east |- aKNs) + (\CombinerToOutput, 0)$) {$z_{K, N_S}$};
+\node (zK_fantom) at ($(zK1)!0.5!(zKNs)$) {$\vdots$};
+\node (z_user_fantom) at ($(z11)!0.5!(zKNs)$) {$\vdots$};
+\draw[signal] (G1.east |- z11) -- (z11);
+\draw[signal] (G1.east |- z1Ns) -- (z1Ns);
+\draw[signal] (GK.east |- zK1) -- (zK1);
+\draw[signal] (GK.east |- zKNs) -- (zKNs);
+
+
+\end{tikzpicture}
+
+\end{document}

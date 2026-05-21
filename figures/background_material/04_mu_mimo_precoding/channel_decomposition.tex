@@ -1,0 +1,146 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\usetikzlibrary{arrows.meta, positioning, fit, calc, shapes.geometric}
+
+\begin{document}
+
+% ===================
+%  Layout Parameters
+% ===================
+
+% Vertical spacing between eigen subchannels
+\newcommand{\ChannelSep}{1.25cm}
+\newcommand{\NoiseHeight}{0.75cm}
+
+% Horizontal spacing
+\newcommand{\InputToPowerAllocator}{1.25cm}
+\newcommand{\PowerAllocatorToChannelGain}{1.25cm}
+\newcommand{\ChannelGainToNoiseAdder}{1.25cm}
+\newcommand{\NoiseAdderToOutput}{1.25cm}
+
+% Multiplier size
+\newcommand{\MultiplierWidth}{1.25cm}
+\newcommand{\MultiplierHeight}{0.75cm}
+
+% Adder size
+\newcommand{\AdderRadius}{0.2cm}
+
+% ===================
+% ===================
+
+\begin{tikzpicture}
+
+
+% Component Styles
+% ================
+
+\tikzset{
+    multiplier/.style = {
+        draw, 
+        rectangle,
+        minimum width=\MultiplierWidth,
+        minimum height=\MultiplierHeight,
+        align=center
+    },
+    adder/.style = {
+        draw, 
+        circle,
+        minimum size=2*\AdderRadius,
+        align=center
+    },
+    signal/.style = {
+        ->,
+    }
+}
+% =================
+
+
+% Figure Components
+% =================
+
+% user 1, eigen subchannel 1.
+\node (x11) at (0,0) {$a_{1, 1}$};
+\node[multiplier, right=\InputToPowerAllocator of x11] (p11) {$\sqrt{p_{1, 1}}$};
+\node[multiplier, right=\PowerAllocatorToChannelGain of p11] (ch11) {$g_{1, 1}$};
+\node[adder, right=\ChannelGainToNoiseAdder of ch11] (add11) {};
+\draw ($(add11) + (-\AdderRadius, 0)$) -- ($(add11) + (\AdderRadius, 0)$);
+\draw ($(add11) + (0, -\AdderRadius)$) -- ($(add11) + (0, \AdderRadius)$);
+\node (n11) at ($(add11) + (0,\NoiseHeight)$) {$\tilde{n}_{1, 1}$};
+\node (y11) at ($(add11) + (\NoiseAdderToOutput,0)$) {$z_{1, 1}$};
+
+\draw[signal] (x11) -- (p11);
+\draw[signal] (p11) -- (ch11);
+\draw[signal] (ch11) -- (add11);
+\draw[signal] (n11) -- (add11);
+\draw[signal] (add11) -- (y11);
+
+% user 1, eigen subchannel N_S.
+\node (x1Ns) at (0,-1*\ChannelSep) {$a_{1, N_S}$};
+\node[multiplier, below=1*\ChannelSep of p11.north] (p1Ns) {$\sqrt{p_{1, N_S}}$};
+\node[multiplier, below=1*\ChannelSep of ch11.north] (ch1Ns) {$g_{1, N_S}$};
+\node[adder, below=1*\ChannelSep of add11.north] (add1Ns) {};
+\draw ($(add1Ns) + (-\AdderRadius, 0)$) -- ($(add1Ns) + (\AdderRadius, 0)$);
+\draw ($(add1Ns) + (0, -\AdderRadius)$) -- ($(add1Ns) + (0, \AdderRadius)$);
+\node (n1Ns) at ($(add1Ns) + (0,\NoiseHeight)$) {$\tilde{n}_{1, N_S}$};
+\node (y1Ns) at ($(add1Ns) + (\NoiseAdderToOutput,0)$) {$z_{1, N_S}$};
+
+\draw[signal] (x1Ns) -- (p1Ns);
+\draw[signal] (p1Ns) -- (ch1Ns);
+\draw[signal] (ch1Ns) -- (add1Ns);
+\draw[signal] (n1Ns) -- (add1Ns);
+\draw[signal] (add1Ns) -- (y1Ns);
+
+% user 1, fantom eigen subchannels.
+\node (x_fantom) at ($(x11)!0.5!(x1Ns)$) {$\vdots$};
+\node (y_fantom) at ($(y11)!0.5!(y1Ns)$) {$\vdots$};
+
+
+
+% user K, eigen subchannel 1.
+\node (xK1) at (0,-2.5*\ChannelSep) {$a_{K, 1}$};
+\node[multiplier, right=\InputToPowerAllocator of xK1] (pK1) {$\sqrt{p_{K, 1}}$};
+\node[multiplier, right=\PowerAllocatorToChannelGain of pK1] (chK1) {$g_{K, 1}$};
+\node[adder, right=\ChannelGainToNoiseAdder of chK1] (addK1) {};
+\draw ($(addK1) + (-\AdderRadius, 0)$) -- ($(addK1) + (\AdderRadius, 0)$);
+\draw ($(addK1) + (0, -\AdderRadius)$) -- ($(addK1) + (0, \AdderRadius)$);
+\node (nK1) at ($(addK1) + (0,\NoiseHeight)$) {$\tilde{n}_{K, 1}$};
+\node (yK1) at ($(addK1) + (\NoiseAdderToOutput,0)$) {$z_{K, 1}$};
+
+\draw[signal] (xK1) -- (pK1);
+\draw[signal] (pK1) -- (chK1);
+\draw[signal] (chK1) -- (addK1);
+\draw[signal] (nK1) -- (addK1);
+\draw[signal] (addK1) -- (yK1);
+
+% user K, eigen subchannel N_S.
+\node (xKNs) at (0,-3.5*\ChannelSep) {$a_{K, N_S}$};
+\node[multiplier, below=1*\ChannelSep of pK1.north] (pKNs) {$\sqrt{p_{K, N_S}}$};
+\node[multiplier, below=1*\ChannelSep of chK1.north] (chKNs) {$g_{K, N_S}$};
+\node[adder, below=1*\ChannelSep of addK1.north] (addKNs) {};
+\draw ($(addKNs) + (-\AdderRadius, 0)$) -- ($(addKNs) + (\AdderRadius, 0)$);
+\draw ($(addKNs) + (0, -\AdderRadius)$) -- ($(addKNs) + (0, \AdderRadius)$);
+\node (nKNs) at ($(addKNs) + (0,\NoiseHeight)$) {$\tilde{n}_{K, N_S}$};
+\node (yKNs) at ($(addKNs) + (\NoiseAdderToOutput,0)$) {$z_{K, N_S}$};
+
+\draw[signal] (xKNs) -- (pKNs);
+\draw[signal] (pKNs) -- (chKNs);
+\draw[signal] (chKNs) -- (addKNs);
+\draw[signal] (nKNs) -- (addKNs);
+\draw[signal] (addKNs) -- (yKNs);
+
+% user K, fantom eigen subchannels.
+\node (xK_fantom) at ($(xK1)!0.5!(xKNs)$) {$\vdots$};
+\node (yK_fantom) at ($(yK1)!0.5!(yKNs)$) {$\vdots$};
+
+
+
+% fantom users.
+\node (x_user_fantom) at ($(x11)!0.5!(xKNs)$) {$\vdots$};
+\node (y_user_fantom) at ($(y11)!0.5!(yKNs)$) {$\vdots$};
+
+
+\end{tikzpicture}
+
+\end{document}
