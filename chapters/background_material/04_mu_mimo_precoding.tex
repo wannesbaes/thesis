@@ -144,10 +144,10 @@ With a fixed total transmit power in practice, this translates directly into low
         \caption{unfavorable channel conditions}
         \label{fig:mu_mimo_zf_precoding_2x2_unfav}
     \end{subfigure}
-    \caption[Visualization of \ac{ZF} precoding ($2$-antenna \ac{BS} and $2$ single-antenna \acp{UT})]
-    {Visualization of \ac{ZF} precoder for a \ac{MU}-\ac{MIMO} system with $2$ single-antenna \acp{UT} and a $2$-antenna \ac{BS} under (a) favorable and (b) unfavorable channel conditions.
+    \caption[Visualization of \acs{ZF} precoding ($2$-antenna \acs{BS} and $2$ single-antenna \acsp{UT})]
+    {Visualization of \acs{ZF} precoder for a \acs{MU}-\acs{MIMO} system with $2$ single-antenna \acsp{UT} and a $2$-antenna \acs{BS} under (a) favorable and (b) unfavorable channel conditions.
     For both scenarios, the channel vectors are normalized and the precoding vectors are scaled such that the effective channel gain for each data stream is equal to 1.
-    Note the much larger norm of the precoding vectors in the unfavorable scenario compared to the favorable scenario, which illustrates that a lot more power is required to achieve the same effective channel gain when the channel vectors of the \acp{UT} are strongly correlated.
+    Note the much larger norm of the precoding vectors in the unfavorable scenario compared to the favorable scenario, which illustrates that a lot more power is required to achieve the same effective channel gain when the channel vectors of the \acsp{UT} are strongly correlated.
     }
     \label{fig:mu_mimo_zf_precoding_2x2}
 \end{figure}
@@ -174,11 +174,11 @@ This maximizes the effective channel gain for each data stream, since it allows 
         \includegraphics[width=\textwidth]{figures/background_material/04_mu_mimo_precoding/zf_precoder_visualization/legend_3x2.png}
         \label{fig:mu_mimo_zf_precoding_legend_3x2}
     \end{subfigure}
-    \caption[Visualization of \ac{ZF} precoding ($3$-antenna \ac{BS} and $2$ single-antenna \acp{UT})]
-    {Visualization of \ac{ZF} precoder for a \ac{MU}-\ac{MIMO} system with $2$ single-antenna \acp{UT} and a $3$-antenna \ac{BS}.
+    \caption[Visualization of \acs{ZF} precoding ($3$-antenna \acs{BS} and $2$ single-antenna \acsp{UT})]
+    {Visualization of \acs{ZF} precoder for a \acs{MU}-\acs{MIMO} system with $2$ single-antenna \acsp{UT} and a $3$-antenna \acs{BS}.
     The channel vectors are normalized and the precoding vectors are scaled such that the effective channel gain for each data stream is equal to 1.
     With three transmit antennas, the null-space orthogonal to each user's channel direction is two-dimensional.
-    The \ac{ZF} precoding vector is chosen as the projection of the intended user's channel direction onto this plane, which minimizes the deviation from the desired channel direction while preserving the zero-forcing constraint.}
+    The \acs{ZF} precoding vector is chosen as the projection of the intended user's channel direction onto this plane, which minimizes the deviation from the desired channel direction while preserving the zero-forcing constraint.}
     \label{fig:mu_mimo_zf_precoding_3x2}
 \end{figure}
 
@@ -625,9 +625,9 @@ The two configurations differ only in how the receive antennas are distributed a
         \caption{$8 \times \{4, 4\}$ \ac{MU}--\ac{MIMO}}
         \label{fig:mu_mimo_sum_rate_comparison_8x4x2}
     \end{subfigure}
-    \caption[Achievable sum rate comparison of the different precoding techniques in two \ac{MU}--\ac{MIMO} systems]
-    {Comparison of the achievable sum rate for the considered \ac{MU} linear precoding techniques in two fully loaded \ac{MU}--\ac{MIMO} systems.
-    The results are averaged over at least $1000$ \ac{i.i.d.} Rayleigh channel realizations.}
+    \caption[Achievable \acs{SR} comparison of the different precoders in two \acs{MU}--\acs{MIMO} systems]
+    {Comparison of the achievable sum rate for the considered \acs{MU} linear precoding techniques in two fully loaded \acs{MU}--\acs{MIMO} systems.
+    The results are averaged over at least $1000$ \acs{i.i.d.} Rayleigh channel realizations.}
     \label{fig:mu_mimo_sum_rate_comparison}
 \end{figure}
 
@@ -642,7 +642,7 @@ Pure \ac{ZF} imposes the strictest constraints, requiring the precoder to invert
 \ac{WMMSE} places no structural constraint on the precoder and directly optimizes the \ac{WSR}, achieving the highest \ac{SR} at moderate \ac{SNR}.
 The performance differences manifest as a horizontal \ac{SNR} offset rather than a change in growth rate, because all four techniques achieve the same multiplexing gain.
 
-A notable exception to the above ranking occurs at very high \ac{SNR} in the $8 \times \{4,4\}$ configuration (Figure~\ref{fig:mu_mimo_sum_rate_comparison_8x4x2}), where \ac{BD} eventually overtakes \ac{WMMSE}.
+A notable exception to the above ranking occurs at very high \ac{SNR} in the $8 \times \{4,4\}$ configuration, where \ac{BD} eventually overtakes \ac{WMMSE}.
 This crossover arises because \ac{BD} approaches the globally optimal solution for the maximum-information-rate criterion as \ac{SNR} grows~\cite{BD_precoding_0}, while \ac{WMMSE} may converge to a suboptimal local optimum in this regime.
 
 Comparing the two configurations also reveals how the distribution of receive antennas affects performance.

@@ -6,7 +6,7 @@
 \section*{Abbreviations}
 \addcontentsline{toc}{section}{Abbreviations}
 
-\begin{acronym}[WMMSE]
+\begin{acronym}[WMMSEE]
     % a b c d e f g h i j k l m n o p q r s t u v w x y z
     \acro{acf}{autocorrelation function}
     \acro{AWGN}{additive white Gaussian noise}
@@ -21,9 +21,14 @@
     \acro{FFT}{fast Fourier transform}
     \acro{FIR}{finite impulse response}
     %\acro{GenAI}{generative artificial intelligence}
+    \acro{GEO}{geostationary earth orbit}
+    \acro{GW}{gateway}
+    \acro{HTS}{high-throughput satellite}
     \acro{IBR}{information bit rate}
     \acro{i.i.d.}{independent and identically distributed}
     \acro{KKT}{Karush-Kuhn-Tucker}
+    \acro{LEO}{low earth orbit}
+    \acro{LoS}{line-of-sight}
     \acro{LSV}{left singular vector}
     %\acro{MAP}{maximum--a--posteriori}
     \acro{MI}{mutual information}
@@ -31,13 +36,16 @@
     \acro{MMSE}{minimum mean squared error}
     \acro{MSE}{mean squared error}
     \acro{MU}{multi-user}
+    \acro{NLoS}{non-line-of-sight}
     \acro{pdf}{probability density function}
     \acro{PAM}{pulse amplitude modulation}
     \acro{PSD}{power spectral density}
     \acro{PSK}{phase shift keying}
     \acro{QAM}{quadrature amplitude modulation}
     \acro{QoS}{Quality--of--Service}
+    \acro{RTT}{round-trip time}
     \acro{RX}{receiver}
+    \acro{SINR}{signal-to-interference-plus-noise ratio}
     \acro{SISO}{single-input single-output}
     \acro{SNR}{signal-to-noise ratio}
     \acro{SR}{sum rate}
@@ -49,32 +57,83 @@
     \acro{WMSE}{weighted mean squared error}
     \acro{WMMSE}{weighted minimum mean squared error}
     \acro{WSR}{weighted sum rate}
-    \acro{WSRBF}{weighted sum rate beamforming}
     \acro{ZF}{zero--forcing}
 \end{acronym}
 
 
-% Mathematical Notations
-\section*{Mathematical Notations}
-\addcontentsline{toc}{section}{Mathematical Notations}
+% \section*{Mathematical Notations}
+% \addcontentsline{toc}{section}{Mathematical Notations}
+% % ==============================
+% %   Mathematical Notations
+% % ==============================
 
-TO DO
+% \paragraph*{Scalar Operations}
+
+% \begin{description}[leftmargin=3cm, labelwidth=2.7cm, labelsep=0.25em, font=\normalfont]
+%     \item[$(\cdot)_+$]          Maximum of the argument and zero
+%     \item[$\log_2(\cdot)$]      Logarithm base 2
+%     \item[$\exp(\cdot), \; e^{(\cdot)}$]        Exponential function
+%     \item[$\delta_{ij}$]        Kronecker delta function
+%     \item[$\delta(\cdot)$]      Dirac delta function
+%     \item[$J_0(\cdot)$]         Bessel function of the first kind, order zero
+% \end{description}
+
+% \paragraph*{Matrix and Vector Operations}
+
+% \begin{description}[leftmargin=3cm, labelwidth=2.7cm, labelsep=0.25em, font=\normalfont]
+%     \item[$(\cdot)^T$]        Transpose
+%     \item[$(\cdot)^H$]        Conjugate transpose (Hermitian)
+%     \item[$(\cdot)^{-1}$]     Matrix inverse
+%     \item[$(\cdot)^{\dagger}$] Moore-Penrose pseudo-inverse
+%     \item[$\mathrm{tr}(\cdot)$]   Trace of a square matrix
+%     \item[$\det(\cdot)$]      Determinant of a square matrix
+%     \item[$\mathrm{rank}(\cdot), \; R_{(\cdot)}$] Rank of a matrix
+%     \item[$\|\cdot\|$]        Euclidean norm of a column vector
+%     \item[$\|\cdot\|_F$]      Frobenius norm of a matrix
+%     \item[$\mathrm{diag}(\cdot)$] Diagonal matrix formed from a vector, or vector formed of diagonal entries
+%     \item[$\mathrm{blkdiag}(\cdot)$] Block-diagonal matrix
+%     \item[$A \succeq 0$]      Matrix $A$ is positive semidefinite
+%     \item[$A \succ 0$]      Matrix $A$ is positive definite
+%     \item[$\Re\{\cdot\}$]      Element-wise real part
+%     \item[$\Im\{\cdot\}$]      Element-wise imaginary part
+%     \item[$\mathbf{I}_n$]     Identity matrix of size $n \times n$
+%     \item[$\mathbf{0}_{m \times n}$]       All-zeros matrix of size $m \times n$
+% \end{description}
+
+% \paragraph*{Probability and Statistics}
+
+% \begin{description}[leftmargin=3cm, labelwidth=2.7cm, labelsep=0.25em, font=\normalfont]
+%     \item[$p(\cdot)$]           Probability density function
+%     \item[${\mathbb{E}\big[\cdot\big]}$]  Expectation operator (element-wise if applied to a vector or matrix)
+%     \item [$\mathbf{C}_{(\cdot)}$]    Covariance matrix of a random column vector
+%     \item[$\mathcal{CN}(\boldsymbol{\mu},\boldsymbol{\Sigma})$]  \acs{CS} complex Gaussian distribution with mean $\boldsymbol{\mu}$ and covariance $\boldsymbol{\Sigma}$
+%     \item[$I(\mathbf{x};\mathbf{y})$] Mutual information between $\mathbf{x}$ and $\mathbf{y}$
+% \end{description}
 
 
 % System Parameters
 \section*{System Parameters}
 \addcontentsline{toc}{section}{System Parameters}
 
-\begin{description}[leftmargin=!, labelwidth=0.75cm, labelsep=1em]
+\begin{description}[leftmargin=3cm, labelwidth=2.7cm, labelsep=0.25em, font=\normalfont]
+    \item[$K$]   Number of UTs
     \item[$N_T$] Number of transmit antennas at the BS
     \item[$N_R$] Number of receive antennas at each UT
     \item[$N_S$] Number of data streams per UT
-    \item[$K$] Number of UTs
+    \item[$P_t$] Total transmit power
+    \item[$N_0$] Noise power on each receive antenna
 \end{description}
 
 
 % Symbols
 \section*{Symbols}
 \addcontentsline{toc}{section}{Symbols}
+
+%% SU-MIMO Symbols
+\paragraph*{SU--MIMO}
+
+
+%% MU-MIMO Symbols
+\paragraph*{MU--MIMO}
 
 TO DO
