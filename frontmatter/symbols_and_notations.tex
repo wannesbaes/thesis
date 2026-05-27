@@ -2,15 +2,15 @@
 \chapter*{Symbols and Notations}
 \addcontentsline{toc}{chapter}{Symbols and Notations}
 
-% Abbreviations
 \section*{Abbreviations}
 \addcontentsline{toc}{section}{Abbreviations}
+% ==============================
+%        Abbreviations
+% ==============================
 
 \begin{acronym}[WMMSEE]
     % a b c d e f g h i j k l m n o p q r s t u v w x y z
     \acro{acf}{autocorrelation function}
-    \acro{AoA}{angle of arrival}
-    \acro{AoD}{angle of departure}
     \acro{AR}{autoregressive}
     \acro{AWGN}{additive white Gaussian noise}
     \acro{BS}{base station}
@@ -18,11 +18,8 @@
     \acro{BER}{bit error rate}
     \acro{CS}{circularly symmetric}
     \acro{CSI}{channel state information}
-    \acro{DFT}{discrete Fourier transform}
     \acro{DPC}{dirty paper coding}
     \acro{EVD}{eigenvalue decomposition}
-    \acro{FFT}{fast Fourier transform}
-    \acro{FIR}{finite impulse response}
     %\acro{GenAI}{generative artificial intelligence}
     \acro{GEO}{geostationary earth orbit}
     \acro{GW}{gateway}
@@ -38,14 +35,11 @@
     \acro{MIMO}{multiple-input multiple-output}
     \acro{MMSE}{minimum mean squared error}
     \acro{MSE}{mean squared error}
-    \acro{MSS}{mobile satellite services}
+    \acro{MSS}{mobile satellite system}
     \acro{MU}{multi-user}
     \acro{NLoS}{non-line-of-sight}
     \acro{pdf}{probability density function}
-    \acro{PAM}{pulse amplitude modulation}
     \acro{PSD}{power spectral density}
-    \acro{PSK}{phase shift keying}
-    \acro{QAM}{quadrature amplitude modulation}
     \acro{QoS}{Quality--of--Service}
     \acro{RTT}{round-trip time}
     \acro{RX}{receiver}
@@ -57,7 +51,6 @@
     \acro{SVD}{singular value decomposition}
     \acro{THP}{Tomlinson--Harashima precoding}
     \acro{TX}{transmitter}
-    \acro{UPA}{uniform planar array}
     \acro{UT}{user terminal}
     \acro{WMSE}{weighted mean squared error}
     \acro{WMMSE}{weighted minimum mean squared error}
@@ -65,80 +58,150 @@
     \acro{ZF}{zero--forcing}
 \end{acronym}
 
+% acronyms not appearing in the abbreviations section
+\acrodef{AoA}{angle of arrival}
+\acrodef{AoD}{angle of departure}
+\acrodef{DFT}{discrete Fourier transform}
+\acrodef{FFT}{fast Fourier transform}
+\acrodef{FIR}{finite impulse response}
+\acrodef{PAM}{pulse amplitude modulation}
+\acrodef{PSK}{phase shift keying}
+\acrodef{QAM}{quadrature amplitude modulation}
+\acrodef{UPA}{uniform planar array}
 
-% \section*{Mathematical Notations}
-% \addcontentsline{toc}{section}{Mathematical Notations}
-% % ==============================
-% %   Mathematical Notations
-% % ==============================
+%\section*{Mathematical Notations}
+\begin{comment}
+\addcontentsline{toc}{section}{Mathematical Notations}
+% ==============================
+%   Mathematical Notations
+% ==============================
 
-% \paragraph*{Scalar Operations}
-
-% \begin{description}[leftmargin=3cm, labelwidth=2.7cm, labelsep=0.25em, font=\normalfont]
-%     \item[$(\cdot)_+$]          Maximum of the argument and zero
-%     \item[$\log_2(\cdot)$]      Logarithm base 2
-%     \item[$\exp(\cdot), \; e^{(\cdot)}$]        Exponential function
-%     \item[$\delta_{ij}$]        Kronecker delta function
-%     \item[$\delta(\cdot)$]      Dirac delta function
-%     \item[$J_0(\cdot)$]         Bessel function of the first kind, order zero
-% \end{description}
-
-% \paragraph*{Matrix and Vector Operations}
-
-% \begin{description}[leftmargin=3cm, labelwidth=2.7cm, labelsep=0.25em, font=\normalfont]
-%     \item[$(\cdot)^T$]        Transpose
-%     \item[$(\cdot)^H$]        Conjugate transpose (Hermitian)
-%     \item[$(\cdot)^{-1}$]     Matrix inverse
-%     \item[$(\cdot)^{\dagger}$] Moore-Penrose pseudo-inverse
-%     \item[$\mathrm{tr}(\cdot)$]   Trace of a square matrix
-%     \item[$\det(\cdot)$]      Determinant of a square matrix
-%     \item[$\mathrm{rank}(\cdot), \; R_{(\cdot)}$] Rank of a matrix
-%     \item[$\|\cdot\|$]        Euclidean norm of a column vector
-%     \item[$\|\cdot\|_F$]      Frobenius norm of a matrix
-%     \item[$\mathrm{diag}(\cdot)$] Diagonal matrix formed from a vector, or vector formed of diagonal entries
-%     \item[$\mathrm{blkdiag}(\cdot)$] Block-diagonal matrix
-%     \item[$A \succeq 0$]      Matrix $A$ is positive semidefinite
-%     \item[$A \succ 0$]      Matrix $A$ is positive definite
-%     \item[$\Re\{\cdot\}$]      Element-wise real part
-%     \item[$\Im\{\cdot\}$]      Element-wise imaginary part
-%     \item[$\mathbf{I}_n$]     Identity matrix of size $n \times n$
-%     \item[$\mathbf{0}_{m \times n}$]       All-zeros matrix of size $m \times n$
-% \end{description}
-
-% \paragraph*{Probability and Statistics}
-
-% \begin{description}[leftmargin=3cm, labelwidth=2.7cm, labelsep=0.25em, font=\normalfont]
-%     \item[$p(\cdot)$]           Probability density function
-%     \item[${\mathbb{E}\big[\cdot\big]}$]  Expectation operator (element-wise if applied to a vector or matrix)
-%     \item [$\mathbf{C}_{(\cdot)}$]    Covariance matrix of a random column vector
-%     \item[$\mathcal{CN}(\boldsymbol{\mu},\boldsymbol{\Sigma})$]  \acs{CS} complex Gaussian distribution with mean $\boldsymbol{\mu}$ and covariance $\boldsymbol{\Sigma}$
-%     \item[$I(\mathbf{x};\mathbf{y})$] Mutual information between $\mathbf{x}$ and $\mathbf{y}$
-% \end{description}
-
-
-% System Parameters
-\section*{System Parameters}
-\addcontentsline{toc}{section}{System Parameters}
+\paragraph*{Scalar Operations}
 
 \begin{description}[leftmargin=3cm, labelwidth=2.7cm, labelsep=0.25em, font=\normalfont]
-    \item[$K$]   Number of UTs
-    \item[$N_T$] Number of transmit antennas at the BS
-    \item[$N_R$] Number of receive antennas at each UT
-    \item[$N_S$] Number of data streams per UT
-    \item[$P_t$] Total transmit power
-    \item[$N_0$] Noise power on each receive antenna
+    \item[$(\cdot)_+$]          Maximum of the argument and zero
+    \item[$\log_2(\cdot)$]      Logarithm base 2
+    \item[$\exp(\cdot), \; e^{(\cdot)}$]        Exponential function
+    \item[$\delta_{ij}$]        Kronecker delta function
+    \item[$\delta(\cdot)$]      Dirac delta function
+    \item[$J_0(\cdot)$]         Bessel function of the first kind, order zero
 \end{description}
 
+\paragraph*{Matrix and Vector Operations}
 
-% Symbols
+\begin{description}[leftmargin=3cm, labelwidth=2.7cm, labelsep=0.25em, font=\normalfont]
+    \item[$(\cdot)^T$]        Transpose
+    \item[$(\cdot)^H$]        Conjugate transpose (Hermitian)
+    \item[$(\cdot)^{-1}$]     Matrix inverse
+    \item[$(\cdot)^{\dagger}$] Moore-Penrose pseudo-inverse
+    \item[$\mathrm{tr}(\cdot)$]   Trace of a square matrix
+    \item[$\det(\cdot)$]      Determinant of a square matrix
+    \item[$\mathrm{rank}(\cdot), \; R_{(\cdot)}$] Rank of a matrix
+    \item[$\|\cdot\|$]        Euclidean norm of a column vector
+    \item[$\|\cdot\|_F$]      Frobenius norm of a matrix
+    \item[$\mathrm{diag}(\cdot)$] Diagonal matrix formed from a vector, or vector formed of diagonal entries
+    \item[$\mathrm{blkdiag}(\cdot)$] Block-diagonal matrix
+    \item[$A \succeq 0$]      Matrix $A$ is positive semidefinite
+    \item[$A \succ 0$]      Matrix $A$ is positive definite
+    \item[$\Re\{\cdot\}$]      Element-wise real part
+    \item[$\Im\{\cdot\}$]      Element-wise imaginary part
+    \item[$\mathbf{I}_n$]     Identity matrix of size $n \times n$
+    \item[$\mathbf{0}_{m \times n}$]       All-zeros matrix of size $m \times n$
+\end{description}
+
+\paragraph*{Probability and Statistics}
+
+\begin{description}[leftmargin=3cm, labelwidth=2.7cm, labelsep=0.25em, font=\normalfont]
+    \item[$p(\cdot)$]           Probability density function
+    \item[${\mathbb{E}\big[\cdot\big]}$]  Expectation operator (element-wise if applied to a vector or matrix)
+    \item [$\mathbf{C}_{(\cdot)}$]    Covariance matrix of a random column vector
+    \item[$\mathcal{CN}(\boldsymbol{\mu},\boldsymbol{\Sigma})$]  \acs{CS} complex Gaussian distribution with mean $\boldsymbol{\mu}$ and covariance $\boldsymbol{\Sigma}$
+    \item[$I(\mathbf{x};\mathbf{y})$] Mutual information between $\mathbf{x}$ and $\mathbf{y}$
+\end{description}
+\end{comment}
+
+\section*{System Parameters}
+\addcontentsline{toc}{section}{System Parameters}
+% ==============================
+%   System Parameters
+% ==============================
+
+\begin{description}[leftmargin=2.5cm, labelwidth=2cm, labelsep=0.25em, font=\normalfont]
+    \item[$ K $]   Number of UTs
+    \item[$ N_T $] Number of transmit antennas at the BS
+    \item[$ N_R $] Number of receive antennas at each UT
+    \item[$ N_S $] Number of data streams per UT
+    \item[$ P_t $] Total transmit power
+    \item[$ N_0 $] Noise power on each receive antenna
+\end{description}
+
 \section*{Symbols}
 \addcontentsline{toc}{section}{Symbols}
+% ==============================
+%          Symbols
+% ==============================
 
-%% SU-MIMO Symbols
-\paragraph*{SU--MIMO}
+We limit ourselves to the notation for a \acs{MU}-\acs{MIMO} downlink system, as this is the most general scenario discussed in this dissertation. The notation for a \acs{SU}-\acs{MIMO} system can be obtained by setting $K=1$ and omitting the user index $k$.
 
+\paragraph*{System Components}
 
-%% MU-MIMO Symbols
-\paragraph*{MU--MIMO}
+\begin{description}[labelsep=0.25em, font=\normalfont]
+    \newcommand{\symbolsep}{\vspace{0.55em}}
 
-TO DO
+    % channel
+    \item[$ h_{k, \, (m, \, n)} \in \mathbb{C} \quad \text{---} \quad $]   channel coefficient from the $n$-th transmit antenna of the \acs{BS} to the $m$-th \phantom{000000000000} receive antenna of user $k$
+    %\item[$ \mathbf{h}_{k, \, n} = {[ h_{k, \, (1, \, n)} \; \dots \; h_{k, \, (N_R, \, n)} ]}^T \in \mathbb{C}^{N_R} \quad \text{---} \quad $]   channel vector (direction) from the $n$-th transmit antenna of the \acs{BS} to user $k$
+    \item[$ \mathbf{H}_k \in \mathbb{C}^{N_R \times N_T} \quad \text{---} \quad $]   channel matrix for user $k$
+    \item[$ \mathbf{H} = {\big[ \mathbf{H}_1^T \; \dots \; \mathbf{H}_K^T \big]^T} \in \mathbb{C}^{KN_R \times N_T} \quad \text{---} \quad $]   compound channel matrix
+    \symbolsep
+
+    % noise
+    \item[$ n_{k, \, m} \in \mathbb{C} \quad \text{---} \quad $]   additive noise sample on the $m$-th receive antenna of user $k$
+    \item[$ \mathbf{n}_k = {[ n_{k, \, 1} \; \dots \; n_{k, \, N_R} ]}^T \in \mathbb{C}^{N_R} \quad \text{---} \quad $]   noise vector for user $k$
+    \item[$ \mathbf{n} = {[ \mathbf{n}_1^T \; \dots \; \mathbf{n}_K^T ]}^T \in \mathbb{C}^{KN_R} \quad \text{---} \quad $]   compound noise vector
+    \symbolsep
+
+    % precoder
+    \item[$ \mathbf{f}_{k, \, i} \in \mathbb{C}^{N_T} \quad \text{---} \quad $]   precoder vector for the $i$-th data stream intended for user $k$
+    \item[$ \mathbf{F}_k = {\big[ \mathbf{f}_{k, \, 1} \; \dots \; \mathbf{f}_{k, \, N_S} \big]} \in \mathbb{C}^{N_T \times N_S} \quad \text{---} \quad $]   precoder matrix for user $k$
+    \item[$ \mathbf{F} = {\big[ \mathbf{F}_1 \; \dots \; \mathbf{F}_K \big]} \in \mathbb{C}^{N_T \times KN_S} \quad \text{---} \quad $]   compound precoder matrix
+    \symbolsep
+
+    % combiner
+    \item[$ \mathbf{g}_{k, \, i} \in \mathbb{C}^{N_R} \quad \text{---} \quad $]   combiner vector for the $i$-th data stream intended for user $k$
+    \item[$ \mathbf{G}_k = {\big[ \mathbf{g}_{k, \, 1}^T \; \dots \; \mathbf{g}_{k, \, N_S}^T \big]^T} \in \mathbb{C}^{N_S \times N_R} \quad \text{---} \quad $]   combiner matrix for user $k$
+    \item[$ \mathbf{G} = \operatorname{diag}\!\big( \mathbf{G}_1, \; \dots, \; \mathbf{G}_K \big) \in \mathbb{C}^{KN_S \times KN_R} \quad \text{---} \quad $]   compound combiner matrix
+    \symbolsep
+
+\end{description}
+
+\paragraph*{System Signals}
+
+\begin{description}[labelsep=0.15em, font=\normalfont]
+    \newcommand{\symbolsep}{\vspace{0.55em}}
+
+    % data symbols
+    \item[$ a_{k, \, i} \in \mathbb{C} \quad \text{---} \quad $]   data symbol in the $i$-th data stream for user $k$
+    \item[$ \mathbf{a}_k = {[ a_{k, \, 1} \; \dots \; a_{k, \, N_S} ]}^T \in \mathbb{C}^{N_S} \quad \text{---} \quad $]   data symbol vector for user $k$
+    \item[$ \mathbf{a} = {[ \mathbf{a}_1^T \; \dots \; \mathbf{a}_K^T ]}^T \in \mathbb{C}^{KN_S} \quad \text{---} \quad $]   compound data symbol vector
+    \symbolsep
+
+    % transmit signal
+    \item[$ x_n \in \mathbb{C} \quad \text{---} \quad $]   transmit signal on the $n$-th transmit antenna at the \acs{BS}
+    \item[$ \mathbf{x} = {[ x_1 \; \dots \; x_{N_T} ]}^T \in \mathbb{C}^{N_T} \quad \text{---} \quad $]   transmit signal vector \; ($\mathbf{x} = \mathbf{F} \, \mathbf{a} = \sum_{k=1}^{K} \sum_{i=1}^{N_S} \mathbf{f}_{k, i} \, a_{k, i}$)
+    \symbolsep
+    
+    % receive signal
+    \item[$ y_{k, \, m} \in \mathbb{C} \quad \text{---} \quad $]   receive signal on the $m$-th receive antenna of user $k$
+    \item[$ \mathbf{y}_k = {[ y_{k, \, 1} \; \dots \; y_{k, \, N_R} ]}^T \in \mathbb{C}^{N_R} \quad \text{---} \quad $]   receive signal vector at user $k$ \; ($\mathbf{y}_k = \mathbf{H}_k \, \mathbf{x} + \mathbf{n}_k$)
+    \item[$ \mathbf{y} = {[ \mathbf{y}_1^T \; \dots \; \mathbf{y}_K^T ]}^T \in \mathbb{C}^{KN_R} \quad \text{---} \quad $]   compound receive signal vector \; ($\mathbf{y} = \mathbf{H} \, \mathbf{x} + \mathbf{n}$)
+    \symbolsep
+
+    % decision variable
+    \item[$ z_{k, \, i} \in \mathbb{C} \quad \text{---} \quad $]   decision variable in the $i$-th data stream at user $k$
+    \item[$ \mathbf{z}_k = {[ z_{k, \, 1} \; \dots \; z_{k, \, N_S} ]}^T \in \mathbb{C}^{N_S} \quad \text{---} \quad $]   decision variable vector at user $k$ \; ($\mathbf{z}_k = \mathbf{G}_k \, \mathbf{y}_k$)
+    \item[$ \mathbf{z} = {[ \mathbf{z}_1^T \; \dots \; \mathbf{z}_K^T ]}^T \in \mathbb{C}^{KN_S} \quad \text{---} \quad $]   compound decision variable vector \; ($\mathbf{z} = \mathbf{G} \, \mathbf{y}$)
+    \symbolsep
+
+\end{description}
+

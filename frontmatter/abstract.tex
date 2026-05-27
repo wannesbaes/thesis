@@ -5,29 +5,42 @@
 %\chapter*{Abstract}
 
 \begin{center}
-    {\Large \textbf{\thesistitle}} \par\vspace{0.3cm}
+    {\Large \textbf{\thesistitle}} \vspace{0.2cm}
 
-    {\large by} \par
-    \textsc{\authorname} \par\vspace{0.3cm}
+    {\large by} \\
+    \textsc{\authorname} \vspace{0.2cm}
 
-    Master's dissertation submitted in order to obtain the academic degree of \degree \par\vspace{0.5cm}
+    Master's dissertation submitted in order to obtain the academic degree of \degree \par\vspace{0.4cm}
 
-    Supervisor: \supervisor \par
-    Counsellor: \counsellor \par\vspace{0.5cm}
+    Supervisor: \supervisor \\
+    Counsellor: \counsellor \vspace{0.4cm}
 
-    \university \par
-    \faculty \par
-    \department \par
+    \university \\
+    \faculty \\
+    \department \\
 \end{center}
 
-\vspace{1cm}
+\vspace{0.6cm}
 
-\noindent\textbf{Abstract} --- 
-% Write abstract here
-Laboris magna irure quis sit et veniam voluptate duis elit esse do excepteur. Officia laboris adipisicing laboris duis ut cillum aliquip. Do veniam aute non do cillum sit pariatur consectetur adipisicing qui. Lorem Lorem veniam minim exercitation cupidatat tempor do aute dolore. Nostrud adipisicing tempor quis qui fugiat sint quis ut aute eiusmod Lorem enim veniam. Elit labore Lorem do proident amet anim exercitation culpa enim cillum qui. Aliquip reprehenderit commodo labore minim laborum mollit ut veniam in irure. Minim sit in non aliqua ut elit veniam irure pariatur non velit consequat. Cupidatat veniam occaecat culpa eu irure aute consectetur dolore culpa deserunt quis officia do. Aliqua aliqua eu velit excepteur culpa ea dolore occaecat. Ea est cillum nulla ea cupidatat esse adipisicing ut. Cillum amet esse ex ex enim elit excepteur ullamco in qui aliqua Lorem veniam. Sunt consectetur aliquip commodo exercitation pariatur id tempor adipisicing aliqua. Fugiat cillum ea irure laborum consectetur ipsum. Excepteur laboris eu veniam ex ad consequat esse id ullamco ea cupidatat ad nisi. Aute nisi velit excepteur adipisicing dolore pariatur sunt. Dolore mollit cupidatat esse sint ipsum est nulla nisi eu cupidatat excepteur sint cillum. Culpa irure magna culpa eiusmod ut nisi ipsum veniam elit est occaecat veniam. Sunt adipisicing eu minim qui ea laboris ullamco ut. Aliquip occaecat in occaecat ut tempor dolore sunt consequat qui cillum reprehenderit. Voluptate commodo cupidatat ullamco sint aliquip veniam consequat do. Nisi velit excepteur aute laboris aliqua fugiat minim occaecat quis non incididunt.
+\noindent\textbf{Abstract} ---
+Linear precoding has become a cornerstone of \acs*{MIMO} communications, as it enables spatial multiplexing gains that translate directly into higher spectral efficiency.
+These benefits are particularly valuable in multi-beam high-throughput satellite systems, where aggressive frequency reuse across the narrow spot beams turns the forward link into an interference-limited \acs*{MU}-\acs*{MIMO} channel. 
+In this environment, precoding is crucial for mitigating inter-beam interference.
+In mobile satellite scenarios, however, the combination of long propagation delays and time-varying channels induced by user mobility introduce complications.
+More specific, the \acs*{CSI} available during the precoder computation is generally outdated with respect to the channel experienced at the time of transmission.
+This work investigates the performance degradation caused by this \acs*{CSI} mismatch and proposes a low-complexity compensation strategy.
 
-\vspace{0.5cm}
+\textbf{Part I} reviews the theoretical foundations underlying this work. 
+After introducing the \acs*{SU}- and \acs*{MU}-\acs*{MIMO} system models, together with the most relevant information-theoretic concepts, a generalised \acs*{WMMSE} framework for joint optimisation of the precoder and combiner in a \acs*{SU} scenario is presented, and the capacity-achieving precoder is derived.
+For the \acs*{MU}-\acs*{MIMO} broadcast channel, we break down common linear precoding strategies and compare there performance.
+Although these results are well established, they are revisited here in a unified notation and validated through Monte-Carlo simulations, so that they can serve as a consistent baseline for the satellite-specific analysis that follows.
+
+\textbf{Part II} applies this framework to the forward link of a multi-beam mobile satellite system.
+The impact of the \acs*{CSI} feedback delay on the system performance is quantified, revealing a substantial performance loss.
+To counter this degradation, a low-complexity prediction strategy based is proposed.
+Numerical results show that this scheme recovers a significant fraction of the performance loss under the considered channel model.
+
+\vspace{0.4cm}
 
 \noindent\textbf{Keywords} --- 
-% Write keywords here
-Precoding Techniques, High-Troughput Satellite Communications, \acs{MIMO}, Outdated \acs{CSI}
+\acs*{MIMO}, Precoding Techniques, Mobile Satellite Systems, Outdated \acs*{CSI}
