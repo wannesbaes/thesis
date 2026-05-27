@@ -1,0 +1,141 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+
+
+%  PARAMETERS
+\newcommand{\Nx}{6}        % number of elements in x-direction
+\newcommand{\Ny}{4}        % number of elements in y-direction
+\newcommand{\dx}{1}        % element spacing in x (tikz units)
+\newcommand{\dy}{1}        % element spacing in y (tikz units)
+
+\pgfmathsetmacro{\Lx}{(\Nx-1)*\dx}
+\pgfmathsetmacro{\Ly}{(\Ny-1)*\dy}
+\pgfmathsetmacro{\AxLen}{1.2*\Lx}
+\pgfmathsetmacro{\AyLen}{1.2*\Ly}
+\pgfmathsetmacro{\AzLen}{0.5*max(\Lx,\Ly)}
+
+% Viewing angles
+\newcommand{\thetaView}{70}     % elevation angle
+\newcommand{\phiView}{110}      % azimuth angle
+
+% Vector `a'
+\newcommand{\thetaA}{30}        % elevation angle
+\newcommand{\phiA}{135}         % azimuth angle
+\newcommand{\aLen}{2}           % length of vector a
+\pgfmathsetmacro{\ax}{\aLen * sin(\thetaA) * cos(\phiA)}
+\pgfmathsetmacro{\ay}{\aLen * sin(\thetaA) * sin(\phiA)}
+\pgfmathsetmacro{\az}{\aLen * cos(\thetaA)}
+
+% Arc radii
+\newcommand{\rArcTheta}{0.5}    % radius of theta arc
+\newcommand{\rArcPhi}{0.5}      % radius of phi arc
+
+% Distance indicators
+\newcommand{\arrowOffset}{0.2}                  % offset of distance arrows from the grid
+\pgfmathsetmacro{\dyBeforePen}{(\Ny-3)*\dy}     % y of penultimate dot
+\pgfmathsetmacro{\dyPen}{(\Ny-2)*\dy}           % y of last dot
+\pgfmathsetmacro{\dxBeforePen}{(\Nx-3)*\dx}     % x of dot before penultimate
+\pgfmathsetmacro{\dxPen}{(\Nx-2)*\dx}           % x of penultimate dot
+
+% Colors
+\definecolor{tabblue}{RGB}{31,119,180}
+\colorlet{color_surface}{tabblue!20}
+\colorlet{color_surface_border}{tabblue!50}
+\colorlet{color_dots}{tabblue}
+\colorlet{color_axes}{gray}
+\colorlet{color_a}{black}
+\colorlet{color_a_projection}{gray!70}
+\colorlet{color_theta}{blue}
+\colorlet{color_phi}{blue}
+\colorlet{color_spacing}{black}
+
+
+% ============================================================
+\begin{document}
+\tdplotsetmaincoords{\thetaView}{\phiView}
+
+\begin{tikzpicture}[tdplot_main_coords, scale=1]
+
+
+    %  ELEMENT 1 — rectangular surface panel
+    \fill[color_surface, opacity=0.6]
+        (0,0,0) -- (\Lx,0,0) -- (\Lx,\Ly,0) -- (0,\Ly,0) -- cycle;
+    \draw[color_surface_border, thin]
+        (0,0,0) -- (\Lx,0,0) -- (\Lx,\Ly,0) -- (0,\Ly,0) -- cycle;
+
+
+    %  ELEMENT 2 — grid of antennas (dots)
+    \foreach \i in {0,...,\numexpr\Nx-1\relax}{
+        \foreach \j in {0,...,\numexpr\Ny-1\relax}{
+            \pgfmathsetmacro{\px}{\i*\dx}
+            \pgfmathsetmacro{\py}{\j*\dy}
+            \fill[color_dots] (\px, \py, 0) circle (1.5pt);
+        }
+    }
+
+
+    %  ELEMENT 3 — vector a
+    \draw[->, color_a, thick] (0,0,0) -- (\ax,\ay,\az)
+        node[anchor=south west] {$\mathbf{d}$};
+    
+
+    %  ELEMENT 4 — projection of vector a
+    \draw[dashed, color_a_projection] (0,0,0) -- (\ax,\ay,0);
+    \draw[dashed, color_a_projection] (\ax,\ay,0) -- (\ax,\ay,\az);
+    \fill[color_a_projection] (\ax,\ay,0) circle (1pt);
+
+
+    %  ELEMENT 5 — elevation angle theta
+    \draw[->, color_theta]
+        plot[variable=\t, domain=0:\thetaA, samples=40]
+        ({\rArcTheta * sin(\t) * cos(\phiA)},
+         {\rArcTheta * sin(\t) * sin(\phiA)},
+         {\rArcTheta * cos(\t)});
+    \pgfmathsetmacro{\thetaMid}{\thetaA / 2}
+    \node[color_theta, font=\small] at
+        ({\rArcTheta * 1.6 * sin(\thetaMid) * cos(\phiA)},
+         {\rArcTheta * 1.6 * sin(\thetaMid) * sin(\phiA)},
+         {\rArcTheta * 1.6 * cos(\thetaMid)})
+        {$\theta$};
+
+
+    %  ELEMENT 6 — azimuth angle phi
+    \tdplotdrawarc[->, color_phi]{(0,0,0)}{\rArcPhi}{0}{\phiA}{}{};
+    \pgfmathsetmacro{\phiLabelAngle}{0.2 * \phiA}
+    \node[color_phi, font=\small, anchor=north] at
+        ({\rArcPhi * 0.5 * cos(\phiLabelAngle)},
+         {\rArcPhi * 0.9 * sin(\phiLabelAngle)},
+         0) {$\phi$};
+
+
+    %  ELEMENT 7 — spacing indicators d_x and d_y
+    \draw[<->, color_spacing]
+        (-\arrowOffset, \dyBeforePen, 0) -- (-\arrowOffset, \dyPen, 0);
+    \node[color_spacing, font=\small] at
+        ({-\arrowOffset - 0.5}, {(\dyBeforePen + \dyPen) / 2}, 0) {$d_y$};
+
+    \draw[<->, color_spacing]
+        (\dxBeforePen, -\arrowOffset, 0) -- (\dxPen, -\arrowOffset, 0);
+    \node[color_spacing, font=\small] at
+        ({(\dxBeforePen + \dxPen) / 2 - 0.4}, {-\arrowOffset - 0.4}, 0) {$d_x$};
+
+    
+    %  ELEMENT 8 — number of antennas labels
+    \node[black, font=\small] at ({\Lx - 0.2}, {-\arrowOffset - 0.2}, 0) {$N_x$};
+    \node[black, font=\small] at ({-\arrowOffset - 0.4}, \Ly, 0) {$N_y$};
+
+
+    %  ELEMENT 0 — COORDINATE AXES
+    \draw[->, color_axes, thick] (0,0,0) -- (\AxLen,0,0)
+        node[anchor=north east] {$x$};
+    \draw[->, color_axes, thick] (0,0,0) -- (0,\AyLen,0)
+        node[anchor=north west] {$y$};
+    \draw[->, color_axes, thick] (0,0,0) -- (0,0,\AzLen)
+        node[anchor=south]      {$z$};
+
+
+\end{tikzpicture}
+\end{document}
