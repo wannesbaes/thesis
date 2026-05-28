@@ -2,64 +2,298 @@
 \input{preamble.tex}
 
 \begin{document}
-
-% Title
 \maketitle
 
-% Abstract
 \begin{abstract}
+% =================
+%    Abstract
+% =================
 Linear precoding has become a cornerstone of \acs*{MIMO} communications, as it enables spatial multiplexing gains that translate directly into higher spectral efficiency.
 These benefits are particularly valuable in multi-beam high-throughput satellite systems, where aggressive frequency reuse across the narrow spot beams turns the forward link into an interference-limited \acs*{MU}-\acs*{MIMO} channel. 
 In this environment, precoding is crucial for mitigating inter-beam interference.
 In mobile satellite scenarios, however, the combination of long propagation delays and time-varying channels induced by user mobility introduce complications.
-More specific, the \acs*{CSI} available during the precoder computation is generally outdated with respect to the channel experienced at the time of transmission.
-This work investigates the performance degradation caused by this \acs*{CSI} mismatch and proposes a low-complexity compensation strategy.
+More specific, the \acs*{CSI} available during the precoder computation is systematically outdated with respect to the channel experienced at the time of transmission.
 This work quantifies the impact of the \acs*{CSI} feedback delay on the system performance, revealing a substantial performance loss.
 To counter this degradation, a low-complexity prediction strategy is proposed.
 Numerical results show that this scheme recovers a significant fraction of the performance loss under the considered channel model.
 \end{abstract}
 
-% Keywords
 \begin{IEEEkeywords}
 \acs*{MIMO}, Precoding Techniques, Mobile Satellite Systems, Outdated \acs*{CSI}
 \end{IEEEkeywords}
 
-
 \section{Introduction}
+\label{section:introduction}
 % ====================
 %   Introduction
 % ====================
-citation~\cite{signal_processing_for_hts}
 
-\section{System Model}
-% ====================
-%   System Model
-% ====================
+% context + motivation
+Satellite communications have recently regained considerable attention as a key enabler of ubiquitous broadband connectivity. 
+They provide cost-efficient coverage of large geographical areas, including regions where deploying terrestrial infrastructure is impractical, and are envisioned as an integral component of future 5G-and-beyond networks~\cite{signal_processing_for_hts, satellites_in_new_space_era}.
+To meet the growing demand for throughput, modern satellite systems have evolved from single-beam architectures towards multi-beam systems, in which the coverage area is partitioned into many narrow spot beams.
+Combined with aggressive frequency reuse across these beams, this multi-beam architecture turns the forward link into an interference-limited \ac{MU}-\ac{MIMO} channel, where linear precoding proves itself a powerful tool for managing the resulting interference~\cite{precoding_for_satellites_survey}.
 
+% problem statement
+The vast majority of the satellite-precoding literature assumes perfect, instantaneous \ac{CSI} at the \ac{GW}.
+This assumption becomes unrealistic in mobile satellite scenarios, where \ac{UT} mobility introduces a Doppler spread that makes the channel time-varying. In addition, propagation delays remain large compared to terrestrial systems: even for a \acs{LEO} constellation, the round-trip time is on the order of a few milliseconds.
+As a result, the \ac{CSI} available at the \ac{GW} when the precoder is computed is systematically outdated with respect to the channel actually experienced at the time of transmission.
+
+% related work
+Only a limited number of works have explicitly addressed linear precoding for mobile multi-beam satellite systems under outdated \ac{CSI}~\cite{precoding_for_satellites_survey}.
+Vázquez et al.~\cite{delayed_csi_precoding_for_satellites_spain} studied delayed \ac{CSI} in a \acs{GEO} mobile interactive system.
+Joroughi et al.~\cite{delayed_csi_precoding_for_satellite_luxembourg} proposed robust precoding strategies for a maritime multi-beam scenario.
+In contrast, the present work starts from a generic multi-user \ac{MIMO} downlink formulation and studies the effect of outdated \ac{CSI} on standard linear precoders.
+Rather than modifying the gateway-side precoder structure, we seek to compensate the mismatch at its source.
+
+% contributions
+The contributions of this paper are twofold.
+First, the impact of outdated \ac{CSI} on the achievable sum-rate of three linear precoders, namely \ac{ZF}, \ac{BD}, and \ac{WMMSE}, is quantified as a function of the feedback delay.
+Second, a low-complexity compensation strategy based on element-wise autoregressive channel prediction is integrated into the feedback loop and evaluated by means of numerical simulations.
+
+% paper outline
+The remainder of the paper is organized as follows.
+Section~\ref{section:system_description} presents the system and channel model.
+Section~\ref{section:precoder_design} summarizes the considered linear precoders.
+Section~\ref{section:outdated_csi_compensation} introduces the proposed channel-prediction strategy for outdated \ac{CSI} compensation.
+Section~\ref{section:simulation_results} reports the simulation results.
+Section~\ref{section:future_work} outlines directions for future work, and Section~\ref{section:conclusion} concludes this work.
+
+\section{System Description}
+\label{section:system_description}
+% ==========================
+%   System Description
+% ==========================
+
+% system architecture
+We consider the forward link of a multi-beam \ac{HTS} system.
+The ground \ac{GW} centralizes all baseband processing and communicates with $K$ \acp{UT} through the satellite, which is equipped with $N_T$ antenna feeds.
+Each \ac{UT} has $N_R$ receive antennas, and the system is modeled as a \ac{MU}-\ac{MIMO} downlink channel.
+\begin{figure}[btp]
+    \centering
+    \includegraphics[width=\columnwidth]{figures/multibeam_satcom_annotated_big.png}
+    \caption{Illustration of the considered system architecture for mobile satellite communications.}
+    \label{fig:system_architecture}
+\end{figure}
+
+% system model
+\textit{System Model.}
+The \ac{GW} assigns a dedicated precoding matrix $\mathbf{F}_k(t) \in \mathbb{C}^{N_T \times N_S}$ to the $N_S$-dimensional data symbol vector $\mathbf{a}_k(t)$ intended for \ac{UT}~$k$.
+Defining the compound precoder $\mathbf{F}(t) = [\mathbf{F}_1(t) \;\cdots\; \mathbf{F}_K(t)] \in \mathbb{C}^{N_T \times KN_S}$ and the stacked symbol vector $\mathbf{a}(t) = [\mathbf{a}_1^T(t) \;\cdots\; \mathbf{a}_K^T(t)]^T$, the received signal at \ac{UT}~$k$ is
+\begin{equation}
+\label{eq:received_signal}
+    \mathbf{y}_k(t) = \mathbf{H}_k(t)\,\mathbf{F}(t)\,\mathbf{a}(t) + \mathbf{n}_k(t),
+\end{equation}
+where $\mathbf{H}_k(t) \in \mathbb{C}^{N_R \times N_T}$ is the channel matrix and $\mathbf{n}_k(t) \sim \mathcal{CN}(\mathbf{0}, N_0\mathbf{I}_{N_R})$ is additive white Gaussian noise.
+The data symbols are assumed zero-mean and spatially uncorrelated, and the total transmit power satisfies $\mathrm{tr}(\mathbf{F}(t)\mathbf{F}^H(t)) \leq P_T$ at any moment in time.
+
+% channel model
+\textit{Channel Model.}
+The user link of \ac{UT}~$k$ follows a frequency-flat Rician fading model~\cite{mimo_over_satellite_review}, expressed as:
+\begin{equation}
+\label{eq:rician_channel}
+    \mathbf{H}_k(t) = \sqrt{\frac{\kappa}{\kappa+1}}\,\mathbf{H}_k^{\mathrm{LoS}} + \sqrt{\frac{1}{\kappa+1}}\,\mathbf{H}_k^{\mathrm{NLoS}}(t),
+\end{equation}
+where $\kappa$ is the Rician factor.
+The deterministic \ac{LoS} component is treated as time-invariant and modeled as a rank-one matrix, in which all entries share a common random phase offset.
+The \ac{NLoS} component $\mathbf{H}_k^{\mathrm{NLoS}}(t)$ captures the Doppler-induced fading due to \ac{UT} mobility.
+Its entries are modeled as \acs{i.i.d.} \ac{CS} zero-mean unit-variance complex Gaussian random processes whose temporal correlation follows Jakes' isotropic scattering model. Specifically, the power spectral density of each \ac{NLoS} channel coefficient is given by
+\begin{equation}
+\label{eq:acf}
+    S_{h^{\mathrm{NLoS}}}(f) = \frac{1}{\pi f_D \sqrt{1 - (f/f_D)^2}}, \quad |f| < f_D,
+\end{equation}
+where $f_D = vf_c/c$ is the maximum Doppler frequency, set by the \ac{UT} velocity~$v$, the carrier frequency~$f_c$, and the speed of light~$c$. The corresponding autocorrelation function is equal to the zero-order Bessel function of the first kind: $R_{h^{\mathrm{NLoS}}}(\tau) = J_0(2\pi f_D \tau)$.
+
+% CSI feedback delay
+\textit{\acs*{CSI} Feedback Delay.}
+Before the \ac{GW} can compute the precoder, channel estimates are acquired at the \acp{UT} and fed back over the return link.
+Denoting the total elapsed time as the \ac{CSI} feedback delay $\tau_{\mathrm{CSI}}$, the precoder at time~$t$ is designed from the outdated channel state $\mathbf{H}(t - \tau_{\mathrm{CSI}})$.
+The degree of mismatch is governed by the \ac{NLoS} coherence time, defined as the lag at which the autocorrelation first falls to one half:
+\begin{equation}
+\label{eq:coherence_time}
+    T_c^{\mathrm{NLoS}} \,\triangleq\, \max\!\left\{\tau > 0 : R_{h^{\mathrm{NLoS}}}(\tau) \geq \tfrac{1}{2}\right\}.
+\end{equation}
+Throughout this work, results are reported as a function of the normalized delay $\tau_{\mathrm{CSI}}/T_c^{\mathrm{NLoS}}$.
+This normalization renders the conclusions independent of any specific combination of carrier frequency, \ac{UT} velocity, or orbital altitude.
 
 \section{Precoder Design}
-% ====================
-%   Precoder Design
-% ====================
+\label{section:precoder_design}
+% =======================
+%    Precoder Design
+% =======================
 
+Linear precoding designs the transmitted signal in order to limit the interference and efficiently deliver the desired data streams at each \ac{UT}, by exploiting the available \ac{CSI} and the spatial degrees of freedom offered by the multi-antenna system.
+For the system model introduced in the previous section, the design objective is the maximization of the achievable \ac{WSR}:
+\begin{equation}
+\label{eq:wsr_problem}
+    \max_{\{\mathbf{F}_k\}} \; \sum_{k=1}^{K} w_k R_k 
+    \qquad \text{s.t.} \qquad
+    \sum_{k=1}^{K} \mathrm{tr}\!\left(\mathbf{F}_k \mathbf{F}_k^H\right) \leq P_T,
+\end{equation}
+where $w_k \geq 0$ is the weight assigned to user $k$ and $R_k$ denotes its achievable rate.
+In this work, equal weights are used for all users, so that the problem reduces to \ac{SR} maximization.
+Three linear precoders are considered: \ac{ZF}, \ac{BD}, and \ac{WMMSE}.
+
+\textit{Zero-Forcing Precoding}~\cite{ZF}.
+\ac{ZF} precoding cancels all inter-user and inter-stream interference by choosing the compound precoder as the right pseudo-inverse of the compound channel matrix.
+As a result, each transmitted stream is received over an independent virtual scalar Gaussian subchannel, which allows simple symbol-by-symbol detection.
+Transmit power is then allocated across these effective subchannels according to the well-known waterfilling solution~\cite{geometric_waterfilling}.
+The main advantage of \ac{ZF} is its low complexity and transparent structure.
+However, when the channel directions are strongly correlated, the required channel inversion becomes inefficient, as lots of power is needed to maintain interference cancellation.
+
+\textit{Block Diagonalization Precoding}~\cite{BD}.
+\ac{BD} relaxes the \ac{ZF} constraint by suppressing only the inter-user interference.
+For each user, the precoder is restricted to the null space of the channel matrices of all other users, such that the multi-user channel is decomposed into parallel $K$ single-user \ac{MIMO} subchannels.
+Each effective \ac{SU} channel is then diagonalized by means of its \ac{SVD}, after which waterfilling is applied across the resulting eigenmodes.
+Compared with \ac{ZF}, \ac{BD} exploits the receive-side spatial processing more efficiently and achieves a higher sum rate, especially when each user is equipped with multiple receive antennas.
+
+\textit{WMMSE Precoding}~\cite{WMMSE}.
+Unlike \ac{ZF} and \ac{BD}, \ac{WMMSE} does not enforce hard interference-nulling constraints.
+Instead, it targets the \ac{WSR} objective directly through an equivalent weighted minimum mean square error formulation, hence the name.
+The resulting problem is solved iteratively by alternating between three closed-form updates: the receive combiners, the \acs{MSE} weights, and the transmit precoder.
+Among the considered linear precoders, \ac{WMMSE} provides the best \ac{SR} performance and serves as the main performance benchmark in the remainder of the paper.
+
+The next sections investigate how these designs degrade when the available \ac{CSI} is outdated and to what extent this degradation can be mitigated through channel prediction.
 
 \section{Outdated CSI Compensation}
+\label{section:outdated_csi_compensation}
 % ================================
 %   Outdated CSI Compensation
 % ================================
 
+% short problem statement
+The precoders described in the previous section are designed under the implicit assumption that the \ac{CSI} available at the \ac{GW} matches the channel experienced at the moment of transmission.
+In a mobile satellite system, however, this assumption is violated by the combination of a time-varying channel due to \ac{UT} mobility and the non-negligible feedback delay.
+As a result, the precoder is computed from an outdated channel realization and is therefore no longer matched to the instantaneous channel. 
+To mitigate this mismatch, a low-complexity channel-prediction strategy is adopted at the \acp{UT}.
+
+% prediction strategy
+The key idea is to exploit the temporal correlation of the fading process.
+Instead of feeding back the most recent channel estimate, each \ac{UT} predicts the channel that will be experienced after the feedback delay and reports this predicted channel to the \ac{GW}.
+The precoder computation itself is left unchanged: only the \ac{CSI} fed back to the \ac{GW} is replaced by a prediction.
+Under the simplified Rician model of Section~\ref{section:system_description}, the time variation is entirely contained in the \ac{NLoS} component, whose entries are spatially uncorrelated and share the same temporal correlation function.
+For this reason, prediction is performed element-wise using the same scalar predictor for each channel coefficient.
+
+% AR-model
+A $p$th-order autoregressive predictor is used.
+Let $\hat{h}_{k,(m,n)}[j]$ denote the estimate of the $(m,n)$-th coefficient of the channel matrix of user $k$ at the $j$-th pilot instant.
+The predicted coefficient $\Delta$ pilot intervals ahead is then written as
+\begin{equation}
+\label{eq:ar_predictor_paper}
+    \hat{h}_{k,(m,n)}[j+\Delta] = \; \sum_{\ell=0}^{p-1} \; \alpha_\ell \; \hat{h}_{k,(m,n)}[j-\ell],
+\end{equation}
+where the prediction horizon is chosen such that $\Delta T_p = \tau_{\mathrm{CSI}}$, with $T_p$ the pilot period.
+The predictor coefficients $\{\alpha_\ell\}$ are obtained from the Yule-Walker equations associated with the known channel autocorrelation function of the entire channel:
+\begin{equation}
+\label{eq:yule_walker_paper}
+    \mathbf{R}_h \, \boldsymbol{\alpha} = \mathbf{r}_h,
+\end{equation}
+where the Toeplitz matrix $\mathbf{R}_h$ and vector $\mathbf{r}_h$ are constructed from $R_h(\tau)= \tfrac{\kappa}{\kappa+1} + \tfrac{1}{\kappa+1} J_0(2\pi f_D \tau)$.
+Since this autocorrelation is fully determined by the maximum Doppler frequency, the predictor coefficients can be computed offline once the model parameters have been selected.
+
+% model parameters
+The predictor is governed by two design parameters: the pilot period $T_p$, which sets the temporal resolution of the channel observations, and the context window $L \triangleq p\,T_p$, which controls how far back in time the predictor reaches.
+The model order $p = L/T_p$ follows directly.
+A tuning study, omitted here for brevity, selected a pilot rate of $6$ messages per coherence period and a context window equal to one coherence period. These values are used in all subsequent simulations.
+
+% Assumptions
+Three idealizations underlie the proposed scheme.
+First, channel-estimation errors at the \acp{UT} are neglected.
+Second, each \ac{UT} is assumed to know the second-order statistics of its channel, which here reduces to knowledge of $f_D$.
+Third, the pilot period $T_p$ is treated as a free design variable rather than being constrained by a pilot-overhead budget.
+
 
 \section{Simulation Results}
+\label{section:simulation_results}
 % ==========================
 %    Simulation Results
 % ==========================
 
+\begin{figure}[!b]
+    \centering
+    \includegraphics[width=0.75\columnwidth]{figures/sr_comparison_8x2x4.png}
+    \caption{Comparison of the achievable sum-rate for different precoding schemes under Rayleigh fading and perfect \acs{CSI} in a $8 \times \{2, 2, 2, 2\}$ system.}
+    \label{fig:sr_comparison_8x2x4}
+\end{figure}
+
+\begin{figure}[!b]
+    \centering
+    \includegraphics[width=0.75\columnwidth]{figures/impact_outdated_csi_ar_wmmse.png}
+    \caption{Comparison of the achievable sum-rate using a \acs{WMMSE} precoder for different values of the normalized \acs{CSI} feedback delay.}
+    \label{fig:impact_outdated_csi_ar_wmmse}
+\end{figure}
+
+\begin{figure*}[!t]
+    \centering
+    \subfloat[$\tau_{\mathrm{CSI}} = \frac{1}{2} \, T_c^{\mathrm{NLoS}}$\label{fig:wmmse_2on4}]{ \includegraphics[width=0.24\textwidth]{figures/wmmse/2on4.png} }
+    \subfloat[$\tau_{\mathrm{CSI}} = \, T_c^{\mathrm{NLoS}}$\label{fig:wmmse_4on4}]{ \includegraphics[width=0.24\textwidth]{figures/wmmse/4on4.png} } 
+    \subfloat[$\tau_{\mathrm{CSI}} =  \frac{3}{2} \, T_c^{\mathrm{NLoS}}$\label{fig:wmmse_6on4}]{ \includegraphics[width=0.24\textwidth]{figures/wmmse/6on4.png} }
+    \subfloat[$\tau_{\mathrm{CSI}} = 2 \, T_c^{\mathrm{NLoS}}$\label{fig:wmmse_8on4}]{ \includegraphics[width=0.24\textwidth]{figures/wmmse/8on4.png} }
+    \caption{Comparison of the achievable sum-rate using a \acs{WMMSE} precoder with and without the \acs{AR}-based channel prediction, for different values of the normalized \acs{CSI} feedback delay.}
+    \label{fig:wmmse_prediction_comparison}
+\end{figure*}
+
+% simulation parameters
+This section evaluates the proposed framework through numerical Monte Carlo simulations.
+We first recall the relative performance of the considered linear precoders under ideal \ac{CSI}, and then focus on the impact of \ac{CSI} aging and the gain achieved by the proposed prediction strategy.
+Unless stated otherwise, the results correspond to an \ac{HTS} system serving $K=4$ \acp{UT}, with $N_T=8$ feeds at the satellite and $N_R=2$ receive antennas per \ac{UT}. The Rician factor is set to $\kappa = 5~\mathrm{dB}$, a common value for urban environments.
+
+% performace of different precoders under Rayleigh fading and perfect CSI
+As a baseline, Fig.~\ref{fig:sr_comparison_8x2x4} compares the achievable sum rate of \ac{ZF}, \ac{BD}, and \ac{WMMSE} precoding under a purely Rayleigh fading channel and perfect instantaneous \ac{CSI}.
+\ac{BD} consistently outperforms \ac{ZF} by exploiting the receive-side spatial degrees of freedom of each \ac{UT}, while \ac{WMMSE} achieves the highest sum rate across the entire \ac{SNR} range by trading off interference suppression against desired-signal power.
+The gap between \ac{BD} and \ac{WMMSE} disappears at high \ac{SNR}, where the regularization in the \ac{WMMSE} update vanishes and the design effectively reduces to \ac{BD}.
+In the remainder of this section, the analysis focuses on \ac{WMMSE}. The conclusions for \ac{ZF} and \ac{BD} are in general qualitatively similar but quantitatively more pessimistic.
+
+% impact of outdated CSI
+Fig.~\ref{fig:impact_outdated_csi_ar_wmmse} reports the sum rate of \ac{WMMSE} precoding under the Rician channel of Section~\ref{section:system_description} for several values of the normalized feedback delay, ranging from instantaneous \ac{CSI} ($\tau_{\mathrm{CSI}}=0$) to $\tau_{\mathrm{CSI}} = 5/4\,T_c^{\mathrm{NLoS}}$.
+Three observations stand out.
+First, even when the \ac{CSI} is perfectly instantaneous, the achievable rate lies noticeably below the Rayleigh reference of Fig.~\ref{fig:sr_comparison_8x2x4}.
+This is a direct consequence of the rank-one \ac{LoS} component of the Rician channel, which concentrates a substantial fraction of the channel energy along a single spatial direction and thereby limits the spatial multiplexing gain.
+Second, the precoder is highly sensitive to outdated \ac{CSI}: even a delay of a quarter of the coherence time causes a significant performance loss at moderate-to-high \ac{SNR}, and the rate degrades monotonically with an increasing feedback delay.
+Beyond the coherence time, the precoder fails to exploit the spatial dimension of the channel altogether, causing the sum-rate to collapse.
+The third observation is a characteristic feature of \ac{WMMSE} precoding with outdated \ac{CSI}. 
+The sum-rate becomes non-monotonic in function of the \ac{SNR}, as the precoder increasingly concentrates power along spatial directions that no longer correspond to the desired channel directions and thus actively generates inter-user interference at high \ac{SNR}.
+
+% impact of compensation strategy
+Fig.~\ref{fig:wmmse_prediction_comparison} evaluates the proposed channel-prediction strategy for four operating points $\tau_{\mathrm{CSI}}/T_c^{\mathrm{NLoS}} \in \{0.5, 1.0, 1.5, 2.0\}$, spanning moderate to severe \ac{CSI} aging.
+In each subplot, the sum-rate curve obtained with the \ac{AR} predictor at the \acp{UT} is compared against the uncompensated case and the perfect-\ac{CSI} reference.
+For moderate delays (Figs.~\ref{fig:wmmse_2on4} and~\ref{fig:wmmse_4on4}), the predictor recovers most of the performance loss and brings the achievable rate close to the perfect-\ac{CSI} upper bound across the entire \ac{SNR} range.
+The non-monotonic high-\ac{SNR} behaviour observed without compensation disappears, as the predicted \ac{CSI} is accurate enough to keep the precoder aligned with the true channel directions.
+For larger delays (Figs.~\ref{fig:wmmse_6on4} and~\ref{fig:wmmse_8on4}), the predictor still provides a substantial improvement, but a residual gap with respect to the perfect-\ac{CSI} reference becomes visible.
+Overall, these results show that a low-complexity \ac{AR} predictor, requiring only knowledge of the channel autocorrelation and no modification of the \ac{GW}-side precoder, is sufficient to restore a large fraction of the performance lost to outdated \ac{CSI} in the operating regime of practical interest, under the considered channel model.
+
+\section{Future Work}
+\label{section:future_work}
+% ====================
+%    Future Work
+% ====================
+
+The simplified Rician model adopted in this paper neglects spatial correlation between channel entries and assumes perfect pre-compensation of the \ac{LoS} Doppler shift. 
+A natural next step is therefore to extend the analysis to more realistic ray-based satellite channel~\cite{massive_mimo_leo_chinese} model that can explicitly capture both effects.
+First results obtained in the dissertation suggest that the proposed \ac{AR}-based prediction strategy remains effective in this setting.
+At the same time, the realistic model reveals an important structural limitation: the channel of each user is effectively rank one, so that each \ac{UT} can support at most one spatial stream.
+Future work should investigate the impact of this rank deficiency on different precoding strategies and develop prediction methods that exploit the joint spatial-temporal correlation structure of the channel.
 
 \section{Conclusion}
+\label{section:conclusion}
 % ====================
 %    Conclusion
 % ====================
 
+This paper studied the impact of outdated \ac{CSI} on linear precoding for mobile satellite systems and proposed a low-complexity compensation strategy based on channel prediction at the \acp{UT}.
+Starting from a multi-user \ac{MIMO} downlink model with Rician fading, three linear precoders were considered: \ac{ZF}, \ac{BD}, and \ac{WMMSE}.
+The simulations showed that all of them are highly sensitive to \ac{CSI} aging.
+
+To mitigate this degradation, an element-wise \ac{AR} predictor was introduced at the \acp{UT}.
+The numerical results showed that this simple strategy restores a large fraction of the performance lost to outdated \ac{CSI}.
+For feedback delays up to about one coherence period of the \ac{NLoS} component, the predicted \ac{CSI} performance approaches the instantaneous \ac{CSI} reference very closely.
+Even for more severe delay values, the prediction remains clearly beneficial and suppresses much of the high-\ac{SNR} degradation observed without compensation.
+
+A practical example illustrates the relevance of these results.
+Consider an \ac{MSS} forward link in the $L$-band at $f_c = 1.5~\mathrm{GHz}$, with a \acs{LEO} satellite at an altitude of $550~\mathrm{km}$ and a \ac{UT} velocity of $20~\mathrm{km/h}$.
+Since the satellite's trajectory is known with high accuracy, its Doppler shift is deterministic and can be pre-compensated~\cite{leo_satellite_doppler_compensation}.
+Under the model adopted in this work, the resulting total \ac{CSI} feedback delay is approximately $\tau_{\mathrm{CSI}} = 7.34~\mathrm{ms}$, while the coherence time of the \ac{NLoS} component is about $T_c^{\mathrm{NLoS}} = 8.71~\mathrm{ms}$.
+This yields a ratio of $\tau_{\mathrm{CSI}}/T_c^{\mathrm{NLoS}} \approx 0.84$, which lies in the regime where the proposed predictor is most effective.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}

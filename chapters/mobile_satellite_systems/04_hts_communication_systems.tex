@@ -160,4 +160,6 @@ The channel is decomposed into a time-invariant beam-gain matrix and a time-vary
 The first is a memoryless strategy that feeds the \ac{GW} with the latest delayed snapshot of the attenuation. The corresponding precoder is a conventional \ac{ZF} or \ac{MMSE} precoder computed from this estimate.
 The second is a memory-based strategy that averages the attenuation over several past snapshots, and it is paired with a novel two-stage precoder: a first stage suppresses inter-beam interference, while a second diagonal stage compensates for the residual time-varying attenuation.
 
-While the works above tackle the same regime of outdated \ac{CSI} in mobile multi-beam satellite systems, our approach differs in ...
+While the works above tackle the same regime of outdated \ac{CSI} in mobile multi-beam satellite systems, our approach differs in several aspects.
+First, rather than focusing on a single precoder, we evaluate the impact of outdated \ac{CSI} on three different, commonly used linear precoders.
+Second, instead of addressing the mismatch mainly through link-adaptation margins or temporal averaging and a dedicated robust precoder structure, we seek to compensate it in a more direct way.
