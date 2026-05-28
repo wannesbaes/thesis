@@ -15,7 +15,7 @@ Despite their superior capacity, nonlinear techniques incur a significantly high
 Linear precoding, by contrast, offers near-optimal performance at a fraction of the complexity, and therefore remains the preferred approach in practice.
 This chapter accordingly focuses on linear precoding techniques.
 
-The following sections presents four commonly used linear precoding strategies for the \ac{MU}-\ac{MIMO} downlink, arranged in order of increasing complexity.
+The following sections present four commonly used linear precoding strategies for the \ac{MU}-\ac{MIMO} downlink, arranged in order of increasing complexity.
 The presentation begins with three precoding techniques related to \acs{ZF}, and concludes with the state-of-the-art \acs{WMMSE} precoder.
 At the end of this chapter, their performance is compared through numerical simulations for different system configurations.
 In line with the previous chapter, the design is focused on maximizing the total \acf{SR} of the system.
@@ -155,9 +155,9 @@ With a fixed total transmit power in practice, this translates directly into low
 Figure~\ref{fig:mu_mimo_zf_precoding_3x2} illustrates what happens when the \ac{BS} is equipped with an additional transmit antenna while the number of single-antenna \acp{UT} remains equal to two.
 The channel matrix is still formed by two row vectors, one for each user, and the precoder by two column vectors.
 However, these vectors now lie in a three-dimensional space.
-As a result, the null-space orthogonal to each user's channel direction is no longer a line but a two-dimensional plane.
+As a result, the null space orthogonal to each user's channel direction is no longer a line but a two-dimensional plane.
 
-In order to eliminate all interference, the precoding vector for each user can be chosen anywhere in the null-space of the other users' channel vectors, that is, in the plane orthogonal to the channel directions of the other users.
+In order to eliminate all interference, the precoding vector for each user can be chosen anywhere in the null space of the other users' channel vectors, that is, in the plane orthogonal to the channel directions of the other users.
 The best choice is to select the precoding vectors as close as possible to the intended channel directions, which corresponds to projecting the channel vectors onto the respective orthogonal planes.
 This maximizes the effective channel gain for each data stream, since it allows as much power as possible to be transmitted in the direction of the intended \ac{UT}.
 
@@ -177,12 +177,12 @@ This maximizes the effective channel gain for each data stream, since it allows 
     \caption[Visualization of \acs{ZF} precoding ($3$-antenna \acs{BS} and $2$ single-antenna \acsp{UT})]
     {Visualization of \acs{ZF} precoder for a \acs{MU}-\acs{MIMO} system with $2$ single-antenna \acsp{UT} and a $3$-antenna \acs{BS}.
     The channel vectors are normalized and the precoding vectors are scaled such that the effective channel gain for each data stream is equal to 1.
-    With three transmit antennas, the null-space orthogonal to each user's channel direction is two-dimensional.
+    With three transmit antennas, the null space orthogonal to each user's channel direction is two-dimensional.
     The \acs{ZF} precoding vector is chosen as the projection of the intended user's channel direction onto this plane, which minimizes the deviation from the desired channel direction while preserving the zero-forcing constraint.}
     \label{fig:mu_mimo_zf_precoding_3x2}
 \end{figure}
 
-\section{Zero-Forcing Precoding with an Heuristic LSV Combiner}
+\section{Zero-Forcing Precoding with a Heuristic LSV Combiner}
 \label{section:mu_mimo_zf_lsv_precoding}
 % =================================================
 %     Zero-Forcing with Heuristic LSV Combiner
@@ -195,7 +195,7 @@ Unlike coordinated designs, where the \ac{BS} jointly computes the compound prec
 
 The procedure is as follows.
 First, the \ac{BS} transmits pilot symbols, from which each \ac{UT} estimates its downlink channel matrix $\mathbf{H}_k$.
-Next, each \ac{UT} constructs its heuristic combiner matrix $\mathbf{G}_k$ from the $N_S$ dominant left singular vectors of $\mathbf{H}_k$, analogous to combiner for capacity-achieving precoding in the \ac{SU}-\ac{MIMO} scenario.
+Next, each \ac{UT} constructs its heuristic combiner matrix $\mathbf{G}_k$ from the $N_S$ dominant left singular vectors of $\mathbf{H}_k$, analogous to the combiner for capacity-achieving precoding in the \ac{SU}-\ac{MIMO} scenario.
 Each \ac{UT} then forms its virtual channel $(\mathbf{G}_k \mathbf{H}_k)$ and feeds this matrix back to the \ac{BS}.
 Finally, the \ac{BS} stacks these virtual channels and applies the standard \ac{ZF} precoding procedure from the previous section on the virtual channel.
 
@@ -217,7 +217,7 @@ The complete procedure is summarized in Algorithm~\ref{alg:zf_lsv_precoding}.
     \Statex $\mathbf{G}_k = \begin{bmatrix} \mathbf{u}_{k, 1} & \dots & \mathbf{u}_{k, N_S} \end{bmatrix}^{\mathsf{H}}, \quad \text{with} \quad \mathbf{H}_k = \mathbf{U}_k \mathbf{\Sigma}_k \mathbf{V}^{\mathsf{H}}_k$
 
     \vspace{0.4\baselineskip}
-    \State Compute the compound precoder matrix $\mathbf{F}$ as using the \ac{ZF} algorithm (Alg.~\ref{alg:zf_precoding}) with inputs
+    \State Compute the compound precoder matrix $\mathbf{F}$ using the \ac{ZF} algorithm (Alg.~\ref{alg:zf_precoding}) with inputs
     \Statex $\mathbf{H} = (\mathbf{G}\mathbf{H}), \quad P_t = P_t, \quad N_0 = N_0.$
     
     \medskip
@@ -255,7 +255,7 @@ To characterize these constraints more explicitly, define the interfering channe
 \label{eq:interfering_channel_matrix}
     \mathring{\mathbf{H}}_k = \begin{bmatrix} \mathbf{H}_1^{\mathsf{H}} & \dots & \mathbf{H}_{k-1}^{\mathsf{H}} & \mathbf{H}_{k+1}^{\mathsf{H}} & \dots & \mathbf{H}_K^{\mathsf{H}} \end{bmatrix}^{\mathsf{H}} \; \in \mathbb{C}^{(K-1)N_R \times N_T}.
 \end{equation}
-The constraint in~\eqref{eq:bd_constraint} is then equivalent to forcing the transmit directions for \ac{UT} $k$ to lie within the null-space of its interfering channel matrix.\\
+The constraint in~\eqref{eq:bd_constraint} is then equivalent to forcing the transmit directions for \ac{UT} $k$ to lie within the null space of its interfering channel matrix.\\
 To obtain a basis for this null space, consider the \ac{SVD} of the interfering channel matrix:
 \begin{equation}
 \label{eq:svd_interfering_channel_matrix}
@@ -269,12 +269,12 @@ Therefore, any precoder of the form
 \end{equation}
 automatically satisfies the zero inter-user interference condition.
 
-Data transmission to \ac{UT} $k$ is only possible if the null space of $\mathring{\mathbf{H}}_k$ is non-empty, i.e. it has a dimension greater than zero.
-This condition is satisfied if $R_{\mathring{H}_k} < N_T$, which is guaranteed under the standing assumption that the number of transmit antennas is greater than or equal to the total number of receive antennas across all users, i.e. $N_T \geq K N_R$.
-In addition, the channel as seen after the projection of $\mathbf{F}_k^{\mathrm{MU}}$, i.e. $(\mathbf{H}_k \mathring{\mathbf{V}}_{k}^{(0)})$, must still retain useful spatial dimensions.
+Data transmission to \ac{UT} $k$ is only possible if the null space of $\mathring{\mathbf{H}}_k$ is non-empty, i.e.\ it has a dimension greater than zero.
+This condition is satisfied if $R_{\mathring{H}_k} < N_T$, which is guaranteed under the standing assumption that the number of transmit antennas is greater than or equal to the total number of receive antennas across all users, i.e.\ $N_T \geq K N_R$.
+In addition, the channel as seen after the projection of $\mathbf{F}_k^{\mathrm{MU}}$, i.e.\ $(\mathbf{H}_k \mathring{\mathbf{V}}_{k}^{(0)})$, must still retain useful spatial dimensions.
 In other words, the channel directions of \ac{UT} $k$ should not be entirely contained in the row space of the interfering \acp{UT}.
 A sufficient condition is that at least one row of $\mathbf{H}_k$ is linearly independent of the rows of $\mathring{\mathbf{H}}_k$~\cite{matrix_analysis_horn_johnson_1985}.
-This shows that \ac{BD}, like \ac{ZF}, benefits from users with sufficiently distinct spatial signatures, i.e. \acp{UT} without highly correlated channel directions.
+This shows that \ac{BD}, like \ac{ZF}, benefits from users with sufficiently distinct spatial signatures, i.e.\ \acp{UT} without highly correlated channel directions.
 Note that pure \ac{ZF} imposes the stronger requirement that all rows of $\mathbf{H}_k$ are linearly independent of $\mathring{\mathbf{H}}_k$.
 While this is not necessary for \ac{BD}, it would result in a higher rank of $(\mathbf{H}_k \mathring{\mathbf{V}}_{k}^{(0)})$, and therefore greater degrees of freedom in the subsequent \ac{SU}-\ac{MIMO} design step.
 
@@ -337,7 +337,7 @@ Other \ac{SU}-\ac{MIMO} design criteria, such as \ac{QoS}-based or \ac{MMSE}-bas
 
 To conclude this section, Figure~\ref{fig:BD_vs_SVD} compares the achievable-rate performance of \ac{BD} precoding in a downlink \ac{MU}-\ac{MIMO} setting with the capacity-achieving \ac{SVD} precoding benchmark in a corresponding \ac{SU}-\ac{MIMO} setting.
 The reference system is a $6 \times 2$ \ac{SU}-\ac{MIMO} link, whereas the multi-user system is an $8 \times \{2,2\}$ \ac{MU}-\ac{MIMO} link with two \acp{UT}, each equipped with two receive antennas.
-The \ac{BD} algorithm decouples the \ac{MU}-\ac{MIMO} system into $2$ parallel \ac{SU}-\ac{MIMO} subsystems with, on average, each 6 effective transmit antennas and 2 receive antennas.
+The \ac{BD} algorithm decouples the \ac{MU}-\ac{MIMO} system into $2$ parallel \ac{SU}-\ac{MIMO} subsystems with, on average, 6 effective transmit antennas and 2 receive antennas each.
 The rates are averaged over $1000$ \ac{i.i.d.} Rayleigh channel realizations.
 
 \begin{figure}[!hbt]
@@ -354,7 +354,7 @@ The curves show that the achievable-rate slope as a function of \ac{SNR} is esse
 In addition, the \ac{SU} benchmark exhibits only a small \ac{SNR} advantage over each user in the \acf{MU} scenario.
 The two users in the \ac{MU} scenario achieve nearly identical rates, which is expected because the \ac{MU} system is statistically symmetric with respect to the users and the results are averaged over multiple channel realizations.
 
-This comparison indicates that, on average, adding two transmit antennas at the \ac{BS} and switching from \ac{SVD} precoding in \ac{SU}-\ac{MIMO} to \ac{BD} precoding in \ac{MU}-\ac{MIMO} enables serving an additional two-stream user with the same reliability only a minor per-user throughput penalty.
+This comparison indicates that, on average, adding two transmit antennas at the \ac{BS} and switching from \ac{SVD} precoding in \ac{SU}-\ac{MIMO} to \ac{BD} precoding in \ac{MU}-\ac{MIMO} enables serving an additional two-stream user at the same reliability and with only a minor per-user throughput penalty.
 From a system-design perspective, this highlights the practical spatial multiplexing capability of \ac{BD} precoding.
 More generally, as more \acp{UT} are served simultaneously, the slope of the total \ac{SR} versus \ac{SNR} increases, at the cost of a modest reduction in the achievable rate of each individual \ac{UT}.
 
@@ -407,7 +407,7 @@ Comparing~\eqref{eq:mu_mimo_wmmse_rate} and~\eqref{eq:mu_mimo_mse_matrix}, the a
     R_k = \log_2 \det\!\big(\mathbf{E}_k^{-1}\big).
 \end{equation}
 This identity is the key bridge between the \ac{WSR} maximization problem and the \acs{WMMSE} minimization problem.
-It is the multi-user analogue of the rate--MSE link already established in the generalized \ac{WMMSE} design of Section~\ref{section:generalized_wmmse_design}.
+It is the multi-user analog of the rate--MSE link already established in the generalized \ac{WMMSE} design of Section~\ref{section:generalized_wmmse_design}.
 \medskip
 
 Define the \ac{WMMSE} optimization problem, in analogy to its \ac{SU} counterpart in~\eqref{eq:su_mimo_WMMSE_optimization_problem}, as
@@ -506,7 +506,7 @@ the channel is modeled as an \ac{i.i.d.} Rayleigh block fading channel (see Appe
 % ======================================
 
 This subsection compares the three \ac{ZF}--type designs under the maximum-information-rate criterion: pure \ac{ZF}, \ac{ZF} with heuristic \ac{LSV} combining, and \ac{BD}.
-In all three cases, the end-to-end processing transforms the original \ac{MU}-\ac{MIMO} channel into parallel scalar Gaussian subchannels, as illustrated in Figure~\ref{fig:mu_mimo_channel_decomposistion}.
+In all three cases, the end-to-end processing transforms the original \ac{MU}-\ac{MIMO} channel into parallel scalar Gaussian subchannels, as illustrated in Figure~\ref{fig:mu_mimo_channel_decomposition}.
 Hence, for a fixed power budget and waterfilling policy, performance is completely determined by the statistics of the effective subchannel gains $g_n$.
 The stronger these effective channel gains, the better the overall system performance.
 
@@ -525,15 +525,15 @@ The stronger these effective channel gains, the better the overall system perfor
         \caption{}
         \label{fig:mu_mimo_decoupled_channel}
     \end{subfigure}
-    \caption[Channel decomposistion of a \acs*{MU}-\acs*{MIMO} system]{A block diagram of the original \acs*{MU}-\acs*{MIMO} channel (a) and its decomposition into parallel Gaussian \acs*{SISO} subchannels (b), as achieved by the \acs*{ZF}--type precoding techniques.}
-    \label{fig:mu_mimo_channel_decomposistion}
+    \caption[Channel decomposition of a \acs*{MU}-\acs*{MIMO} system]{A block diagram of the original \acs*{MU}-\acs*{MIMO} channel (a) and its decomposition into parallel Gaussian \acs*{SISO} subchannels (b), as achieved by the \acs*{ZF}--type precoding techniques.}
+    \label{fig:mu_mimo_channel_decomposition}
 \end{figure}
 
-Figure~\ref{fig:mu_mimo_eff_subchannel_gain_distributions_8x2x4} reports the marginal \acp{pdf} for a single user in an system with $8$ transmit antennas at the \ac{BS} and $4$ two-antenna \acp{UT}, obtained through Monte Carlo simulations.
+Figure~\ref{fig:mu_mimo_eff_subchannel_gain_distributions_8x2x4} reports the marginal \acp{pdf} for a single user in a system with $8$ transmit antennas at the \ac{BS} and $4$ two-antenna \acp{UT}, obtained through Monte Carlo simulations.
 Because users with the same number of receive antennas are statistically symmetric, this user is representative for the full set of users.
 For pure \ac{ZF}, the effective subchannel gains are given by $g_n=\big((\mathbf{H}\mathbf{H}^{\mathsf{H}})^{-1}\big)_{n,n}^{-1}$ and, under an \ac{i.i.d.} Rayleigh fading model, their distribution follows from the inverse-Wishart model~\cite{wishart_matrices_1, wishart_matrices_0}.
 In particular, each $g_n$ is Gamma-distributed with shape parameter $\alpha = N_T-KN_R+1$ and rate parameter $\beta=1$.
-For \ac{ZF} with an heuristic \ac{LSV} combiner and for \ac{BD} precoding, no analytical distribution is derived..
+For \ac{ZF} with a heuristic \ac{LSV} combiner and for \ac{BD} precoding, no analytical distribution is derived.
 
 \begin{figure}[htb!]
     \centering
@@ -652,5 +652,5 @@ The benefit of concentrating antennas is more pronounced for \ac{BD} than for \a
 
 The simulation results confirm the position of \ac{WMMSE} as the state-of-the-art linear \ac{MU}-\ac{MIMO} precoding technique under the maximum-\ac{SR} criterion.
 \ac{BD} provides a close-to-optimal coordinated alternative that does not require iterative optimization, while \ac{ZF}+\ac{LSV} offers a low-overhead non-coordinated baseline.
-The choice between these techniques in practice therefore involves a tradeoff between achievable \ac{SR}, computational complexity, and signaling overhead.
+The choice between these techniques in practice therefore involves a trade-off between achievable \ac{SR}, computational complexity, and signaling overhead.
 In the next chapters, performance evaluations are carried out using the \ac{WMMSE} precoder.

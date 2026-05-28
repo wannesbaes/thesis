@@ -1,2 +1,20 @@
 \chapter{Simulation Framework}
 \label{appendix:simulation_framework}
+
+This work is accompanied by a simulation framework for multi-user \ac{MIMO} digital communication systems, designed to evaluate and compare different precoding strategies and channel models in a structured way. It is available as an open-source project on GitHub\footnote{\url{https://github.com/wannesbaes/satellite-precoding-techniques}}.
+
+The framework is built around a modular class hierarchy that separates the core system components from the interchangeable processing algorithms. 
+A \texttt{simulation runner} orchestrates the simulation loop, driving a \texttt{MU-MIMO system} that encapsulates a \texttt{base station}, a set of \texttt{user terminal} instances, and a \texttt{channel}.
+Each core component delegates its signal processing to abstract processing classes, which can be swapped out independently to evaluate different algorithms, as shown by class diagram in Figure~\ref{fig:simulation_framework_class_diagram}.
+
+\begin{figure}[!b]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/annex/F_simulation_framework/class_diagram.png}
+    \caption{Class diagram of the simulation framework, illustrating the modular design and separation of concerns.}
+    \label{fig:simulation_framework_class_diagram}
+\end{figure}
+
+Generative artificial intelligence (GenAI) was used as a supporting tool during the development of the simulation framework. Its role was limited to assisting with implementation efficiency, while the architectural design, algorithmic choices, validation methodology, and interpretation of results remained entirely the responsibility of the author.
+
+Beyond software development, GenAI was also used throughout this thesis for a limited set of productivity-oriented tasks, including summarizing academic literature, and improving the structure and clarity of written text. All AI-assisted output was critically reviewed, verified, and adapted by the author before being incorporated into the final work.
+

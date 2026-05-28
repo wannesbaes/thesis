@@ -24,7 +24,7 @@ The modulator then converts the symbol sequence into a baseband signal suitable 
 During transmission, the channel distorts the signal due to attenuation, multipath propagation, and additive noise, such that the received signal differs from the transmitted signal.
 
 At the \ac{RX}, the demodulator converts the received signal into a sequence of decision variables.
-These are processed by the detector to obtain estimates of the originally transmitted symbols, which are then mapped back to coded bits.
+These decision variables are processed by the detector to obtain estimates of the originally transmitted symbols, which are then mapped back to coded bits.
 Finally, the channel and source decoders reconstruct the original information sequence.
 
 In this work, we consider a simplified version of this general architecture in order to focus on the aspects most relevant to our study.
@@ -39,7 +39,7 @@ The transmission medium is assumed to be a wireless channel affected by fading a
 
 When both the \ac{TX} and the \ac{RX} are equipped with multiple antennas, the system is referred to as a \ac{MIMO} system.
 
-Compared to a single-antenna link, the multiple antennas provide additional spatial degrees of freedom that can be exploited to increase data throughput, improve reliability, or achieve a trade-off between both.
+Compared to a single-antenna link, the multiple antennas provide additional spatial degrees of freedom that can be exploited to increase data throughput, improve reliability, or achieve a trade-off between the two.
 Spatial multiplexing techniques enable significant capacity gains by transmitting multiple independent data streams simultaneously over different antennas. A well-known example is the BLAST architecture~\cite{foschini_1998}.
 Alternatively, spatial diversity can be achieved through space-time coding schemes, which distribute symbols across both space and time to improve robustness against fading. A classical example is the Alamouti scheme~\cite{alamouti_1998}.
 Throughout this work, the focus is on spatial multiplexing and, in particular, on how the simultaneous transmission of multiple data streams over a shared channel can be made most efficient through precoding.
@@ -64,7 +64,7 @@ The discrete-time complex baseband input-output relation of a \ac{SU}-\ac{MIMO} 
 \end{equation}
 where $\mathbf{x} \in \mathbb{C}^{N_T}$ is the transmitted signal vector, $\mathbf{y} \in \mathbb{C}^{N_R}$ is the received signal vector, $\mathbf{H} \in \mathbb{C}^{N_R \times N_T}$ is the channel matrix, and $\mathbf{n} \in \mathbb{C}^{N_R}$ is the additive noise vector.
 The $(n_r, n_t)$-th entry of $\mathbf{H}$ represents the complex channel coefficient between transmit antenna $n_t$ and receive antenna $n_r$.
-The noise vector is \ac{CS} complex Gaussian distributed, i.e. $\mathbf{n} \sim \mathcal{CN}(\mathbf{0}, N_0 \, \mathbf{I}_{N_R})$, such that its entries are spatially independent, each with an expected power of $N_0$.
+The noise vector is \ac{CS} complex Gaussian distributed, i.e.\ $\mathbf{n} \sim \mathcal{CN}(\mathbf{0}, N_0 \, \mathbf{I}_{N_R})$, such that its entries are spatially independent, each with an expected power of $N_0$.
 The time index is omitted for brevity.
 
 % transmitter
@@ -125,7 +125,7 @@ It is evident that, whenever the transfer matrix is not diagonal, the data symbo
 \subsection{MU-MIMO System Model}
 \label{subsection:mu_mimo_system_model}
 
-When multiple receivers are served simultaneously by a single multi-antenna transmitter, the system is referred to as a downlink \ac{MU} \ac{MIMO} system. In this context, the transmitter is called the \ac{BS} and the individual receivers are referred to as \acp{UT}. A block diagram is shown in Fig.~\ref{fig:mu_mimo_block_diagram}.
+When multiple receivers are served simultaneously by a single multi-antenna transmitter, the system is referred to as a downlink \acf{MU} \ac{MIMO} system. In this context, the transmitter is called the \ac{BS} and the individual receivers are referred to as \acp{UT}. A block diagram is shown in Fig.~\ref{fig:mu_mimo_block_diagram}.
 
 \begin{figure}[!ht]
     \centering
@@ -199,7 +199,7 @@ The overall input-output relation of the \ac{MU}-\ac{MIMO} Gaussian channel can 
     \quad \mathbf{a} = \begin{bmatrix} \mathbf{a}_1 \\ \vdots \\ \mathbf{a}_K \end{bmatrix}. \notag
 \end{gather}
 where $\mathbf{G} \in \mathbb{C}^{K N_S \times K N_R}$ denotes the compound combining matrix, $\mathbf{H} \in \mathbb{C}^{K N_R \times N_T}$ the compound channel matrix, and $\mathbf{F} \in \mathbb{C}^{N_T \times K N_S}$ the compound precoding matrix.
-The block-diagonal structure of $\mathbf{G}$ indicates that each \ac{UT} processes only its own received signal vector, i.e., no cooperation is assumed between different \acp{UT}.
+The block-diagonal structure of $\mathbf{G}$ indicates that each \ac{UT} processes only its own received signal vector, i.e.\ no cooperation is assumed between the different \acp{UT}.
 
 
 \section{Information Theory Concepts}
@@ -239,7 +239,7 @@ The capacity $C$ of a \ac{SU}-\ac{MIMO} channel is the largest achievable rate. 
 \end{equation}
 Typically, the maximization is subject to the transmit power constraint, as formulated in \eqref{eq:su_mimo_power_constraint}.
 
-In~\cite{telatar_1999}, the capacity for a \ac{SU}-\ac{MIMO} Gaussian communication system is derived. First, it is shown that under the total transmit power constraint, the \ac{MI} is maximized in case of Gaussian signaling, i.e. the channel input $\mathbf{x}$ is \ac{CS} complex Gaussian distributed. Then, the mutual information between $\mathbf{x}$ and $\mathbf{y}$ for a given covariance matrix $\mathbf{C}_{\mathrm{x}}$ is obtained as
+In~\cite{telatar_1999}, the capacity for a \ac{SU}-\ac{MIMO} Gaussian communication system is derived. First, it is shown that under the total transmit power constraint, the \ac{MI} is maximized in case of Gaussian signaling, i.e.\ the channel input $\mathbf{x}$ is \ac{CS} complex Gaussian distributed. Then, the mutual information between $\mathbf{x}$ and $\mathbf{y}$ for a given covariance matrix $\mathbf{C}_{\mathrm{x}}$ is obtained as
 \begin{equation}
 \label{eq:mi_su_mimo_gaussian_channel}
     I(\mathbf{x};\mathbf{y})
@@ -276,7 +276,7 @@ An example rate region for $K = 2$ users is shown in Fig.~\ref{fig:rate_region}.
 The rate region captures the trade-offs inherent to multi-user transmission: increasing the \ac{IBR} of one user may reduce the rates achievable by others due to interference and shared resources.
 It is therefore desirable to operate on the boundary of the rate region, where no user's rate can be increased without reducing that of another.
 
-The sum capacity $C_{\text{sum}}$ is the maximum achievable \ac{SR}, i.e., the sum of all individual \acp{IBR}:
+The sum capacity $C_{\text{sum}}$ is the maximum achievable \ac{SR}, i.e.\ the sum of all individual \acp{IBR}:
 \begin{equation}
 \label{eq:sum_capacity}
     C_{\text{sum}} = \max_{(r_1,\ldots,r_K)\in\mathcal{R}} \; \sum_{k=1}^{K} \, r_k.
@@ -301,7 +301,7 @@ The \ac{MI} between the transmitted vectors $\mathbf{x}_1^{\text{up}}, \dots, \m
     = \mathbb{E}\!\left[ \log_2\!\left( \frac{p(\mathbf{y} \mid \mathbf{x}_1^{\text{up}}, \dots, \mathbf{x}_K^{\text{up}})}{p(\mathbf{y})} \right) \right],
 \end{equation}
 where the expectation is taken with respect to the joint \ac{pdf} of $(\mathbf{x}_1^{\text{up}}, \dots, \mathbf{x}_K^{\text{up}})$ and $\mathbf{y}$, and $p(\mathbf{y})$ is the marginal \ac{pdf} of $\mathbf{y}$.
-It is further obtained as
+It can further be written as,
 \begin{equation}
 \label{eq:mi_mu_mimo_uplink_gaussian_channel}
     I(\mathbf{x}_1^{\text{up}}, \dots, \mathbf{x}_K^{\text{up}}; \mathbf{y})

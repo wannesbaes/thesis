@@ -3,7 +3,7 @@
 
 This chapter develops linear precoding strategies for \ac{SU}-\ac{MIMO} systems under a total transmit--power constraint.
 First, we analyze the capacity in greater detail. Next, a generalized \acs{WMMSE} design framework for the joint optimization of the precoder and combiner is derived.
-Finally, the performance is evaluated through Monte-Carlo simulations for different system configurations.
+Finally, the performance is evaluated through Monte Carlo simulations for different system configurations.
 
 \section{Capacity Achieving Precoding}
 \label{section:capacity_achieving_precoding}
@@ -62,7 +62,7 @@ with $\tilde{y}_i = \tilde{n}_i$ for $R_H < i \leq N_R$.
 The equivalent channel decomposes into $R_H$ independent parallel scalar Gaussian subchannels, each with its own channel gain $\sigma_i$. These subchannels and their gains are referred to as eigen subchannels and eigenmodes, respectively.
 Since the components $\tilde{x}_i$ for $R_H < i \leq N_T$ have no effect on the output, they carry no information and can be set to zero.
 
-For each eigen subchannel, the \acf{MI} is maximised by a zero-mean, \ac{CS} complex Gaussian input~\cite{telatar_1999}. Under this choice, the optimization problem~\eqref{eq:capacity_su_mimo_gaussian_channel_optimization_problem} simplifies to
+For each eigen subchannel, the \acf{MI} is maximized by a zero-mean, \ac{CS} complex Gaussian input~\cite{telatar_1999}. Under this choice, the optimization problem~\eqref{eq:capacity_su_mimo_gaussian_channel_optimization_problem} simplifies to
 \begin{equation}
 \label{eq:capacity_su_mimo_gaussian_channel_optimization_problem_simplified}
 \begin{aligned}
@@ -206,7 +206,7 @@ A more efficient approach exploits the geometric interpretation of the waterfill
 In the present \ac{SU}-\ac{MIMO} setting, each eigen subchannel can be represented as a container with unit width and floor level $N_0 / \sigma_i^2$, while the total transmit power is interpreted as water that is poured into these containers until a common water level is reached.
 The complete procedure is summarized in Appendix~\ref{appendix_section:waterfilling_algorithm}.
 The structure of the optimal power allocation is illustrated in Fig.~\ref{fig:waterfilling_power_allocation} for a \ac{SU}-\ac{MIMO} system with four transmit and four receive antennas operating at an \ac{SNR} of $5$ dB: eigen subchannels with stronger channel
-conditions, i.e. larger gains $\sigma_i$, receive more power than weaker ones.
+conditions, i.e.\ larger gains $\sigma_i$, receive more power than weaker ones.
 
 At extremely low \ac{SNR}, the waterfilling solution corresponds to the eigenbeamforming power allocation strategy, which concentrates all available power on the strongest eigen subchannel. As a result, only a single data stream is transmitted in this \ac{SNR} regime. This behavior is illustrated in Fig.~\ref{subfig:waterfilling_power_allocation_low_SNR}.
 Conversely, at an extremely high \ac{SNR}, the optimal power allocation strategy reduces to the uniform power allocation, which distributes power equally across all eigen subchannels, as illustrated in Fig.~\ref{subfig:waterfilling_power_allocation_high_SNR}.
@@ -253,7 +253,7 @@ By an appropriate selection of these weights, the framework specializes to the m
 %  Generalized WMMSE Design
 % ==========================
 
-The objective is to jointly design the precoder $\mathbf{F}$ and the combiner $\mathbf{G}$ so as to minimize a wweighted combination of mean--square estimation errors.
+The objective is to jointly design the precoder $\mathbf{F}$ and the combiner $\mathbf{G}$ so as to minimize a weighted combination of mean--square estimation errors.
 To this end, the estimation error vector $\mathbf{e} \in \mathbb{C}^{N_s}$ is defined as the difference between the transmitted data symbol vector $\mathbf{a}$ and the decision variable vector $\mathbf{z}$:
 \begin{equation}
 \label{eq:error_vector}
@@ -308,7 +308,7 @@ The \ac{WMMSE} optimization problem is then formulated as
 \end{aligned}
 \end{equation}
 
-The optimization problem in\eqref{eq:su_mimo_WMMSE_optimization_problem} can be solved using the Lagrange duality together with the \acf{KKT} conditions.
+The optimization problem in~\eqref{eq:su_mimo_WMMSE_optimization_problem} can be solved using the Lagrange duality together with the \acf{KKT} conditions.
 This leads to the following necessary optimality conditions~\cite{su_mimo_joint_precoder_decoder_design}:
 \begin{subequations}
 \begin{align}
@@ -342,11 +342,11 @@ The matrices $\mathbf{V} \in \mathbb{C}^{N_T \times R_H}$ and $\mathbf{\Lambda} 
 \end{equation}
 where the columns of $\mathbf{V}$ form an orthonormal basis for the range space of $(\mathbf{H}^{\mathsf{H}} \mathbf{C}_{\mathrm{n}}^{-1} \mathbf{H})$, and the columns of $\bar{\mathbf{V}}$ span its null space.
 The diagonal matrix $\mathbf{\Lambda}$ contains the $R_H$ non-zero eigenvalues arranged in descending order, whereas $\bar{\mathbf{\Lambda}}$ contains the remaining zero eigenvalues.
-Note that, as in Section~\ref{subsection:optimal_precoder_design}, the number of data streams is set equal to the rank of the channel matrix, i.e. $N_s = R_H$. Moreover, the rank of the channel matrix is equal to the rank of $(\mathbf{H}^{\mathsf{H}} \mathbf{C}_{\mathrm{n}}^{-1} \mathbf{H})$ since $\mathbf{C}_{\mathrm{n}}^{-1}$ is positive definite and therefore does not alter the rank of the product.
+Note that, as in Section~\ref{subsection:optimal_precoder_design}, the number of data streams is set equal to the rank of the channel matrix, i.e.\ $N_s = R_H$. Moreover, the rank of the channel matrix is equal to the rank of $(\mathbf{H}^{\mathsf{H}} \mathbf{C}_{\mathrm{n}}^{-1} \mathbf{H})$ since $\mathbf{C}_{\mathrm{n}}^{-1}$ is positive definite and therefore does not alter the rank of the product.
 
-Now, it only remains to show how to obtain the Lagrange multiplier that satisfies the power constraint and also is such that the bracketed matrices in both~\eqref{eq:solution_generalized_design_precoder_phi} and~\eqref{eq:solution_generalized_design_combiner_phi} are positive-definite.
+Now, it only remains to show how to obtain the Lagrange multiplier that satisfies the power constraint and ensures that the bracketed matrices in both~\eqref{eq:solution_generalized_design_precoder_phi} and~\eqref{eq:solution_generalized_design_combiner_phi} are positive-definite.
 Let $\mathbf{\Lambda} = \mathrm{diag}(\lambda_1, \dots, \lambda_{R_H})$ and $\mathbf{W}_{\mathrm{e}} = \mathrm{diag}(w_1, \dots, w_{R_H})$.
-Suppose $k \leq R_H$ eigen subchannels are effectively used for transmission, i.e. they are allocated non-zero power.
+Suppose $k \leq R_H$ eigen subchannels are effectively used for transmission, i.e.\ they are allocated non-zero power.
 From~\eqref{eq:solution_generalized_design_precoder_phi} and the total power constraint in~\eqref{eq:su_mimo_WMMSE_optimization_problem}, we have
 \begin{equation}
 \label{eq:power_constraint_generalized_design}
@@ -429,7 +429,7 @@ The design requirement reduces to the following equation
     d \, \mathbf{D} = (\mu^{-1/2} \mathbf{\Lambda}^{1/2} \mathbf{W}^{1/2}_{\mathrm{e}} - \mathbf{I})_{+},
 \end{equation}
 which must be solved for the weight matrix.
-Assuming for simplicity that all subchannels are active, i.e. $\mathbf{\Phi}_{\mathrm{f}} > 0$, the corresponding solution is given by~\cite{su_mimo_joint_precoder_decoder_design}
+Assuming for simplicity that all subchannels are active, i.e.\ $\mathbf{\Phi}_{\mathrm{f}} > 0$, the corresponding solution is given by~\cite{su_mimo_joint_precoder_decoder_design}
 \begin{equation}
 \label{eq:QoS_weight_matrix_solution}
     \mathbf{W}^{1/2}_{\mathrm{e}} = \mu^{1/2} (d \, \mathbf{D} + \mathbf{I}) \mathbf{\Lambda}^{-1/2}
@@ -519,7 +519,7 @@ The number of bits per symbol is always chosen to be even, so that the \ac{QAM} 
     \includegraphics[width=0.55\linewidth]
     {figures/background_material/03_su_mimo_precoding/impact_constellation/2x2_fixed_ba_ber_vs_snr.png}
     \caption[System performance with fixed bit allocation]
-    {\ac{BER} as a function of \ac{SNR} for three \ac{SU}-\ac{MIMO} systems with $2$ transmit and $2$ receive antennas, each using a different modulation constellations on each stream: 16--\ac{PAM}, 16--\ac{PSK}, and 16--\ac{QAM}.}
+    {\ac{BER} as a function of \ac{SNR} for three \ac{SU}-\ac{MIMO} systems with $2$ transmit and $2$ receive antennas, each using different modulation constellations on each stream: 16--\ac{PAM}, 16--\ac{PSK}, and 16--\ac{QAM}.}
     \label{fig:impact_constellation_2x2_fixed_ba_ber_vs_snr}
 \end{figure}
 
@@ -587,7 +587,7 @@ In contrast to the fixed bit allocation case, the \ac{BER} remains approximately
 
 The previous subsection assigned to each eigen subchannel the largest even number of bits not exceeding the subchannel capacity, so that the system operated at approximately the maximum achievable rate.
 In practice, however, it may be preferable to transmit at a lower rate in exchange for a reduced \ac{BER}.
-To quantify this tradeoff, we introduce a rate factor $r_f \in (0, 1]$ that specifies which fraction of the subchannel capacity is used for transmission.
+To quantify this trade-off, we introduce a rate factor $r_f \in (0, 1]$ that specifies which fraction of the subchannel capacity is used for transmission.
 The bit allocation on subchannel $i$ is then generalized to the largest even integer not exceeding $r_f \, C_i$, where $C_i$ denotes the instantaneous capacity of that subchannel.
 The case $r_f = 1$ recovers the maximum-rate allocation of the previous subsection.
 
@@ -616,7 +616,7 @@ The case $r_f = 1$ recovers the maximum-rate allocation of the previous subsecti
 Figure~\ref{fig:impact_ibr_4x4_adaptive_ba} shows the \ac{BER} and \ac{IBR} as a function of \ac{SNR} for several values of $r_f$ on a $4 \times 4$ system.
 As expected, reducing $r_f$ lowers the \ac{IBR}, because fewer bits are assigned to each subchannel.
 At the same time, the \ac{BER} decreases, since the chosen modulation order moves further below the subchannel capacity and the link operates with a larger margin.
-This illustrates an important tradeoff between throughput and reliability: operating below capacity sacrifices data rate in exchange for improved error performance.
+This illustrates an important trade-off between throughput and reliability: operating below capacity sacrifices data rate in exchange for improved error performance.
 
 For completeness, Figure~\ref{fig:impact_ibr_2x2_fixed_ba_ber_vs_snr} shows the analogous experiment under fixed bit allocation on a $2 \times 2$ system, where the same modulation order is applied on all eigen subchannels across the entire \ac{SNR} range.
 The behavior is consistent: a smaller constellation size yields a lower \ac{BER} at any given \ac{SNR}.
@@ -641,7 +641,7 @@ The slope of the \ac{BER} curve is essentially unchanged by the constellation or
 This subsection examines how the number of transmit and receive antennas affects system performance, keeping the rate factor fixed at $r_f = 1$.
 Figure~\ref{fig:impact_antennas_variable_ibr_4x4_adaptive_ba} shows the \ac{BER} and \ac{IBR} as a function of \ac{SNR} for several antenna configurations.
 The \ac{BER} remains approximately constant across all configurations, consistent with the behavior observed in Section~\ref{subsection:bit_allocation_strategies}.
-By contrast, the maximum achievable rate, and thus the \ac{IBR}, markedly with antenna count.
+By contrast, the maximum achievable rate, and thus the \ac{IBR}, varies markedly with antenna count.
 Three distinct effects can be observed.
 
 \begin{figure}[htb]
@@ -662,7 +662,7 @@ Three distinct effects can be observed.
         \label{subfig:impact_antennas_variable_ibr_4x4_adaptive_ba_ibr_vs_snr}
     \end{subfigure}
     \caption[Impact of the antenna count on the system performance (constant BER comparison)]
-    {Illustration of the impact of the antenna count on the system performance for a system adaptive bit allocation. The (a) \ac{BER} and (b) \ac{IBR} are shown as a function of \ac{SNR}, for five different antenna configurations.}
+    {Illustration of the impact of the antenna count on the system performance for a system using adaptive bit allocation. The (a) \ac{BER} and (b) \ac{IBR} are shown as a function of \ac{SNR}, for five different antenna configurations.}
     \label{fig:impact_antennas_variable_ibr_4x4_adaptive_ba}
 \end{figure}
 
@@ -677,7 +677,7 @@ The eigen subchannels thus experience better average channel conditions, yieldin
 Finally, configurations with the same $\min(N_T, N_R)$ and the same total number of antennas show no performance difference when the excess antennas are placed at the \ac{TX} or at the \ac{RX}.
 This symmetry follows since $\mathbf{H}\mathbf{H}^{\mathsf{H}}$ and $\mathbf{H}^{\mathsf{H}}\mathbf{H}$ have the same non-zero eigenvalues, so the singular-value distribution of an $N_R \times N_T$ i.i.d. Rayleigh channel is identical to that of its transpose.
 
-As in the previous subsection, the rate--reliability tradeoff also applies here.
+As in the previous subsection, the rate--reliability trade-off also applies here.
 Figure~\ref{fig:impact_antennas_variable_ber_4x4_adaptive_ba} illustrates this by adjusting the rate factor of each configuration so that all systems achieve approximately the same \ac{IBR} at each \ac{SNR}.
 Under this equal-rate comparison, systems with more antennas consistently achieve lower \ac{BER}, because the additional spatial degrees of freedom support the same throughput with larger margins on the individual eigen subchannels.
 

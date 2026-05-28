@@ -177,8 +177,8 @@ As established in Section~\ref{appendix_section:cs_complex_gaussian_channel_gain
 \begin{equation}
     h(t) = \sum_{n=1}^{N} a_n \, e^{\,j(2\pi f_D \cos(\alpha_n)\, t \;+\; \phi_n)},
 \end{equation}
-where the expected power is normalized, i.e., $\sum_{n=1}^{N} \mathbb{E}[a_n^2] = 1$ and $\phi_n \sim \mathrm{Uniform}(0, 2\pi)$ are independent across scatterers.
-The scatterers are further assumed to be uniformly distributed on a sphere around the \ac{RX}, so that the angles of arrival are identically distributed as $\alpha_n \sim \mathrm{Uniform}(0, 2\pi)$.
+where the expected power is normalized, i.e.\ $\sum_{n=1}^{N} \mathbb{E}[a_n^2] = 1$, and where the phases $\phi_n \sim \mathrm{Uniform}(0, 2\pi)$ are independent across scatterers.
+The scatterers are further assumed to be uniformly distributed on a sphere around the \ac{RX}, so that the angles of arrival $\alpha_n$ are \ac{i.i.d.} distributed according to $\mathrm{Uniform}(0, 2\pi)$.
 
 \subsection*{Autocorrelation Function}
 \label{appendix_section:acf_jakes_model}
@@ -270,7 +270,7 @@ Let us compute the \ac{PSD} $S_h(f) = \mathcal{F}\{R_h(\tau)\}$ of the fading pr
 \end{fleqn}
 
 The resulting \ac{PSD} is known as the Doppler spectrum.
-It is nonzero only for $|f| \leq f_D$, confirming that the fading process is band-limited to the maximum Doppler frequency: since no scattering angle can produce a Doppler shift exceeding $\pm f_D$. The total Doppler spread equals $2f_D$.
+It is nonzero only for $|f| \leq f_D$, confirming that the fading process is band-limited to the maximum Doppler frequency, since no scattering angle can produce a Doppler shift exceeding $\pm f_D$. The total Doppler spread equals $2f_D$.
 
 The spectrum exhibits a characteristic ``bathtub'' shape, which is a direct consequence of the mapping $f = f_D \cos(\alpha)$.
 Near $\alpha = 0$ and $\alpha = \pi$, $\cos(\alpha)$ varies slowly as a function of $\alpha$, so a wide range of angles maps to a narrow frequency band near $\pm f_D$, concentrating power at the spectral edges.

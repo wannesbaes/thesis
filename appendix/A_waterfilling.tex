@@ -1,7 +1,7 @@
 \chapter{Waterfilling for Power Allocation}
 \label{appendix:waterfilling}
 
-In this appendix, we solve the problem of optimal power allocation across independent scalar Gaussian channels using the method of Lagrangian multipliers.
+In this appendix, we solve the problem of optimal power allocation across independent scalar Gaussian channels using the method of Lagrange multipliers.
 The key principles of this method are explained alongside the derivation, because it is also employed to solve other optimization problems encountered in this dissertation.
 The solution to the optimal power allocation problem gives rise to the waterfilling algorithm, which is discussed at the end of this appendix.
 
@@ -9,7 +9,7 @@ The solution to the optimal power allocation problem gives rise to the waterfill
 \section{Optimal Power Allocation}
 \label{appendix_section:optimal_power_allocation}
 % ===========================================================
-%  Optimal Power Allocation using Lagrangian Multipliers
+%  Optimal Power Allocation using Lagrange Multipliers
 % =========================================================== 
 
 Consider $N$ independent \ac{SISO} Gaussian transmission channels.
@@ -29,7 +29,7 @@ Consider the following general optimization problem:
 where $p_n$ denotes the power allocated to channel $n$, and $P_t$ denotes the total available transmit power. 
 The coefficients $\alpha_n$ are non-negative weighting factors that allow different channels to be prioritized unequally, whereas $\gamma_n > 0$ denotes the ratio between the channel gain and the noise power of channel $n$.
 
-To solve the constrained optimization problem in~\eqref{eq:optimal_power_allocation_optimization_problem}, the method of Lagrangian multipliers is employed.
+To solve the constrained optimization problem in~\eqref{eq:optimal_power_allocation_optimization_problem}, the method of Lagrange multipliers is employed.
 The core idea of this method is to convert a constrained optimization problem into an unconstrained one by absorbing the constraints into a modified objective function, known as the Lagrangian.
 This is achieved by introducing auxiliary variables, called Lagrange multipliers, one for each constraint, which penalize violations of the constraints.
 
@@ -104,7 +104,7 @@ This interpretation is illustrated in Fig.~\ref{fig:waterfilling_algorithm} for 
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.625\textwidth]{figures/annex/A_waterfilling/out/waterfilling_algorithm.pdf}
-    \caption[Waterfilling algorithm interpretation]{A visualization of the waterfilling algorithm for optimal power allocation strategy in a system with $N = 4$ channels.}
+    \caption[Waterfilling algorithm interpretation]{A visualization of the waterfilling algorithm as the optimal power allocation strategy in a system with $N = 4$ channels.}
     \label{fig:waterfilling_algorithm}
 \end{figure}
 
@@ -163,7 +163,7 @@ The complete procedure for determining the water level and the corresponding pow
 %          Examples
 % =============================
 
-% Example 1: piecewise frequence selective channel
+% Example 1: piecewise frequency selective channel
 \paragraph{Piecewise Frequency-Selective Channel}~\\
 Consider a channel with a piecewise constant frequency response, partitioned into $N$ non-overlapping subbands.
 Subband $n$ spans the frequency interval $[B_{n-1}, B_n]$ and has a bandwidth $\beta_n = |B_n - B_{n-1}|$, a constant channel gain $g_n$, and experiences additive white Gaussian noise with power spectral density $N_0$.

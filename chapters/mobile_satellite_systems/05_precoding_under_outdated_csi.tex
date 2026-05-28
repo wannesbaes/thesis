@@ -104,7 +104,7 @@ The achievable rate reaches a maximum and decreases slightly beyond it when the 
 Unlike \ac{ZF} and \ac{BD}, \ac{WMMSE} precoding adapts its solution to the operating \ac{SNR}.
 At low \ac{SNR} it trades interference suppression against desired-signal power, while at high \ac{SNR} the regularization vanishes and it converges to the interference-free \ac{BD} solution.
 The algorithm then increasingly concentrates power in directions that it expects to be beneficial, but which, due to the channel mismatch, actively generate inter-user interference in the actual channel.
-The \ac{ZF}-type precoders do not exhibit this behaviour because they steer in the wrong direction just as aggressive for any \ac{SNR} value.
+The \ac{ZF}-type precoders do not exhibit this behaviour because they steer in the wrong direction just as aggressively for any \ac{SNR} value.
 
 \begin{figure}[!htb]
     \centering
@@ -144,9 +144,9 @@ The performance gain introduced by this strategy will again be evaluated by mean
 
 % strategy philosophy: AR-model
 Among the many possible prediction methods, a linear \acf{AR} model is adopted here as a simple and tractable baseline. It leads to a closed-form predictor, requires only knowledge of the autocorrelation function, and entails a very limited computational complexity.
-The prediction is performed locally at each \ac{UT}, while the \ac{GW} continues to compute the precoder exactly as in Chapter~\ref{chapter:mu_mimo_precoding}. From the perspective of the \ac{GW}, the precoding procedure is therefore unchanged. Only the channel information on which it relies, is replaced by a prediction of the future channel state. As a result, the additional complexity introduced by the compensation strategy is borne entirely by the \acp{UT}.
+The prediction is performed locally at each \ac{UT}, while the \ac{GW} continues to compute the precoder exactly as in Chapter~\ref{chapter:mu_mimo_precoding}. From the perspective of the \ac{GW}, the precoding procedure is therefore unchanged. Only the channel information on which it relies is replaced by a prediction of the future channel state. As a result, the additional complexity introduced by the compensation strategy is borne entirely by the \acp{UT}.
 
-% AR-model mecanism
+% AR-model mechanism
 Under the simplified channel model of Chapter~\ref{chapter:hts_communication_systems}, the temporal variation is entirely contained in the \ac{NLoS} component. Moreover, spatial correlation within the \ac{NLoS} component is neglected, so that the entries of $\mathbf{H}_k^{\mathrm{NLoS}}(t)$ evolve independently and share the same temporal correlation function. Therefore, we choose to carry out the prediction element-wise, using the same scalar predictor for each channel coefficient. 
 Let $\hat{h}_{k, \,(i, j)}[n]$ denote the estimate of the $(i,j)$-th entry of the channel matrix of \ac{UT}~$k$ at the $n$-th pilot instant. A $p$-th order \ac{AR} predictor of the channel $\Delta$ pilot intervals ahead is then written as
 \begin{equation}
@@ -174,8 +174,8 @@ Third, the pilot period $T_p$ is treated as a free design parameter and is not c
 
 % two free parameters
 The predictor of~\eqref{eq:ar_predictor} is controlled by two free parameters. 
-Firstly, the pilot period $T_p$, or equivalently the pilot rate $1/T_p$, which determines the temporal resolution at which the channel is observed.
-Secondly, the time span or context window length $L \triangleq p\, T_p$ covered by the $p$ past samples, which controls how far back in time the predictor reaches.
+First, the pilot period $T_p$, or equivalently the pilot rate $1/T_p$, which determines the temporal resolution at which the channel is observed.
+Second, the time span or context window length $L \triangleq p\, T_p$ covered by the $p$ past samples, which controls how far back in time the predictor reaches.
 For a fixed window length, a higher pilot rate raises the model order $p$ by providing finer temporal resolution, while for a fixed pilot rate, a longer window increases the model
 order by incorporating older observations.
 The order $p$ of the \ac{AR} model is fixed once $T_p$ and $L$ are chosen through the relation $p = L/T_p$, and thus not considered as a third design parameter.
@@ -183,7 +183,7 @@ Both model parameters are expressed relative to the coherence time of the channe
 
 % decoupled optimization
 Rather than performing a joint grid search over $T_p$ and $L$, the two parameters are tuned sequentially. 
-The pilot rate is first optimised with the context window length held fixed at a conservative value, after which the context window length is tuned with the pilot rate frozen at the value found in the first step.
+The pilot rate is first optimized with the context window length held fixed at a conservative value, after which the context window length is tuned with the pilot rate frozen at the value found in the first step.
 Both optimisations are evaluated for the $8 \times \{2, 2, 2, 2\}$ system using \ac{WMMSE} precoding at a single operating point with an \ac{SNR} equal to $20~\mathrm{dB}$, for different values of \ac{CSI} feedback delay.
 
 \begin{figure}[!b]
@@ -202,7 +202,7 @@ Both optimisations are evaluated for the $8 \times \{2, 2, 2, 2\}$ system using 
 For the first sweep, the context window length fixed at $2\,T_c$. This is a generous choice, made to ensure that no potentially useful information would be excluded.
 Figure~\ref{fig:parameter_pilot_rate} shows the achievable sum-rate as a function of the pilot rate for four values of the \ac{CSI} feedback delay.
 The achievable sum-rate increases steadily as the pilot rate grows, reflecting the improvement in temporal resolution available to the predictor. 
-When too few samples are available within the temporal correlation window to capture the channel dynamics accurately, the achievable sum-rate drops rapidly, especailly for the larger feedback delays.
+When too few samples are available within the temporal correlation window to capture the channel dynamics accurately, the achievable sum-rate drops rapidly, especially for the larger feedback delays.
 At $6$ messages per $T_c$, all four curves reach their respective maximum and converge to nearly the same value, indicating that the compensation is equally effective regardless of the feedback delay.
 Increasing the pilot rate further than $6$ messages per coherence time does not improve performance and even causes a slight degradation for the larger delays, most likely because the resulting high model order renders the Yule-Walker system ill-conditioned. The autocorrelation matrix then becomes increasingly close to singular.
 A pilot rate of $6$ messages per coherence time is therefore selected.
@@ -212,7 +212,7 @@ With the pilot rate fixed at $6$ messages per $T_c$, the context window length i
 Figure~\ref{fig:parameter_context_window_length_wmmse} shows that a too short window prevents the predictor from accessing enough of the temporal correlation of the channel and, as expected, severely degrades the achievable sum-rate.
 Also, the curves saturate beyond a certain prediction horizon.
 This aligns with the intuition that, after a certain point, the channel history is no longer significantly correlated with the value being predicted, such that the additional information contained in older samples is negligible.
-This saturation point depends strongly on the \ac{CSI} feedback delay: for shorter feedback delays, a shorter window length sufficies.
+This saturation point depends strongly on the \ac{CSI} feedback delay: for shorter feedback delays, a shorter window length suffices.
 Note that a longer context window length results in a larger memory footprint at the \ac{UT}.
 A context window length of one coherence period is therefore adopted for all subsequent simulations.
 
@@ -272,7 +272,7 @@ This behaviour is expected: for $\tau_{\mathrm{CSI}} > T_c$, the channel samples
 The compensation strategy remains beneficial in this regime, but the residual mismatch grows with delay and the achievable sum-rate drops accordingly.
 
 % disappearance of ceiling / peak-and-decrease
-An remarkeble difference between Figure~\ref{fig:impact_outdated_csi_achievable_rate_zf_bd} and Figures~\ref{fig:impact_compensation_achievable_rate_zf_bd} is the disappearance of the rate ceiling.
+A remarkable difference between Figure~\ref{fig:impact_outdated_csi_achievable_rate_zf_bd} and Figures~\ref{fig:impact_compensation_achievable_rate_zf_bd} is the disappearance of the rate ceiling.
 The compensation strategy restores the growth of the achievable sum-rate with increasing \ac{SNR} for almost all considered \ac{CSI} feedback delays.
 Only when $\tau_{\mathrm{CSI}}$ approaches $2\,T_c$, the residual prediction error is large enough to reintroduce an interference floor, and the familiar saturation behaviour of §\ref{section:outdated_csi_impact} reappears.
 A similar observation can be made for \ac{WMMSE} precoding.
@@ -388,8 +388,7 @@ for $n_x = 0, \ldots, N_x - 1$ and $n_y = 0, \ldots, N_y - 1$, where $\lambda$ i
 \end{figure}
 
 Because the scattering on ground takes place only within a few kilometers around each \ac{UT}, the \ac{AoD} for different propagation paths to the same \ac{UT} are nearly identical due to the exceptional propagation distance in satellite communications~\cite{chinese0_massive_mimo_leo}.
-Therefore, a single satellite-side steering vector $\mathbf{a}^{\mathrm{sat}}_k = \mathbf{a}(\theta^{\mathrm{sat}}_k, \phi^{\mathrm{sat}}_k)
-\in \mathbb{C}^{N_T}$ applies to every component of the channel, where $(\theta^{\mathrm{sat}}_k, \phi^{\mathrm{sat}}_k)$ is the elevation-azimuth angle pair to \ac{UT}~$k$ from a satellite point-of-view.
+Therefore, a single satellite-side steering vector $\mathbf{a}^{\mathrm{sat}}_k = \mathbf{a}(\theta^{\mathrm{sat}}_k, \phi^{\mathrm{sat}}_k) \in \mathbb{C}^{N_T}$ applies to every component of the channel, where $(\theta^{\mathrm{sat}}_k, \phi^{\mathrm{sat}}_k)$ is the elevation-azimuth angle pair to \ac{UT}~$k$ from the satellite's point of view.
 By contrast, from a \ac{UT} perspective scattering is local, so each ray within a cluster arrives from a distinct direction described by an individual steering vector $\mathbf{a}^{\mathrm{ut}}_{k,c,\ell} = \mathbf{a}(\theta^{\mathrm{ut}}_{k,c,\ell}, \phi^{\mathrm{ut}}_{k,c,\ell}) \in \mathbb{C}^{N_R}$.
 
 % channel matrix 
@@ -444,7 +443,7 @@ This significantly alters the behavior of the precoding schemes considered in th
 Because the purpose of this section is not to study this rank limitation itself, the subsequent evaluation is restricted to system configurations in which each \ac{UT} is equipped with a single receive antenna.
 
 A second distinction from the simplified model concerns the spatial structure of the channel.
-Under the ray-based model of~\eqref{eq:satellite_channel_model}, the entries of the channal matrix for \ac{UT}~$k$ are no longer spatially independent.
+Under the ray-based model of~\eqref{eq:satellite_channel_model}, the entries of the channel matrix for \ac{UT}~$k$ are no longer spatially independent.
 In principle, a predictor that exploits this spatial correlation jointly with the temporal one could yield more accurate predictions than the element-wise approach of Section~\ref{subsection:compensation_strategy}.
 However, developing such a predictor would significantly increase the complexity at each \ac{UT}.
 To maintain a fair and direct comparison with the results of Section~\ref{section:outdated_csi_compensation}, the same element-wise \ac{AR} predictor is applied here without modification, with the same parameter values established in Section~\ref{subsection:compensation_parameter_optimization}.
@@ -461,7 +460,7 @@ In analogy with Section~\ref{section:outdated_csi_impact}, the \ac{CSI} feedback
 The left panel of Figure~\ref{fig:satellite_channel_performance} shows the \ac{BER} under outdated \ac{CSI} as a function of the \ac{SNR} for several values of the feedback delay.
 The qualitative behavior closely mirrors the observations made in Section~\ref{section:outdated_csi_impact} for the simplified Rician model.
 As the feedback delay grows, the \ac{BER} at any given \ac{SNR} degrades monotonically.
-For delays approaching or exceeding $T_c^{\mathrm{NLoS}}$, the residual inter-user interference caused by the channel mismatch begins to dominate the noise at high \ac{SNR}, and the \ac{BER} curves flatten. The system has an extremely poor reliability, no matter the avalaible transmit power.
+For delays approaching or exceeding $T_c^{\mathrm{NLoS}}$, the residual inter-user interference caused by the channel mismatch begins to dominate the noise at high \ac{SNR}, and the \ac{BER} curves flatten. The system has an extremely poor reliability, no matter the available transmit power.
 
 % compensation
 The right panel of Figure~\ref{fig:satellite_channel_performance} shows the same system with \ac{AR}-based channel prediction.
@@ -491,7 +490,9 @@ A thorough parameter study, an investigation of the spatial and temporal correla
         \label{fig:satellite_channel_impact_compensation_ber_zf}
     \end{subfigure}
     \caption[Impact of Outdated and Predicted \acs{CSI} on the \acs{BER} (\acs{ZF} precoding)]{
-        title
+        A comparison of the total \acs*{BER} in a $8 \times \{1,1,1,1\}$ system using a \ac{ZF} precoder.
+        The \acs*{BS} transmits a single $16$--\acs*{QAM} data stream to each \acs*{UT}.
+        The different colored curves correspond to different \acs*{CSI} feedback delays.
     }
     \label{fig:satellite_channel_performance}
 \end{figure}
@@ -554,5 +555,5 @@ The \ac{AR}-based strategy is therefore well-suited to \ac{LEO} satellite scenar
 For a \ac{GEO} satellite at an altitude of $35\,786~\mathrm{km}$, the one-way propagation delay is $\tau_{\mathrm{prop}} = 119.4~\mathrm{ms}$, yielding $\tau_{\mathrm{CSI}} = 477.5~\mathrm{ms}$.
 Even for the slowest \ac{UT} velocity considered ($5~\mathrm{km/h}$, $T_c = 34.84~\mathrm{ms}$), this corresponds to $\tau_{\mathrm{CSI}} / T_c \approx 13.7$, far beyond the range where temporal prediction is effective.
 The \ac{AR}-based compensation strategy is therefore not applicable to \ac{GEO} links.
-In this regime, the mismatch between the available and the actual channel is too large to be bridged the predictor.
+In this regime, the mismatch between the available and the actual channel is too large to be bridged by the predictor.
 More robust precoding formulations that explicitly account for severe \ac{CSI} uncertainty are required.

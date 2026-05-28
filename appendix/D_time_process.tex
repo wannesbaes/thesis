@@ -59,12 +59,12 @@ From~\eqref{eq:cholensky_mean_h} and~\eqref{eq:cholensky_covariance_h}, the mean
 \end{equation}
 
 Second, let us demonstrate that the Cholesky decomposition of the covariance matrix $\mathbf{C}$ always exists.
-It is well-known that the Cholesky decomposition of a matrix $\mathbf{C}$ exists and is unique if and only if $\mathbf{C}$ is an Hermitian matrix and a positive-definite matrix, i.e.:
+It is well-known that the Cholesky decomposition of a matrix $\mathbf{C}$ exists and is unique if and only if $\mathbf{C}$ is a Hermitian matrix and a positive-definite matrix, i.e.:
 \begin{equation}
     \exists ! \, \mathbf{L} : \mathbf{C} = \mathbf{L}\mathbf{L}^H \iff \mathbf{C} = \mathbf{C}^H \quad \text{and} \quad \forall \mathbf{x} \in \mathbb{C}^N \setminus \{\mathbf{0}\} : \, \mathbf{x}^H \mathbf{C} \mathbf{x} > 0
 \end{equation}
 
-Consider a autocorrelation function $R_h(\tau)$ of a wide-sense stationary process, i.e. $R_h$ does not depend on the absolute time $t$, but only on the time difference $\tau$.
+Consider an autocorrelation function $R_h(\tau)$ of a wide-sense stationary process, i.e.\ $R_h$ does not depend on the absolute time $t$, but only on the time difference $\tau$.
 Therefore, the covariance matrix $\mathbf{C}$ is a real and symmetric Toeplitz matrix by construction. Thus, $\mathbf{C}$ is a Hermitian matrix.
 
 We prove that $\mathbf{C}$ is positive-definite by contradiction.
@@ -78,10 +78,10 @@ First, let us simplify the expression $\mathbf{x}^H \mathbf{C} \mathbf{x}$:
     \label{eq:cholensky_positive_definite_C}
 \end{align}
 
-We consider a autocorrelation function $R_h(\tau)$ that corresponds to a power spectral density that makes physical sense, i.e. $S_h(f)$ is positive for all frequencies $f$ and strictly positive for a set of positive measure.
+We consider an autocorrelation function $R_h(\tau)$ that corresponds to a power spectral density that makes physical sense, i.e.\ $S_h(f)$ is positive for all frequencies $f$ and strictly positive for a set of positive measure.
 Then, it is easy to see that $\mathbf{C}$ is positive semi-definite, since the integrand is non-negative for all frequencies $f$.
 
-Assume that $\mathbf{C}$ is not positive-definite, then there exists a non-zero vector $\mathbf{x} \in \mathbb{C}^N$ such that $\mathbf{x}^H \mathbf{C} \mathbf{x} = 0$.
+Assume that $\mathbf{C}$ is not positive-definite. Then, there exists a non-zero vector $\mathbf{x} \in \mathbb{C}^N$ such that $\mathbf{x}^H \mathbf{C} \mathbf{x} = 0$.
 For that to be true, the integrand must be zero, which implies that $X(f) = 0$ for all frequencies $f$ where $S_h(f) > 0$, which is a set of positive measure. 
 $X(f)$ can be seen as the $\mathcal{Z}$-transform of $\mathbf{x}$ evaluated on the unit circle, which corresponds to a complex  polynomial of degree at most $N-1$. 
 By the Fundamental Theorem of Algebra, such a nonzero polynomial has at most $N-1$ roots. Therefore, $\mathbf{x}$ must be the zero vector, which contradicts the assumption. 
@@ -114,7 +114,7 @@ The linear filtering method for generating a zero-mean unit-variance complex Gau
 
 \end{itemize}
 
-The underlying idea behind this method is that passing white complex Gaussian noise through a linear time-invariant filter with frequency response $G(f)$ yields an output process whose power spectral density is equal to $|G(f)|^2$.
+The underlying principle behind this method is that passing white complex Gaussian noise through a linear time-invariant filter with frequency response $G(f)$ yields an output process whose power spectral density is equal to $|G(f)|^2$.
 Consequently, by choosing $G(f) = \sqrt{S_h(f)}$, the output process is shaped so as to have the desired power spectral density.
 The derivation below makes this argument precise.
 

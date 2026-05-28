@@ -39,7 +39,7 @@ Equivalently, it can be expressed as the average number of bit errors per detect
 \label{eq:ber_definition}
     \mathrm{BER} = \frac{1}{\log_2(M)} \sum_{(\hat{\alpha}, \alpha) \in \mathcal{A}^{2}} \mathrm{N}(\hat{\alpha}, \alpha)\, \mathrm{Prob}[\hat{a} = \hat{\alpha} \land a = \alpha].
 \end{equation}
-Here, $\mathcal{A}^{2}$ denotes the Cartesian product of the constellation with itself, and thus contains all possible transmitted-detected symbol pairs.
+Here, $\mathcal{A}^{2}$ denotes the Cartesian product of the constellation with itself, and thus contains all possible pairs of transmitted and detected symbols.
 The quantity $\mathrm{N}(\hat{\alpha}, \alpha)$ denotes the number of bit errors incurred when the symbol $\alpha$ is transmitted and $\hat{\alpha}$ is detected.
 In other words, it equals the Hamming distance between the binary labels of $\alpha$ and $\hat{\alpha}$.
 Finally, $\mathrm{Prob}[\hat{a} = \hat{\alpha} \land a = \alpha]$ is the joint probability that $\alpha$ is transmitted and $\hat{\alpha}$ is detected.
@@ -121,7 +121,7 @@ Letting $\mathcal{S}(\alpha)$ denote the set of nearest neighbours of symbol $\a
     \approx \frac{1}{M \log_2(M)} \, \mathrm{Q}\!\left(\sqrt{\frac{p}{2N_0}}\,d_{\min}\right) \, \sum_{\alpha \in \mathcal{A}} \sum_{\hat{\alpha} \in \mathcal{S}(\alpha)} \mathrm{N}(\hat{\alpha}, \alpha).
 \end{equation}
 
-For uncoded transmission, the optimal mapping from bits to symbol is given by Gray coding, which ensures that the binary labels of any two nearest-neighbour symbols differ in only one bit position, i.e. their Hamming distance is equal to one.
+For uncoded transmission, the optimal mapping from bits to constellation symbols is given by Gray coding, which ensures that the binary labels of any two nearest-neighbour symbols differ in only one bit position, i.e. their Hamming distance is equal to one.
 Hence,
 \begin{equation}
     \mathrm{BER} \approx \frac{1}{M \log_2(M)}\; \mathrm{Q}\!\left(\sqrt{\frac{p}{2N_0}}\,d_{\min}\right) \sum_{\alpha \in \mathcal{A}} |\mathcal{S}(\alpha)|.

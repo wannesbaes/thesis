@@ -30,13 +30,13 @@ Precoding has emerged as the natural solution: by exploiting \ac{CSI} at the tra
 %    Modeling Aspects
 % ==========================
 
-\subsection*{System Architecture}
+\subsection{System Architecture}
 % -------------------------------
 
 An illustration of the system architecture of a multi-beam satellite system is shown in Figure~\ref{fig:multibeam_satellite_architecture}.
 It consists of three main entities: the \acf{GW}, the satellite or \ac{BS}, and the \acp{UT}.
 The \ac{GW} is connected to the core network and usually performs all baseband processing.
-The link between the \ac{GW} and the satellite is referred to as the feeder link, while the link between the satellite and the \acp{UT} is referred to as the user link. The direction from the \ac{GW} throught the \ac{BS} to the \acp{UT} is called the forward link, while the opposite direction is called the return link.
+The link between the \ac{GW} and the satellite is referred to as the feeder link, while the link between the satellite and the \acp{UT} is referred to as the user link. The direction from the \ac{GW} through the \ac{BS} to the \acp{UT} is called the forward link, while the opposite direction is called the return link.
 The forward link is by far the most rate-demanding direction, and centralizing the precoder design at the \ac{GW} (or \ac{BS}) aligns naturally with the \ac{MU}-\ac{MIMO} downlink framework developed in Chapter~\ref{chapter:mu_mimo_precoding}.
 
 Throughout this work, we focus on the forward link of a multi-beam \ac{HTS} system serving mobile \acp{UT}. 
@@ -48,7 +48,7 @@ Throughout this work, we focus on the forward link of a multi-beam \ac{HTS} syst
     \label{fig:multibeam_satellite_architecture}
 \end{figure}
 
-\subsection*{Features of Satellite Communications}
+\subsection{Features of Satellite Communications}
 % --------------------------------------------------
 
 % distinctive features of satellite communications
@@ -63,11 +63,11 @@ For the present work, the two most relevant features are therefore the mobility 
 The mobility of the \acp{UT} and/or the satellite makes the channel time-varying through Doppler effects.
 For \ac{GEO} satellites, which appear essentially stationary relative to the Earth's surface, the satellite-induced Doppler shift is negligible, and the dominant source of channel variation is \ac{UT} motion alone.
 For \ac{LEO} satellites, the high orbital velocity produces a substantial satellite-induced Doppler shift. 
-However, since the satellite's trajectory is known with high accuracy, this contribution is deterministic and can be pre-compensated (see e.g.~\cite{doppler_compensation_mimo_leo}).
+However, since the satellite's trajectory is known with high accuracy, this contribution is deterministic and can be pre-compensated (see, e.g.~\cite{doppler_compensation_mimo_leo}).
 The residual, more difficult component to track is the Doppler shift induced by the motion of the \ac{UT}, since it depends on the instantaneous user velocity and propagation geometry.
 So, in both cases, \ac{UT} mobility is the primary driver of channel time-variation, and it causes the channel to fluctuate at a rate governed by the \ac{UT} speed and the carrier frequency.
 
-% popagation delay
+% propagation delay
 The large geographical distances between the \ac{GW}, the satellite, and the \acp{UT} introduce a propagation delay that is several orders of magnitude larger than in terrestrial systems. 
 For a \ac{GEO} satellite, which orbits at an altitude of approximately $35{,}786~\mathrm{km}$, the one-way propagation delay is on the order of $250~\mathrm{ms}$.
 Even for a \ac{LEO} constellation, the \ac{RTT} remains in the tens of milliseconds.
@@ -75,7 +75,7 @@ Since the precoder is computed based on \ac{CSI} provided by the \acp{UT}, this 
 In a static scenario, this mismatch is of limited importance.
 In combination with a time-varying channel, however, it forms a major challenge for precoding design.
 
-\subsection*{Channel Model}
+\subsection{Channel Model}
 % --------------------------
 
 No single probabilistic model captures the full range of propagation conditions encountered in mobile satellite communications, and a variety of models have been proposed in the literature for different scenarios.
@@ -115,22 +115,22 @@ While these assumptions yield a tractable and well-understood baseline, they do 
 At the end of the following chapter, we therefore describe how this model can be extended to a more realistic setting that accounts for spatial correlation and a residual \ac{LoS} Doppler component, and we briefly evaluate the impact of these features on the performance of the proposed precoding techniques.
 
 
-\section{Classification}
-\label{section:hts_classification}
+\section{Classification and Positioning}
+\label{section:hts_classification_and_positioning}
 % =============================================
-%   Classification of Precoding Techniques
+%     Classification and Positioning
 % =============================================
 
-A large number of precoding techniques have been proposed for satellite communications, differing in the assumptions they make about the system and in the design objectives they pursue. A comprehensive survey can be found in~\cite{3_precoding_for_satellites_survey}. The objective of this section is not to reproduce this overview, but rather to position the present work within the broader landscape and to identify the techniques that are most closely related.
+A large number of precoding techniques have been proposed for satellite communications. These techniques differ in the assumptions they make about the system and in the design objectives they pursue. A comprehensive survey can be found in~\cite{3_precoding_for_satellites_survey}. The objective of this section is not to reproduce this overview, but rather to position the present work within the broader landscape and to identify the techniques that are most closely related.
 
-\subsection*{A Taxonomy of Precoding Techniques}
+\subsection{A Taxonomy of Precoding Techniques}
 % --------------------------------------------
 
 Besides the distinction between linear and nonlinear techniques, existing satellite precoding methods can be classified along several other non-exclusive axes. For each axis we briefly recall the main alternatives and indicate the choice made in this work.
 
 A first distinction concerns the traffic model. In practical multibeam satellite systems, a single beam may simultaneously serve multiple \acp{UT} within the same frame, which leads naturally to a multi-group multicast formulation. 
 To avoid additional complications introduced by multicast scheduling, we restrict the analysis to the unicast case, in which only a single \ac{UT} is served per beam.
-A second axis concerns the optimization criterion. Depending on the system objective, the precoder may be designed to maximize the sum rate under a transmit power constraint, or to minimize the transmit power provided that \ac{QoS} metric is met.
+A second axis concerns the optimization criterion. Depending on the system objective, the precoder may be designed to maximize the sum rate under a transmit power constraint, or to minimize the transmit power provided that a \ac{QoS} metric is met.
 Closely related to this is the choice of power constraint. In practical satellite payloads, each feed is typically driven by its own power amplifier, which makes per-feed power constraints the most natural formulation from an implementation perspective.
 However, owing to the additional complexity associated with per-feed power constraints, most existing precoding techniques are formulated under a total transmit-power constraint.
 In this dissertation, the emphasis is placed on sum-rate maximization subject to a total transmit power constraint, in line with the terrestrial \ac{MU}-\ac{MIMO} framework developed in the previous chapters.
@@ -144,16 +144,16 @@ The vast majority of the satellite precoding literature assumes perfect instanta
 This assumption becomes unrealistic in the scenario considered here, where the combination of large propagation delay and a time-varying channel due to a \ac{UT}-induced Doppler renders the \ac{CSI} available at the \ac{GW} systematically outdated.
 Precoding under outdated \ac{CSI} is therefore the regime adopted in this work.
 
-\subsection*{Related Work and Positioning}
-\label{subsection:related_work_and_position}
-% ------------------------------------------
+\subsection{Related Work}
+\label{subsection:related_work}
+% -----------------------------
 
 To the best of our knowledge, only two works have addressed the design of linear precoding for mobile multi-beam satellite systems with outdated \ac{CSI} under assumptions comparable to ours.
 
 The first is the work of Vázquez et al.~\cite{10_delayed_csi_precoding_for_satellites_spain}, which considers an L-band mobile interactive multi-beam system over a \ac{GEO} satellite. 
 The authors model the feedback loop as a single delay $\tau$ on the order of $700$ milliseconds and adopt a simple closed-form \ac{MMSE} precoder.
 Their key analytical observation is that, for a fixed precoder, the random phase fluctuations of the fading process affect the desired and the interfering terms symmetrically and therefore cancel in the resulting \ac{SINR}, only the amplitude fluctuations of the fading process remain visible. 
-As a consequence, the ergodic sum rate is essentially unchanged by outdated \ac{CSI}, and the dominant practical impairment becomes the mismatch between the \ac{SINR} predicted by the outdated \ac{CSI} and the \ac{SINR} effectively experienced by the \acp{UT}, which is handled by fixed back-off margins in the link-adaptation stage.
+As a consequence, the ergodic sum rate is essentially unchanged by outdated \ac{CSI}, and the dominant practical impairment becomes the mismatch between the \ac{SINR} predicted by the outdated \ac{CSI} and the \ac{SINR} effectively experienced by the \acp{UT}. This mismatch is handled by fixed back-off margins in the link-adaptation stage.
 
 The second is the work of Joroughi et al.~\cite{11_delayed_csi_precoding_for_satellite_luxembourg}, which considers a maritime multi-beam scenario at L-band. 
 The channel is decomposed into a time-invariant beam-gain matrix and a time-varying diagonal attenuation matrix, and the authors propose two \ac{CSI} feedback strategies.
