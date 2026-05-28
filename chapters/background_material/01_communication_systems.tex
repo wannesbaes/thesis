@@ -75,26 +75,26 @@ The transmitted signal can therefore be expressed as
 \label{eq:su_mimo_precoding}
     \mathbf{x} = \mathbf{F} \, \mathbf{a}.
 \end{equation}
-The data symbols are assumed to be zero-mean, mutually uncorrelated, and normalized, such that $ \mathbb{E}\!\left[\mathbf{a}\mathbf{a}^H\right] = \mathbf{I}_{N_S} $.
-Throughout this work, the power allocation is assumed to be incorporated into the precoding matrix, unless explicitly stated otherwise. Under this convention, the total transmit power is constrained by (see Appendix~\ref{calculation:transmit_power_constraint})
+The data symbols are assumed to be zero-mean, mutually uncorrelated, and normalized, such that $ \mathbb{E}\!\left[\mathbf{a}\mathbf{a}^{\mathsf{H}}\right] = \mathbf{I}_{N_S} $.
+Throughout this work, the power allocation is assumed to be incorporated into the precoding matrix, unless explicitly stated otherwise. Under this convention, the total transmit power is constrained by
 \begin{equation}
 \label{eq:su_mimo_power_constraint}
-    \mathbb{E}\!\left[\|\mathbf{x}\|^2\right] = \mathrm{tr}\!\left(\mathbf{F}^H \mathbf{F}\right) \leq P_t.
+    \mathbb{E}\!\left[\|\mathbf{x}\|^2\right] = \mathrm{tr}\!\left(\mathbf{F}^{\mathsf{H}} \, \mathbf{F}\right) \leq P_t.
 \end{equation}
 \begin{comment}
 \begin{subequations}
 \begin{align}
     P_t
     &\geq \mathbb{E}\!\left[ \left\|\mathbf{x}\right\|^2 \right] \\
-    &= \mathbb{E}\!\left[ \mathbf{x}^H \mathbf{x} \right] \\
-    &= \mathbb{E}\!\left[ \left(\mathbf{F} \mathbf{a}\right)^H \left(\mathbf{F} \mathbf{a}\right) \right] \\
-    &= \mathbb{E}\!\left[ \mathbf{a}^H \mathbf{F}^H \mathbf{F} \mathbf{a} \right] \\
-    &= \mathbb{E}\!\left[ \text{Tr}\!\left[ \mathbf{a}^H \mathbf{F}^H \mathbf{F} \mathbf{a} \right] \right] \\
-    &= \mathbb{E}\!\left[ \text{Tr}\!\left[ \mathbf{F}^H \mathbf{F} \, \mathbf{a} \mathbf{a}^H \right] \right] \\
-    &= \text{Tr}\!\left[ \mathbb{E}\!\left[ \mathbf{F}^H \mathbf{F} \, \mathbf{a} \mathbf{a}^H \right]  \right] \\
-    &= \text{Tr}\!\left[ \mathbf{F}^H \mathbf{F} \, \mathbb{E}\!\left[ \mathbf{a} \mathbf{a}^H \right]  \right] \\
-    &= \text{Tr}\!\left[ \mathbf{F}^H \mathbf{F} \, \mathbf{I}_{N_S} \right] \\
-    &= \text{Tr}\!\left[ \mathbf{F}^H \mathbf{F} \right] \\
+    &= \mathbb{E}\!\left[ \mathbf{x}^{\mathsf{H}} \mathbf{x} \right] \\
+    &= \mathbb{E}\!\left[ \left(\mathbf{F} \mathbf{a}\right)^{\mathsf{H}} \left(\mathbf{F} \mathbf{a}\right) \right] \\
+    &= \mathbb{E}\!\left[ \mathbf{a}^{\mathsf{H}} \mathbf{F}^{\mathsf{H}} \mathbf{F} \mathbf{a} \right] \\
+    &= \mathbb{E}\!\left[ \text{Tr}\!\left[ \mathbf{a}^{\mathsf{H}} \mathbf{F}^{\mathsf{H}} \mathbf{F} \mathbf{a} \right] \right] \\
+    &= \mathbb{E}\!\left[ \text{Tr}\!\left[ \mathbf{F}^{\mathsf{H}} \mathbf{F} \, \mathbf{a} \mathbf{a}^{\mathsf{H}} \right] \right] \\
+    &= \text{Tr}\!\left[ \mathbb{E}\!\left[ \mathbf{F}^{\mathsf{H}} \mathbf{F} \, \mathbf{a} \mathbf{a}^{\mathsf{H}} \right]  \right] \\
+    &= \text{Tr}\!\left[ \mathbf{F}^{\mathsf{H}} \mathbf{F} \, \mathbb{E}\!\left[ \mathbf{a} \mathbf{a}^{\mathsf{H}} \right]  \right] \\
+    &= \text{Tr}\!\left[ \mathbf{F}^{\mathsf{H}} \mathbf{F} \, \mathbf{I}_{N_S} \right] \\
+    &= \text{Tr}\!\left[ \mathbf{F}^{\mathsf{H}} \mathbf{F} \right] \\
 \label{eq:su_mimo_power_constraint_derivation}
 \end{align}
 \end{subequations}
@@ -152,26 +152,26 @@ The transmitted signal vector $\mathbf{x} \in \mathbb{C}^{N_T}$ is now a functio
 \label{eq:mu_mimo_precoding}
     \mathbf{x} = \sum_{k=1}^{K} \mathbf{F}_k \, \mathbf{a}_k.
 \end{equation}
-Since the data symbols intended for different \acp{UT} are assumed to be uncorrelated, the total transmit power constraint can now be formulated as (see Appendix~\ref{calculation:transmit_power_constraint})
+Since the data symbols intended for different \acp{UT} are assumed to be uncorrelated, the total transmit power constraint can now be formulated as
 \begin{equation}
 \label{eq:mu_mimo_power_constraint}
-    \mathbb{E}\!\left[\|\mathbf{x}\|^2\right] = \sum_{k=1}^{K} \mathrm{tr}\!\left(\mathbf{F}_k^H \mathbf{F}_k\right) \leq P_t.
+    \mathbb{E}\!\left[\|\mathbf{x}\|^2\right] = \sum_{k=1}^{K} \mathrm{tr}\!\left(\mathbf{F}_k^{\mathsf{H}} \, \mathbf{F}_k\right) \leq P_t.
 \end{equation}
 \begin{comment}
 \begin{subequations}
 \begin{align}
     P_t
     &\geq \mathbb{E}\!\left[ \left\|\mathbf{x}\right\|^2 \right] \\
-    &= \mathbb{E}\!\left[ \mathbf{x}^H \mathbf{x} \right] \\
-    &= \mathbb{E}\!\left[ \left(\sum_{k=1}^{K} \mathbf{F}_k \mathbf{a}_k\right)^H \left(\sum_{k'=1}^{K} \mathbf{F}_{k'} \mathbf{a}_{k'}\right) \right] \\
-    &= \mathbb{E}\!\left[ \sum_{k=1}^{K} \left(\mathbf{F}_k \mathbf{a}_k\right)^H \left(\sum_{k'=1}^{K} \mathbf{F}_{k'} \mathbf{a}_{k'}\right) \right] \\
-    &= \mathbb{E}\!\left[ \sum_{k=1}^{K} \sum_{k'=1}^{K} \left(\mathbf{F}_k \mathbf{a}_k \right)^H \mathbf{F}_{k'} \mathbf{a}_{k'} \right] \\
-    &= \mathbb{E}\!\left[ \sum_{k=1}^{K} \sum_{k'=1}^{K} \mathbf{a}_k^H \mathbf{F}_k^H \mathbf{F}_{k'} \mathbf{a}_{k'} \right] \\
-    &= \mathbb{E}\!\left[ \sum_{k=1}^{K} \sum_{k'=1}^{K} \text{Tr}\!\left[ \mathbf{a}_k^H \mathbf{F}_k^H \mathbf{F}_{k'} \mathbf{a}_{k'} \right] \right] \\
-    &= \mathbb{E}\!\left[ \sum_{k=1}^{K} \sum_{k'=1}^{K} \text{Tr}\!\left[ \mathbf{F}_k^H \mathbf{F}_{k'} \, \mathbf{a}_{k'} \mathbf{a}_k^H \right] \right] \\
-    &= \sum_{k=1}^{K} \sum_{k'=1}^{K} \text{Tr}\!\left[ \mathbf{F}_k^H \mathbf{F}_{k'} \, \mathbb{E}\!\left[ \mathbf{a}_{k'} \mathbf{a}_k^H \right] \right] \\
-    &= \sum_{k=1}^{K} \sum_{k'=1}^{K} \text{Tr}\!\left[ \mathbf{F}_k^H \mathbf{F}_{k'} \, \mathbf{I}_{N_S} \, \delta_{kk'} \right] \\
-    &= \sum_{k=1}^{K} \text{Tr}\!\left[ \mathbf{F}_k^H \mathbf{F}_{k} \right] \\
+    &= \mathbb{E}\!\left[ \mathbf{x}^{\mathsf{H}} \mathbf{x} \right] \\
+    &= \mathbb{E}\!\left[ \left(\sum_{k=1}^{K} \mathbf{F}_k \mathbf{a}_k\right)^{\mathsf{H}} \left(\sum_{k'=1}^{K} \mathbf{F}_{k'} \mathbf{a}_{k'}\right) \right] \\
+    &= \mathbb{E}\!\left[ \sum_{k=1}^{K} \left(\mathbf{F}_k \mathbf{a}_k\right)^{\mathsf{H}} \left(\sum_{k'=1}^{K} \mathbf{F}_{k'} \mathbf{a}_{k'}\right) \right] \\
+    &= \mathbb{E}\!\left[ \sum_{k=1}^{K} \sum_{k'=1}^{K} \left(\mathbf{F}_k \mathbf{a}_k \right)^{\mathsf{H}} \mathbf{F}_{k'} \mathbf{a}_{k'} \right] \\
+    &= \mathbb{E}\!\left[ \sum_{k=1}^{K} \sum_{k'=1}^{K} \mathbf{a}_k^{\mathsf{H}} \mathbf{F}_k^{\mathsf{H}} \mathbf{F}_{k'} \mathbf{a}_{k'} \right] \\
+    &= \mathbb{E}\!\left[ \sum_{k=1}^{K} \sum_{k'=1}^{K} \text{Tr}\!\left[ \mathbf{a}_k^{\mathsf{H}} \mathbf{F}_k^{\mathsf{H}} \mathbf{F}_{k'} \mathbf{a}_{k'} \right] \right] \\
+    &= \mathbb{E}\!\left[ \sum_{k=1}^{K} \sum_{k'=1}^{K} \text{Tr}\!\left[ \mathbf{F}_k^{\mathsf{H}} \mathbf{F}_{k'} \, \mathbf{a}_{k'} \mathbf{a}_k^{\mathsf{H}} \right] \right] \\
+    &= \sum_{k=1}^{K} \sum_{k'=1}^{K} \text{Tr}\!\left[ \mathbf{F}_k^{\mathsf{H}} \mathbf{F}_{k'} \, \mathbb{E}\!\left[ \mathbf{a}_{k'} \mathbf{a}_k^{\mathsf{H}} \right] \right] \\
+    &= \sum_{k=1}^{K} \sum_{k'=1}^{K} \text{Tr}\!\left[ \mathbf{F}_k^{\mathsf{H}} \mathbf{F}_{k'} \, \mathbf{I}_{N_S} \, \delta_{kk'} \right] \\
+    &= \sum_{k=1}^{K} \text{Tr}\!\left[ \mathbf{F}_k^{\mathsf{H}} \mathbf{F}_{k} \right] \\
 \end{align}
 \end{subequations}
 \end{comment}
@@ -243,13 +243,13 @@ In~\cite{telatar_1999}, the capacity for a \ac{SU}-\ac{MIMO} Gaussian communicat
 \begin{equation}
 \label{eq:mi_su_mimo_gaussian_channel}
     I(\mathbf{x};\mathbf{y})
-    = \log_2\left(\det\left(\mathbf{I}_{N_R} +  \mathbf{C}_{\mathrm{n}}^{-1} \; \mathbf{H}\,\mathbf{C}_{\mathrm{x}}\,\mathbf{H}^\mathrm{H} \right)\right).
+    = \log_2\left(\det\left(\mathbf{I}_{N_R} +  \mathbf{C}_{\mathrm{n}}^{-1} \; \mathbf{H}\,\mathbf{C}_{\mathrm{x}}\,\mathbf{H}^\mathsf{H} \right)\right).
 \end{equation}
 The capacity then results from maximizing \eqref{eq:mi_su_mimo_gaussian_channel} over all positive semidefinite covariance matrices $\mathbf{C}_{\mathrm{x}}$ that satisfy the transmit power constraint:
 \begin{equation}
 \label{eq:capacity_su_mimo_gaussian_channel_optimization_problem}
 \begin{aligned}
-    & C = \max_{\mathbf{C}_{\mathrm{x}}} \; \log_2\left(\det\left(\mathbf{I}_{N_R} + \mathbf{C}_{\mathrm{n}}^{-1} \; \mathbf{H}\,\mathbf{C}_{\mathrm{x}}\,\mathbf{H}^\mathrm{H} \right)\right) \\
+    & C = \max_{\mathbf{C}_{\mathrm{x}}} \; \log_2\left(\det\left(\mathbf{I}_{N_R} + \mathbf{C}_{\mathrm{n}}^{-1} \; \mathbf{H}\,\mathbf{C}_{\mathrm{x}}\,\mathbf{H}^\mathsf{H} \right)\right) \\
     & \text{s.t.} \quad \mathbf{C}_{\mathrm{x}} \succeq 0, \quad \mathrm{tr}\!\left(\mathbf{C}_{\mathrm{x}}\right) \leq P_t.
 \end{aligned}
 \end{equation}
@@ -305,13 +305,13 @@ It is further obtained as
 \begin{equation}
 \label{eq:mi_mu_mimo_uplink_gaussian_channel}
     I(\mathbf{x}_1^{\text{up}}, \dots, \mathbf{x}_K^{\text{up}}; \mathbf{y})
-    = \log_2\!\left(\det\!\left(\mathbf{I}_{N_T} + \mathbf{C}_{\mathrm{n}}^{-1} \sum_{k=1}^{K} \mathbf{H}_k\,\mathbf{C}_{\mathrm{x},\, k}^{\text{up}}\,\mathbf{H}_k^\mathrm{H} \right)\right).
+    = \log_2\!\left(\det\!\left(\mathbf{I}_{N_T} + \mathbf{C}_{\mathrm{n}}^{-1} \sum_{k=1}^{K} \mathbf{H}_k\,\mathbf{C}_{\mathrm{x},\, k}^{\text{up}}\,\mathbf{H}_k^\mathsf{H} \right)\right).
 \end{equation}
 The uplink \ac{SR} is achievable if and only if the sum of the \ac{IBR}s of all \acp{UT} is strictly smaller than the \ac{MI} as given in~\eqref{eq:mi_mu_mimo_uplink_gaussian_channel}. Therefore, the sum capacity of the downlink channel is obtained by maximizing \eqref{eq:mi_mu_mimo_uplink_gaussian_channel} over all positive semidefinite covariance matrices satisfying the total transmit power constraint and applying the duality result:
 \begin{equation}
 \label{eq:sum_capacity_mu_mimo_gaussian_channel}
 \begin{aligned}
-    & C_{\text{sum}} = \max_{\mathbf{C}_{\mathrm{x},\,1}^{\text{up}}, \dots, \mathbf{C}_{\mathrm{x},\,K}^{\text{up}}} \; \log_2\!\left(\det\!\left(\mathbf{I}_{N_T} + \mathbf{C}_{\mathrm{n}}^{-1} \sum_{k=1}^{K} \mathbf{H}_k\,\mathbf{C}_{\mathrm{x},\, k}^{\text{up}}\,\mathbf{H}_k^\mathrm{H} \right)\right) \\
+    & C_{\text{sum}} = \max_{\mathbf{C}_{\mathrm{x},\,1}^{\text{up}}, \dots, \mathbf{C}_{\mathrm{x},\,K}^{\text{up}}} \; \log_2\!\left(\det\!\left(\mathbf{I}_{N_T} + \mathbf{C}_{\mathrm{n}}^{-1} \sum_{k=1}^{K} \mathbf{H}_k\,\mathbf{C}_{\mathrm{x},\, k}^{\text{up}}\,\mathbf{H}_k^\mathsf{H} \right)\right) \\
     &\text{s.t.} \quad \sum_{k=1}^{K} \mathrm{tr}\!\left(\mathbf{C}_{\mathrm{x},\, k}^{\text{up}}\right) \leq P_t \quad \text{and} \quad \mathbf{C}_{\mathrm{x},\, k}^{\text{up}} \succeq 0 \quad \forall k = 1, \dots, K.
 \end{aligned}
 \end{equation}
