@@ -1,9 +1,10 @@
 \chapter{Precoding for SU-MIMO systems}
 \label{chapter:su_mimo_precoding}
 
-This chapter develops linear precoding strategies for \ac{SU}-\ac{MIMO} systems under a total transmit--power constraint.
+This chapter develops linear precoding strategies for \ac{SU}-\ac{MIMO} systems under a total transmit-power constraint.
 First, we analyze the capacity in greater detail. Next, a generalized \acs{WMMSE} design framework for the joint optimization of the precoder and combiner is derived.
 Finally, the performance is evaluated through Monte Carlo simulations for different system configurations.
+
 
 \section{Capacity Achieving Precoding}
 \label{section:capacity_achieving_precoding}
@@ -29,7 +30,7 @@ The \ac{SVD}~\cite{svd_lecture_notes} of the channel matrix yields
 where $\mathbf{U} \in \mathbb{C}^{N_R \times N_R}$ and $\mathbf{V} \in \mathbb{C}^{N_T \times N_T}$ are unitary matrices, and $\mathbf{\Sigma} \in \mathbb{R}^{N_R \times N_T}$ is a rectangular diagonal matrix which contains the singular values of $\mathbf{H}$ on its main diagonal in decreasing order.
 The columns of $\mathbf{U}$ and $\mathbf{V}$ contain the left and right singular vectors of $\mathbf{H}$, respectively.
 
-Now define the transformed variables $\tilde{\mathbf{y}} = \mathbf{U}^{\mathsf{H}} \mathbf{y}$, $\tilde{\mathbf{x}} = \mathbf{V}^{\mathsf{H}} \mathbf{x}$, and $\tilde{\mathbf{n}} = \mathbf{U}^{\mathsf{H}} \mathbf{n}$.
+Now define the transformed variables $\tilde{\mathbf{y}} = \mathbf{U}^{\mathsf{H}} \mathbf{y}$, $\tilde{\mathbf{x}} = \mathbf{V} \mathbf{x}$, and $\tilde{\mathbf{n}} = \mathbf{U}^{\mathsf{H}} \mathbf{n}$.
 Since multiplication by a unitary matrix preserves the distribution of \ac{CS} complex Gaussian noise, $\tilde{\mathbf{n}}$ has the same distribution as $\mathbf{n}$. 
 Moreover, because $\mathbf{U}$ and $\mathbf{V}$ are unitary, the transformations between $(\mathbf{x},\mathbf{y})$ and $(\tilde{\mathbf{x}},\tilde{\mathbf{y}})$ are bijective. 
 The original channel from~\eqref{eq:su_mimo_io} can therefore be represented equivalently as
@@ -59,7 +60,7 @@ Written component-wise, the equivalent channel becomes
     \tilde{y}_i = \sigma_i \, \tilde{x}_i + \tilde{n}_i \qquad \text{for} \quad i = 1, \dots, R_H,
 \end{equation}
 with $\tilde{y}_i = \tilde{n}_i$ for $R_H < i \leq N_R$. 
-The equivalent channel decomposes into $R_H$ independent parallel scalar Gaussian subchannels, each with its own channel gain $\sigma_i$. These subchannels and their gains are referred to as eigen subchannels and eigenmodes, respectively.
+The equivalent channel decomposes into $R_H$ independent parallel scalar Gaussian subchannels, each with their own channel gain $\sigma_i$. These subchannels and their gains are referred to as eigen subchannels and eigenmodes, respectively.
 Since the components $\tilde{x}_i$ for $R_H < i \leq N_T$ have no effect on the output, they carry no information and can be set to zero.
 
 For each eigen subchannel, the \acf{MI} is maximized by a zero-mean, \ac{CS} complex Gaussian input~\cite{telatar_1999}. Under this choice, the optimization problem~\eqref{eq:capacity_su_mimo_gaussian_channel_optimization_problem} simplifies to
@@ -67,7 +68,7 @@ For each eigen subchannel, the \acf{MI} is maximized by a zero-mean, \ac{CS} com
 \label{eq:capacity_su_mimo_gaussian_channel_optimization_problem_simplified}
 \begin{aligned}
     & C = \max_{\{\mathbb{E}\left[|\tilde{x}_i|^2\right] \, \}} \; \sum_{i=1}^{R_H} \log_2\!\left(1 + \mathbb{E}\left[|\tilde{x}_i|^2\right] \, \frac{\sigma^2_i}{N_0} \right) \\
-    & \text{s.t.} \quad \sum_{i=1}^{R_H} \mathbb{E}\left[|\tilde{x}_i|^2\right] \leq P_t.
+    & \text{s.t.} \quad \sum_{i=1}^{R_H} \mathbb{E}\left[|\tilde{x}_i|^2\right] \leq P_T.
 \end{aligned}
 \end{equation}
 
@@ -99,12 +100,12 @@ For an arbitrary precoding matrix $\mathbf{F}$ and combining matrix $\mathbf{G}$
 \label{eq:mi_az}
 \begin{align}
     I(\mathbf{a}; \mathbf{z}) 
-    &= \log_2\!\left(\det\!\left(\mathbf{I}_{N_s} + (\mathbf{G} \, \mathbf{C}_{\mathrm{n}} \, \mathbf{G}^{\mathsf{H}})^{-1} \, (\mathbf{G} \mathbf{H} \mathbf{F}) \, \mathbf{C}_{\mathrm{a}} \, (\mathbf{G} \mathbf{H} \mathbf{F})^{\mathsf{H}}\right)\right) \label{eq:mi_az_a} \\
-    &= \log_2\!\left(\det\!\left(\mathbf{I}_{N_s} + \tfrac{1}{N_0}(\mathbf{G} \mathbf{G}^{\mathsf{H}})^{-1} \, (\mathbf{G} \mathbf{H} \mathbf{F}) \, (\mathbf{G} \mathbf{H} \mathbf{F})^{\mathsf{H}}\right)\right) \label{eq:mi_az_b}.
+    &= \log_2\!\left(\det\!\left(\mathbf{I}_{N_S} + (\mathbf{G} \, \mathbf{C}_{\mathrm{n}} \, \mathbf{G}^{\mathsf{H}})^{-1} \, (\mathbf{G} \mathbf{H} \mathbf{F}) \, \mathbf{C}_{\mathrm{a}} \, (\mathbf{G} \mathbf{H} \mathbf{F})^{\mathsf{H}}\right)\right) \label{eq:mi_az_a} \\
+    &= \log_2\!\left(\det\!\left(\mathbf{I}_{N_S} + \tfrac{1}{N_0}(\mathbf{G} \mathbf{G}^{\mathsf{H}})^{-1} \, (\mathbf{G} \mathbf{H} \mathbf{F}) \, (\mathbf{G} \mathbf{H} \mathbf{F})^{\mathsf{H}}\right)\right) \label{eq:mi_az_b}.
 \end{align}
 \end{subequations}
 Expression~\eqref{eq:mi_az_a} follows directly from~\eqref{eq:mi_su_mimo_gaussian_channel} and the structural similarity between~\eqref{eq:su_mimo_io} and~\eqref{eq:su_mimo_precoding_combining_io}.
-Expression~\eqref{eq:mi_az_b} then follows from~\eqref{eq:mi_az_a} upon substituting $\mathbf{C}_{\mathrm{a}} = \mathbf{I}_{N_s}$ and $\mathbf{C}_{\mathrm{n}} = N_0 \mathbf{I}_{N_R}$.
+Expression~\eqref{eq:mi_az_b} then follows from~\eqref{eq:mi_az_a} upon substituting $\mathbf{C}_{\mathrm{a}} = \mathbf{I}_{N_S}$ and $\mathbf{C}_{\mathrm{n}} = N_0 \mathbf{I}_{N_R}$.
 
 Motivated by the capacity derivation in the previous subsection, we choose the columns of $\mathbf{F}$ and the rows of $\mathbf{G}$ as the $R_H$ most dominant right and left singular vectors of $\mathbf{H}$, respectively.
 These are precisely the singular vectors associated with the non-zero singular values of $\mathbf{H}$. The number of data streams is therefore chosen equal to the rank of the channel matrix.
@@ -112,7 +113,7 @@ In addition, the precoder incorporates the power allocation through a diagonal m
 More specifically, we set
 \begin{equation}
 \label{eq:su_mimo_optimal_precoder_and_combiner}
-    \mathbf{F} = \mathbf{V}_{N_s} \, \sqrt{\mathbf{P}} \qquad \text{and} \qquad \mathbf{G} = \mathbf{U}_{N_s}^{\mathsf{H}}.
+    \mathbf{F} = \mathbf{V}_{N_S} \, \sqrt{\mathbf{P}} \qquad \text{and} \qquad \mathbf{G} = \mathbf{U}_{N_S}^{\mathsf{H}}.
 \end{equation}
 
 It follows from~\eqref{eq:su_mimo_optimal_precoder_and_combiner} that $I(\mathbf{a}; \mathbf{z}) = I(\mathbf{x}; \mathbf{y})$ for an appropriate choice of the power allocation matrix~$\mathbf{P}$.
@@ -121,13 +122,13 @@ This result can be verified in a brute-force way by substituting the particular 
 \begin{subequations}
 \begin{align}
     I(\mathbf{a}; \mathbf{z}) 
-    &= \log_2\!\left(\det\!\left(\mathbf{I}_{N_s} + \tfrac{1}{N_0} (\mathbf{U}_{N_s}^{\mathsf{H}} \mathbf{U}_{N_s})^{-1} \, (\mathbf{U}_{N_s}^{\mathsf{H}} (\mathbf{U} \mathbf{\Sigma} \mathbf{V}^{\mathsf{H}}) \mathbf{V}_{N_s} \sqrt{\mathbf{P}}) \, (\mathbf{U}_{N_s}^{\mathsf{H}} (\mathbf{U} \mathbf{\Sigma} \mathbf{V}^{\mathsf{H}}) \mathbf{V}_{N_s} \sqrt{\mathbf{P}})^{\mathsf{H}}\right)\right) \\
-    &= \log_2\!\left(\det\!\left(\mathbf{I}_{N_s} + \tfrac{1}{N_0} \mathbf{I}_{N_s} \, (\mathbf{U}_{N_s}^{\mathsf{H}} \mathbf{U} \mathbf{\Sigma} \mathbf{V}^{\mathsf{H}} \mathbf{V}_{N_s} \sqrt{\mathbf{P}}) \, (\mathbf{U}_{N_s}^{\mathsf{H}} \mathbf{U} \mathbf{\Sigma} \mathbf{V}^{\mathsf{H}} \mathbf{V}_{N_s} \sqrt{\mathbf{P}})^{\mathsf{H}}\right)\right) \\
-    &= \log_2\!\left(\det\!\left(\mathbf{I}_{N_s} + \tfrac{1}{N_0} \, \left(\begin{bmatrix} \mathbf{I}_{N_s} & \mathbf{0} \end{bmatrix} \, \begin{bmatrix} \mathbf{\Sigma}_{R_H} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} \end{bmatrix} \, \begin{bmatrix} \mathbf{I}_{N_s} \\ \mathbf{0} \end{bmatrix} \sqrt{\mathbf{P}}\right) \, \left(\begin{bmatrix} \mathbf{I}_{N_s} & \mathbf{0} \end{bmatrix} \, \begin{bmatrix} \mathbf{\Sigma}_{R_H} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} \end{bmatrix} \, \begin{bmatrix} \mathbf{I}_{N_s} \\ \mathbf{0} \end{bmatrix} \sqrt{\mathbf{P}}\right)^{\mathsf{H}}\right)\right)  \\
-    &= \log_2\!\left(\det\!\left(\mathbf{I}_{N_s} + \tfrac{1}{N_0} \, (\mathbf{\Sigma}_{N_s} \sqrt{\mathbf{P}}) \, (\mathbf{\Sigma}_{N_s} \sqrt{\mathbf{P}})^{\mathsf{H}}\right)\right) \\
-    &= \log_2\!\left(\det\!\left(\mathbf{I}_{N_s} + \tfrac{1}{N_0} \, \mathbf{\Sigma}_{N_s}^2 \, \mathbf{P}\right)\right) \\
-    &= \log_2\!\left( \prod_{i=1}^{N_s} \left(1 + \frac{\sigma^2_i}{N_0}\, p_i \right) \right)  \\
-    &= \sum_{i=1}^{N_s} \log_2\!\left(1 + \frac{\sigma^2_i}{N_0}\, p_i \right)
+    &= \log_2\!\left(\det\!\left(\mathbf{I}_{N_S} + \tfrac{1}{N_0} (\mathbf{U}_{N_S}^{\mathsf{H}} \mathbf{U}_{N_S})^{-1} \, (\mathbf{U}_{N_S}^{\mathsf{H}} (\mathbf{U} \mathbf{\Sigma} \mathbf{V}^{\mathsf{H}}) \mathbf{V}_{N_S} \sqrt{\mathbf{P}}) \, (\mathbf{U}_{N_S}^{\mathsf{H}} (\mathbf{U} \mathbf{\Sigma} \mathbf{V}^{\mathsf{H}}) \mathbf{V}_{N_S} \sqrt{\mathbf{P}})^{\mathsf{H}}\right)\right) \\
+    &= \log_2\!\left(\det\!\left(\mathbf{I}_{N_S} + \tfrac{1}{N_0} \mathbf{I}_{N_S} \, (\mathbf{U}_{N_S}^{\mathsf{H}} \mathbf{U} \mathbf{\Sigma} \mathbf{V}^{\mathsf{H}} \mathbf{V}_{N_S} \sqrt{\mathbf{P}}) \, (\mathbf{U}_{N_S}^{\mathsf{H}} \mathbf{U} \mathbf{\Sigma} \mathbf{V}^{\mathsf{H}} \mathbf{V}_{N_S} \sqrt{\mathbf{P}})^{\mathsf{H}}\right)\right) \\
+    &= \log_2\!\left(\det\!\left(\mathbf{I}_{N_S} + \tfrac{1}{N_0} \, \left(\begin{bmatrix} \mathbf{I}_{N_S} & \mathbf{0} \end{bmatrix} \, \begin{bmatrix} \mathbf{\Sigma}_{R_H} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} \end{bmatrix} \, \begin{bmatrix} \mathbf{I}_{N_S} \\ \mathbf{0} \end{bmatrix} \sqrt{\mathbf{P}}\right) \, \left(\begin{bmatrix} \mathbf{I}_{N_S} & \mathbf{0} \end{bmatrix} \, \begin{bmatrix} \mathbf{\Sigma}_{R_H} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} \end{bmatrix} \, \begin{bmatrix} \mathbf{I}_{N_S} \\ \mathbf{0} \end{bmatrix} \sqrt{\mathbf{P}}\right)^{\mathsf{H}}\right)\right)  \\
+    &= \log_2\!\left(\det\!\left(\mathbf{I}_{N_S} + \tfrac{1}{N_0} \, (\mathbf{\Sigma}_{N_S} \sqrt{\mathbf{P}}) \, (\mathbf{\Sigma}_{N_S} \sqrt{\mathbf{P}})^{\mathsf{H}}\right)\right) \\
+    &= \log_2\!\left(\det\!\left(\mathbf{I}_{N_S} + \tfrac{1}{N_0} \, \mathbf{\Sigma}_{N_S}^2 \, \mathbf{P}\right)\right) \\
+    &= \log_2\!\left( \prod_{i=1}^{N_S} \left(1 + \frac{\sigma^2_i}{N_0}\, p_i \right) \right)  \\
+    &= \sum_{i=1}^{N_S} \log_2\!\left(1 + \frac{\sigma^2_i}{N_0}\, p_i \right)
 \end{align}
 \label{eq:mi_az_equals_mi_xy}
 \end{subequations}
@@ -138,25 +139,25 @@ This yields
 \begin{subequations}
 \label{eq:su_mimo_optimal_precoding_combining_io}
 \begin{align}
-    \mathbf{z} &= \mathbf{U}_{N_s}^{\mathsf{H}} \, \mathbf{U} \mathbf{\Sigma} \mathbf{V}^{\mathsf{H}} \, \mathbf{V}_{N_s} \sqrt{\mathbf{P}} \, \mathbf{a} + \mathbf{U}_{N_s}^{\mathsf{H}} \mathbf{n} \\
-    %&= \begin{bmatrix} \mathbf{I}_{N_s} & \mathbf{0} \end{bmatrix} \; \begin{bmatrix} \mathbf{\Sigma}_{R_H} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} \end{bmatrix} \; \begin{bmatrix} \mathbf{I}_{N_s} \\ \mathbf{0} \end{bmatrix} \; \sqrt{\mathbf{P}} \, \mathbf{a} + \tilde{\mathbf{n}} \\
-    &= \mathbf{\Sigma}_{N_s} \, \sqrt{\mathbf{P}} \, \mathbf{a} + \tilde{\mathbf{n}},
+    \mathbf{z} &= \mathbf{U}_{N_S}^{\mathsf{H}} \, \mathbf{U} \mathbf{\Sigma} \mathbf{V}^{\mathsf{H}} \, \mathbf{V}_{N_S} \sqrt{\mathbf{P}} \, \mathbf{a} + \mathbf{U}_{N_S}^{\mathsf{H}} \mathbf{n} \\
+    %&= \begin{bmatrix} \mathbf{I}_{N_S} & \mathbf{0} \end{bmatrix} \; \begin{bmatrix} \mathbf{\Sigma}_{R_H} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} \end{bmatrix} \; \begin{bmatrix} \mathbf{I}_{N_S} \\ \mathbf{0} \end{bmatrix} \; \sqrt{\mathbf{P}} \, \mathbf{a} + \tilde{\mathbf{n}} \\
+    &= \mathbf{\Sigma}_{N_S} \, \sqrt{\mathbf{P}} \, \mathbf{a} + \tilde{\mathbf{n}},
 \end{align}
 \end{subequations}
-where $\mathbf{\Sigma}_{N_s} \in \mathbb{R}^{N_s \times N_s}$ contains the $R_H$ non-zero singular values of $\mathbf{H}$ on its diagonal.
+where $\mathbf{\Sigma}_{N_S} \in \mathbb{R}^{N_S \times N_S}$ contains the $N_S = R_H$ non-zero singular values of $\mathbf{H}$ on its diagonal.
 Comparing~\eqref{eq:su_mimo_optimal_precoding_combining_io} with~\eqref{eq:su_mimo_equivalent_io}, one can readily verify that $I(\mathbf{a}; \mathbf{z}) = I(\mathbf{x}; \mathbf{y})$, provided that the power allocated to each stream is set according to the waterfilling solution.
 Hence, transmission with the precoder and combiner from~\eqref{eq:su_mimo_optimal_precoder_and_combiner} achieves the capacity of the \ac{SU}-\ac{MIMO} channel.
 \bigskip
 
 % interpretation optimal precoding scheme: decomposition
-Denoting the $s$th element of the decision variable vector $\mathbf{z}$ by $z_s$, one can write~\eqref{eq:su_mimo_optimal_precoding_combining_io} component-wise as
+Denoting the $i$th element of the decision variable vector $\mathbf{z}$ by $z_i$, one can write~\eqref{eq:su_mimo_optimal_precoding_combining_io} component-wise as
 \begin{equation}
 \label{eq:su_mimo_optimal_precoding_combining_io_component_wise}
-    z_s = \sigma_s \, \sqrt{p_s} \, a_s + \tilde{n}_s \qquad \text{for} \quad s = 1, \dots, N_s.
+    z_i = \sigma_i \, \sqrt{p_i} \, a_i + \tilde{n}_i \qquad \text{for} \quad i = 1, \dots, N_S.
 \end{equation}
 
 This expression shows that the precoder and combiner in~\eqref{eq:su_mimo_optimal_precoder_and_combiner} diagonalize the \ac{SU}-\ac{MIMO} transfer matrix from~\eqref{eq:su_mimo_precoding_combining_io}.
-The original \ac{SU}-\ac{MIMO} channel is decoupled into $N_s = R_H$ independent parallel scalar \ac{SISO} Gaussian subchannels with gains $\sigma_s$, which coincides exactly with the decomposition of the equivalent channel in~\eqref{eq:su_mimo_equivalent_io_component_wise}.
+The original \ac{SU}-\ac{MIMO} channel is decoupled into $N_S$ independent parallel scalar \ac{SISO} Gaussian subchannels with gains $\sigma_i \neq 0$, which coincides exactly with the decomposition of the equivalent channel in~\eqref{eq:su_mimo_equivalent_io_component_wise}.
 A visualization of this decomposition is shown in Fig.~\ref{fig:su_mimo_channel_decomposition}.
 
 As a result, the individual data streams become statistically independent. 
@@ -185,19 +186,20 @@ This leads to a significant reduction in receiver complexity, especially for sys
 \bigskip
 
 % power allocation interpretation.
-No general closed-form expression exists for the optimal water level $\mu_{\mathrm{w}}$, and hence for the resulting power allocation. Nevertheless, the optimal power allocation is fully characterized by
+No general closed-form expression exists for the optimal water level $\mu_{\mathrm{w}}$, and hence for the resulting power allocation.
+Nevertheless, the optimal power allocation is fully characterized by
 \begin{equation}
 \label{eq:su_mimo_optimal_power_allocation}
-    \sum_{i=1}^{N_s} p_i = P_t
+    p_i = \left(\mu_{\mathrm{w}} - \frac{N_0}{\sigma^2_i}\right)_{+}
     \qquad \text{and} \qquad
-    p_i = \left(\mu_{\mathrm{w}} - \frac{N_0}{\sigma^2_i}\right)_{+}.
+    \sum_{i=1}^{N_S} p_i = P_T.
 \end{equation}
 
 \begin{figure}[!bt]
     \centering
     \includegraphics[width=0.6\linewidth]{figures/background_material/03_su_mimo_precoding/waterfilling/4x4__SNR_5dB.png}
     \caption[Waterfilling power allocation]
-    {Optimal power allocation for a \ac{SU}-\ac{MIMO} system with 4 transmit and 4 receive antennas and a total transmit power $P_t$ of $\SI{1}{\watt}$ per channel use. The system operates at an \ac{SNR} of $5$ dB.}
+    {Optimal power allocation for a \ac{SU}-\ac{MIMO} system with 4 transmit and 4 receive antennas and a total transmit power $P_T$ of $\SI{1}{\watt}$ per channel use. The system operates at an \ac{SNR} of $5$ dB.}
     \label{fig:waterfilling_power_allocation}
 \end{figure}
 
@@ -230,7 +232,7 @@ It is worth noting that uniform power allocation does not require knowledge of t
         \label{subfig:waterfilling_power_allocation_high_SNR}
     \end{subfigure}
     \caption[Waterfilling power allocation at SNR extremes]
-    {Waterfilling power allocation for a \ac{SU}-\ac{MIMO} system with 4 transmit and 4 receive antennas at different \ac{SNR} extremes. The maximum transmit power $P_t$ is $\SI{1}{\watt}$ per channel use.}
+    {Waterfilling power allocation for a \ac{SU}-\ac{MIMO} system with 4 transmit and 4 receive antennas at different \ac{SNR} extremes. The maximum transmit power $P_T$ is $\SI{1}{\watt}$ per channel use.}
 
     \label{fig:waterfilling_power_allocation_SNR_extremes}
 \end{figure}
@@ -243,7 +245,7 @@ It is worth noting that uniform power allocation does not require knowledge of t
 % ==========================================================
 
 In the previous section, a linear precoder and combiner that jointly decompose the \ac{SU}-\ac{MIMO} channel into independent parallel eigen subchannels were shown to achieve the channel capacity.
-In this section, we generalize this result by adopting the minimization of a weighted sum of mean--square estimation errors as the design criterion.
+In this section, we generalize this result by adopting the minimization of a weighted sum of mean-square estimation errors as the design criterion.
 It will be shown that the optimum precoder and combiner under this criterion likewise decouple the channel into parallel eigen subchannels, regardless of the specific choice of error weights.
 By an appropriate selection of these weights, the framework specializes to the maximum information rate design, the \ac{QoS} design, and the unweighted \ac{MMSE} design.
 
@@ -253,8 +255,8 @@ By an appropriate selection of these weights, the framework specializes to the m
 %  Generalized WMMSE Design
 % ==========================
 
-The objective is to jointly design the precoder $\mathbf{F}$ and the combiner $\mathbf{G}$ so as to minimize a weighted combination of mean--square estimation errors.
-To this end, the estimation error vector $\mathbf{e} \in \mathbb{C}^{N_s}$ is defined as the difference between the transmitted data symbol vector $\mathbf{a}$ and the decision variable vector $\mathbf{z}$:
+The objective is to jointly design the precoder $\mathbf{F}$ and the combiner $\mathbf{G}$ so as to minimize a weighted combination of mean-square estimation errors.
+To this end, the estimation error vector $\mathbf{e} \in \mathbb{C}^{N_S}$ is defined as the difference between the transmitted data symbol vector $\mathbf{a}$ and the decision variable vector $\mathbf{z}$:
 \begin{equation}
 \label{eq:error_vector}
     \mathbf{e} 
@@ -267,7 +269,7 @@ The \ac{MSE} matrix, also referred to as the error covariance matrix, is defined
 \label{eq:mse_matrix}
     \text{MSE} 
     = \mathbb{E}\!\left[\mathbf{e}\, \mathbf{e}^{\mathsf{H}}\right]
-    = (\mathbf{G}\mathbf{H}\mathbf{F} - \mathbf{I}_{N_s})(\mathbf{G}\mathbf{H}\mathbf{F} - \mathbf{I}_{N_s})^{\mathsf{H}} + \mathbf{G} \mathbf{C}_{\mathrm{n}} \mathbf{G}^{\mathsf{H}}
+    = (\mathbf{G}\mathbf{H}\mathbf{F} - \mathbf{I}_{N_S})(\mathbf{G}\mathbf{H}\mathbf{F} - \mathbf{I}_{N_S})^{\mathsf{H}} + \mathbf{G} \mathbf{C}_{\mathrm{n}} \mathbf{G}^{\mathsf{H}}
 \end{equation}
 \begin{comment}
 \begin{subequations}
@@ -277,13 +279,13 @@ The \ac{MSE} matrix, also referred to as the error covariance matrix, is defined
     &= \mathbb{E}\!\left[\mathbf{e}\, \mathbf{e}^{\mathsf{H}}\right] \\
     &= \mathbb{E}\!\left[(\mathbf{a} - \mathbf{G}\mathbf{H}\mathbf{F}\,\mathbf{a} - \mathbf{G}\mathbf{n}) (\mathbf{a} - \mathbf{G}\mathbf{H}\mathbf{F}\,\mathbf{a} - \mathbf{G}\mathbf{n})^{\mathsf{H}}\right] \\
     &= \mathbb{E}\!\left[(\mathbf{a} - \mathbf{G}\mathbf{H}\mathbf{F}\,\mathbf{a} - \mathbf{G}\mathbf{n}) (\mathbf{a}^{\mathsf{H}} - \mathbf{a}^{\mathsf{H}}(\mathbf{G}\mathbf{H}\mathbf{F})^{\mathsf{H}} - \mathbf{n}^{\mathsf{H}}\mathbf{G}^{\mathsf{H}})\right] \\
-    &= \mathbb{E}\!\left[((\mathbf{I}_{N_s} - \mathbf{G}\mathbf{H}\mathbf{F})\,\mathbf{a} - \mathbf{G}\mathbf{n}) (\mathbf{a}^{\mathsf{H}}\,(\mathbf{I}_{N_s} - (\mathbf{G}\mathbf{H}\mathbf{F})^{\mathsf{H}}) - \mathbf{n}^{\mathsf{H}}\mathbf{G}^{\mathsf{H}})\right] \\
-    &= \mathbb{E}\!\left[(\mathbf{I}_{N_s} - \mathbf{G}\mathbf{H}\mathbf{F}) \, \mathbf{a} \, \mathbf{a}^{\mathsf{H}} \, (\mathbf{I}_{N_s} - \mathbf{G}\mathbf{H}\mathbf{F})^{\mathsf{H}}\right] - \mathbb{E}\!\left[(\mathbf{I}_{N_s} - \mathbf{G}\mathbf{H}\mathbf{F}) \, \mathbf{a} \, \mathbf{n}^{\mathsf{H}}\mathbf{G}^{\mathsf{H}}\right] \notag \\
-    & \quad \quad - \mathbb{E}\!\left[\mathbf{G}\mathbf{n} \, \mathbf{a}^{\mathsf{H}}\,(\mathbf{I}_{N_s} - (\mathbf{G}\mathbf{H}\mathbf{F})^{\mathsf{H}})\right] + \mathbb{E}\!\left[\mathbf{G}\mathbf{n} \, \mathbf{n}^{\mathsf{H}}\mathbf{G}^{\mathsf{H}}\right] \\
-    &= (\mathbf{I}_{N_s} - \mathbf{G}\mathbf{H}\mathbf{F}) \, \mathbb{E}\!\left[\mathbf{a} \, \mathbf{a}^{\mathsf{H}}\right] \, (\mathbf{I}_{N_s} - \mathbf{G}\mathbf{H}\mathbf{F})^{\mathsf{H}} - (\mathbf{I}_{N_s} - \mathbf{G}\mathbf{H}\mathbf{F}) \, \mathbb{E}\!\left[\mathbf{a} \, \mathbf{n}^{\mathsf{H}}\right] \, \mathbf{G}^{\mathsf{H}} \notag \\
-    & \quad \quad - \mathbf{G} \, \mathbb{E}\!\left[\mathbf{n} \, \mathbf{a}^{\mathsf{H}}\right] \, (\mathbf{I}_{N_s} - (\mathbf{G}\mathbf{H}\mathbf{F})^{\mathsf{H}}) + \mathbf{G} \, \mathbb{E}\!\left[\mathbf{n} \, \mathbf{n}^{\mathsf{H}}\right] \, \mathbf{G}^{\mathsf{H}}\\
-    &= (\mathbf{I}_{N_s} - \mathbf{G}\mathbf{H}\mathbf{F}) \, \mathbf{I}_{N_s} \, (\mathbf{I}_{N_s} - \mathbf{G}\mathbf{H}\mathbf{F})^{\mathsf{H}} + \mathbf{G} \, \mathbf{C}_{\mathrm{n}} \, \mathbf{G}^{\mathsf{H}} \\
-    &= (\mathbf{G}\mathbf{H}\mathbf{F} - \mathbf{I}_{N_s})(\mathbf{G}\mathbf{H}\mathbf{F} - \mathbf{I}_{N_s})^{\mathsf{H}} + \mathbf{G} \mathbf{C}_{\mathrm{n}} \mathbf{G}^{\mathsf{H}}
+    &= \mathbb{E}\!\left[((\mathbf{I}_{N_S} - \mathbf{G}\mathbf{H}\mathbf{F})\,\mathbf{a} - \mathbf{G}\mathbf{n}) (\mathbf{a}^{\mathsf{H}}\,(\mathbf{I}_{N_S} - (\mathbf{G}\mathbf{H}\mathbf{F})^{\mathsf{H}}) - \mathbf{n}^{\mathsf{H}}\mathbf{G}^{\mathsf{H}})\right] \\
+    &= \mathbb{E}\!\left[(\mathbf{I}_{N_S} - \mathbf{G}\mathbf{H}\mathbf{F}) \, \mathbf{a} \, \mathbf{a}^{\mathsf{H}} \, (\mathbf{I}_{N_S} - \mathbf{G}\mathbf{H}\mathbf{F})^{\mathsf{H}}\right] - \mathbb{E}\!\left[(\mathbf{I}_{N_S} - \mathbf{G}\mathbf{H}\mathbf{F}) \, \mathbf{a} \, \mathbf{n}^{\mathsf{H}}\mathbf{G}^{\mathsf{H}}\right] \notag \\
+    & \quad \quad - \mathbb{E}\!\left[\mathbf{G}\mathbf{n} \, \mathbf{a}^{\mathsf{H}}\,(\mathbf{I}_{N_S} - (\mathbf{G}\mathbf{H}\mathbf{F})^{\mathsf{H}})\right] + \mathbb{E}\!\left[\mathbf{G}\mathbf{n} \, \mathbf{n}^{\mathsf{H}}\mathbf{G}^{\mathsf{H}}\right] \\
+    &= (\mathbf{I}_{N_S} - \mathbf{G}\mathbf{H}\mathbf{F}) \, \mathbb{E}\!\left[\mathbf{a} \, \mathbf{a}^{\mathsf{H}}\right] \, (\mathbf{I}_{N_S} - \mathbf{G}\mathbf{H}\mathbf{F})^{\mathsf{H}} - (\mathbf{I}_{N_S} - \mathbf{G}\mathbf{H}\mathbf{F}) \, \mathbb{E}\!\left[\mathbf{a} \, \mathbf{n}^{\mathsf{H}}\right] \, \mathbf{G}^{\mathsf{H}} \notag \\
+    & \quad \quad - \mathbf{G} \, \mathbb{E}\!\left[\mathbf{n} \, \mathbf{a}^{\mathsf{H}}\right] \, (\mathbf{I}_{N_S} - (\mathbf{G}\mathbf{H}\mathbf{F})^{\mathsf{H}}) + \mathbf{G} \, \mathbb{E}\!\left[\mathbf{n} \, \mathbf{n}^{\mathsf{H}}\right] \, \mathbf{G}^{\mathsf{H}}\\
+    &= (\mathbf{I}_{N_S} - \mathbf{G}\mathbf{H}\mathbf{F}) \, \mathbf{I}_{N_S} \, (\mathbf{I}_{N_S} - \mathbf{G}\mathbf{H}\mathbf{F})^{\mathsf{H}} + \mathbf{G} \, \mathbf{C}_{\mathrm{n}} \, \mathbf{G}^{\mathsf{H}} \\
+    &= (\mathbf{G}\mathbf{H}\mathbf{F} - \mathbf{I}_{N_S})(\mathbf{G}\mathbf{H}\mathbf{F} - \mathbf{I}_{N_S})^{\mathsf{H}} + \mathbf{G} \mathbf{C}_{\mathrm{n}} \mathbf{G}^{\mathsf{H}}
 \end{align}
 \end{subequations}
 \end{comment}
@@ -304,7 +306,7 @@ The \ac{WMMSE} optimization problem is then formulated as
 \label{eq:su_mimo_WMMSE_optimization_problem}
 \begin{aligned}
     & \min_{\mathbf{F}, \mathbf{G}} \; \mathrm{tr}(\mathbf{W}_{\mathrm{e}} \, \mathbb{E}\!\left[\mathbf{e} \mathbf{e}^{\mathsf{H}} \right]) \\
-    & \text{s. t.} \quad \mathrm{tr}(\mathbf{F}\mathbf{F}^{\mathsf{H}}) \leq P_t.
+    & \text{s. t.} \quad \mathrm{tr}(\mathbf{F}\mathbf{F}^{\mathsf{H}}) \leq P_T.
 \end{aligned}
 \end{equation}
 
@@ -342,7 +344,7 @@ The matrices $\mathbf{V} \in \mathbb{C}^{N_T \times R_H}$ and $\mathbf{\Lambda} 
 \end{equation}
 where the columns of $\mathbf{V}$ form an orthonormal basis for the range space of $(\mathbf{H}^{\mathsf{H}} \mathbf{C}_{\mathrm{n}}^{-1} \mathbf{H})$, and the columns of $\bar{\mathbf{V}}$ span its null space.
 The diagonal matrix $\mathbf{\Lambda}$ contains the $R_H$ non-zero eigenvalues arranged in descending order, whereas $\bar{\mathbf{\Lambda}}$ contains the remaining zero eigenvalues.
-Note that, as in Section~\ref{subsection:optimal_precoder_design}, the number of data streams is set equal to the rank of the channel matrix, i.e.\ $N_s = R_H$. Moreover, the rank of the channel matrix is equal to the rank of $(\mathbf{H}^{\mathsf{H}} \mathbf{C}_{\mathrm{n}}^{-1} \mathbf{H})$ since $\mathbf{C}_{\mathrm{n}}^{-1}$ is positive definite and therefore does not alter the rank of the product.
+Note that, as in Section~\ref{subsection:optimal_precoder_design}, the number of data streams is set equal to the rank of the channel matrix, i.e.\ $N_S = R_H$. Moreover, the rank of the channel matrix is equal to the rank of $(\mathbf{H}^{\mathsf{H}} \mathbf{C}_{\mathrm{n}}^{-1} \mathbf{H})$ since $\mathbf{C}_{\mathrm{n}}^{-1}$ is positive definite and therefore does not alter the rank of the product.
 
 Now, it only remains to show how to obtain the Lagrange multiplier that satisfies the power constraint and ensures that the bracketed matrices in both~\eqref{eq:solution_generalized_design_precoder_phi} and~\eqref{eq:solution_generalized_design_combiner_phi} are positive-definite.
 Let $\mathbf{\Lambda} = \mathrm{diag}(\lambda_1, \dots, \lambda_{R_H})$ and $\mathbf{W}_{\mathrm{e}} = \mathrm{diag}(w_1, \dots, w_{R_H})$.
@@ -350,12 +352,12 @@ Suppose $k \leq R_H$ eigen subchannels are effectively used for transmission, i.
 From~\eqref{eq:solution_generalized_design_precoder_phi} and the total power constraint in~\eqref{eq:su_mimo_WMMSE_optimization_problem}, we have
 \begin{equation}
 \label{eq:power_constraint_generalized_design}
-    \mathrm{tr}(\mathbf{F}\mathbf{F}^{\mathsf{H}}) = \mathrm{tr}(\mathbf{\Phi}_{\mathrm{f}}^2) = \mu^{-1/2} \sum_{i=1}^k \lambda_i^{-1/2} w^{1/2}_i - \sum_{i=1}^k \lambda_i^{-1} = P_t.
+    \mathrm{tr}(\mathbf{F}\mathbf{F}^{\mathsf{H}}) = \mathrm{tr}(\mathbf{\Phi}_{\mathrm{f}}^2) = \mu^{-1/2} \sum_{i=1}^k \lambda_i^{-1/2} w^{1/2}_i - \sum_{i=1}^k \lambda_i^{-1} = P_T.
 \end{equation}
 Therefore, we can obtain the following expression for the Lagrange multiplier $\mu$:
 \begin{equation}
 \label{eq:lagrange_multiplier_generalized_design}
-    \mu = \left( \frac{\sum_{i=1}^k \lambda_i^{-1/2} w^{1/2}_i}{P_t + \sum_{i=1}^k \lambda_i^{-1}} \right)^2.
+    \mu = \left( \frac{\sum_{i=1}^k \lambda_i^{-1/2} w^{1/2}_i}{P_T + \sum_{i=1}^k \lambda_i^{-1}} \right)^2.
 \end{equation}
 Let $\rho_k = \lambda_k w_k$ and let them be ordered in decreasing manner. To compute $\mathbf{\Phi}_{\mathrm{f}}$ optimally and ensure that it is positive-definite, we can compute $\mu$ according to~\eqref{eq:lagrange_multiplier_generalized_design} for each $k = 1, \dots, R_H$ iteratively, and select the largest $k$ such that $\mu \leq \rho_k$~\cite{su_mimo_joint_precoder_decoder_design}.
 
@@ -398,7 +400,7 @@ The performance of these systems will be evaluated in Section~\ref{section:perfo
 % ===========================
 Consider an application in which different data streams carry information of heterogeneous types with different \ac{MSE} requirements for successful transmission. 
 A typical example is a multimedia system in which audio and video streams are transmitted simultaneously but require different levels of reliability.
-For such \acf{QoS}-sensitive applications, the system must be designed to achieve prescribed \ac{MSE} levels on the individual eigen subchannels.
+For such \acf{QoS} sensitive applications, the system must be designed to achieve prescribed \ac{MSE} levels on the individual eigen subchannels.
 
 First, we note that the expression for the \ac{MSE} matrix simplifies upon substituting the optimum precoder and combiner from~\eqref{eq:solution_generalized_design_precoder} and~\eqref{eq:solution_generalized_design_combiner}:
 \begin{equation}
@@ -433,8 +435,8 @@ Assuming for simplicity that all subchannels are active, i.e.\ $\mathbf{\Phi}_{\
 \begin{equation}
 \label{eq:QoS_weight_matrix_solution}
     \mathbf{W}^{1/2}_{\mathrm{e}} = \mu^{1/2} (d \, \mathbf{D} + \mathbf{I}) \mathbf{\Lambda}^{-1/2}
-    \quad \text{with} \quad \mu^{1/2} = \frac{\mathrm{tr}(\mathbf{\Lambda}^{-1/2} \mathbf{W}^{1/2}_{\mathrm{e}})}{P_t + \mathrm{tr}(\mathbf{\Lambda}^{-1})}
-    \quad \text{and} \quad d = \frac{P_t}{\mathrm{tr}(\mathbf{D} \mathbf{\Lambda}^{-1})}.
+    \quad \text{with} \quad \mu^{1/2} = \frac{\mathrm{tr}(\mathbf{\Lambda}^{-1/2} \mathbf{W}^{1/2}_{\mathrm{e}})}{P_T + \mathrm{tr}(\mathbf{\Lambda}^{-1})}
+    \quad \text{and} \quad d = \frac{P_T}{\mathrm{tr}(\mathbf{D} \mathbf{\Lambda}^{-1})}.
 \end{equation}
 
 As a simple example, consider an application that requires all data streams to achieve the same reliability, using a fixed rate and an identical modulation and coding scheme for all streams.
@@ -445,9 +447,9 @@ The resulting optimum precoder and combiner are then given by~\cite{su_mimo_join
 \label{eq:optimum_precoder_combiner_equal_errors}
 \begin{align}
     \mathbf{F} &= \mathbf{V} \mathbf{\Phi}_{\mathrm{f}} 
-    \quad \text{with} \quad \mathbf{\Phi}_{\mathrm{f}} = \sqrt{\frac{P_t}{\mathrm{tr}(\mathbf{\Lambda}^{-1})}} \, \mathbf{\Lambda}^{-1/2}  \\
+    \quad \text{with} \quad \mathbf{\Phi}_{\mathrm{f}} = \sqrt{\frac{P_T}{\mathrm{tr}(\mathbf{\Lambda}^{-1})}} \, \mathbf{\Lambda}^{-1/2}  \\
     \mathbf{G} &= \mathbf{\Phi}_{\mathrm{g}} \mathbf{V}^{\mathsf{H}} \mathbf{H}^{\mathsf{H}} \mathbf{C}^{-1}_{\mathrm{n}} 
-    \quad \text{with} \quad \mathbf{\Phi}_{\mathrm{g}} = \frac{\sqrt{P_t \, \mathrm{tr}(\mathbf{\Lambda}^{-1})}}{P_t + \mathrm{tr}(\mathbf{\Lambda}^{-1})} \, \mathbf{\Lambda}^{-1/2} 
+    \quad \text{with} \quad \mathbf{\Phi}_{\mathrm{g}} = \frac{\sqrt{P_T \, \mathrm{tr}(\mathbf{\Lambda}^{-1})}}{P_T + \mathrm{tr}(\mathbf{\Lambda}^{-1})} \, \mathbf{\Lambda}^{-1/2} 
 \end{align}
 \end{subequations}
 This \ac{QoS} design for equal error rates allocates more power to eigen subchannels with smaller channel gains and less power to stronger eigen subchannels, such that all active subchannels achieve the same output \acp{SNR} and \acp{MSE}.
@@ -477,7 +479,7 @@ This expression has exactly the same form as the weighted waterfilling solution 
 Hence, the power allocation can be computed efficiently using Algorithm~\ref{alg:waterfilling} with these parameter choices.
 
 As in the maximum-information-rate design, eigen subchannels whose gains fall below a threshold receive no power. 
-Among the remaining active subchannels, however, the weighting factor $\alpha_i = \lambda_i^{-1/2}$ gives relatively more emphasis to weaker subchannels than in the standard sum-rate case with $\alpha_i = 1$.
+Among the remaining active subchannels, however, the weighting factor $\alpha_i = \lambda_i^{-1/2}$ gives relatively more emphasis to weaker subchannels than in the standard sum-rate case where $\alpha_i = 1$.
 This reflects the fact that the present design minimizes the total sum \ac{MSE}, rather than maximizing the information rate.
 
 
@@ -671,7 +673,7 @@ This follows directly from the channel rank: for an i.i.d. Rayleigh fading chann
 Consequently, adding antennas on both sides creates additional parallel streams and therefore increases the slope of the maximum achievable rate in function of the \ac{SNR}
 
 The second effect is a vertical upward shift of the \ac{IBR} curve when antennas are added only on the side with a larger antenna count while $\min(N_T, N_R)$ remains unchanged.
-This shift occurs because, for a fixed smaller dimension, the expected squared singular values of an $N_R \times N_T$ i.i.d. Gaussian matrix increase with the larger dimension~\cite{singular_values_distribution}.
+This shift occurs because, for a fixed smaller dimension, the expected values of the squared singular values of an $N_R \times N_T$ i.i.d. Gaussian matrix increase with the larger dimension~\cite{singular_values_distribution}.
 The eigen subchannels thus experience better average channel conditions, yielding a higher \ac{IBR} at the same \ac{SNR} while leaving the slope unchanged.
 
 Finally, configurations with the same $\min(N_T, N_R)$ and the same total number of antennas show no performance difference when the excess antennas are placed at the \ac{TX} or at the \ac{RX}.

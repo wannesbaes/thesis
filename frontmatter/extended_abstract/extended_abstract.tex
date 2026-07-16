@@ -11,7 +11,7 @@
 Linear precoding has become a cornerstone of \acs*{MIMO} communications, as it enables spatial multiplexing gains that translate directly into higher spectral efficiency.
 These benefits are particularly valuable in multi-beam high-throughput satellite systems, where aggressive frequency reuse across the narrow spot beams turns the forward link into an interference-limited \acs*{MU}-\acs*{MIMO} channel. 
 In this environment, precoding is crucial for mitigating inter-beam interference.
-In mobile satellite scenarios, however, the combination of long propagation delays and time-varying channels induced by user mobility introduce complications.
+In mobile satellite scenarios, however, the combination of long propagation delays and time-varying channels induced by user mobility introduces complications.
 More specific, the \acs*{CSI} available during the precoder computation is systematically outdated with respect to the channel experienced at the time of transmission.
 This work quantifies the impact of the \acs*{CSI} feedback delay on the system performance, revealing a substantial performance loss.
 To counter this degradation, a low-complexity prediction strategy is proposed.
@@ -32,11 +32,11 @@ Numerical results show that this scheme recovers a significant fraction of the p
 Satellite communications have recently regained considerable attention as a key enabler of ubiquitous broadband connectivity. 
 They provide cost-efficient coverage of large geographical areas, including regions where deploying terrestrial infrastructure is impractical, and are envisioned as an integral component of future 5G-and-beyond networks~\cite{signal_processing_for_hts, satellites_in_new_space_era}.
 To meet the growing demand for throughput, modern satellite systems have evolved from single-beam architectures towards multi-beam systems, in which the coverage area is partitioned into many narrow spot beams.
-Combined with aggressive frequency reuse across these beams, this multi-beam architecture turns the forward link into an interference-limited \ac{MU}-\ac{MIMO} channel, where linear precoding proves itself a powerful tool for managing the resulting interference~\cite{precoding_for_satellites_survey}.
+Combined with aggressive frequency reuse and polarization across these beams, this multi-beam architecture turns the forward link into an interference-limited \ac{MU} \ac{MIMO} channel, where linear precoding proves itself a powerful tool for managing the resulting interference~\cite{precoding_for_satellites_survey}.
 
 % problem statement
-The vast majority of the satellite-precoding literature assumes perfect, instantaneous \ac{CSI} at the \ac{GW}.
-This assumption becomes unrealistic in mobile satellite scenarios, where \ac{UT} mobility introduces a Doppler spread that makes the channel time-varying. In addition, propagation delays remain large compared to terrestrial systems: even for a \acs{LEO} constellation, the round-trip time is on the order of a few milliseconds.
+The vast majority of the satellite-precoding literature assumes perfect, instantaneous \ac{CSI} at the \ac{GW}~\cite{precoding_for_satellites_survey}.
+This assumption becomes unrealistic in mobile satellite scenarios, where the \ac{UT} mobility introduces a Doppler spread that makes the channel time-varying. In addition, propagation delays remain large compared to terrestrial systems: even for a \acs{LEO} constellation, the round-trip time is on the order of a few milliseconds.
 As a result, the \ac{CSI} available at the \ac{GW} when the precoder is computed is systematically outdated with respect to the channel actually experienced at the time of transmission.
 
 % related work
@@ -57,7 +57,7 @@ Section~\ref{section:system_description} presents the system and channel model.
 Section~\ref{section:precoder_design} summarizes the considered linear precoders.
 Section~\ref{section:outdated_csi_compensation} introduces the proposed channel-prediction strategy for outdated \ac{CSI} compensation.
 Section~\ref{section:simulation_results} reports the simulation results.
-Section~\ref{section:future_work} outlines directions for future work, and Section~\ref{section:conclusion} concludes this work.
+Section~\ref{section:future_work} outlines directions for future work, and Section~\ref{section:conclusion} ends this work with a conclusion.
 
 \section{System Description}
 \label{section:system_description}
@@ -79,7 +79,7 @@ Each \ac{UT} has $N_R$ receive antennas, and the system is modeled as a \ac{MU}-
 % system model
 \textit{System Model.}
 The \ac{GW} assigns a dedicated precoding matrix $\mathbf{F}_k(t) \in \mathbb{C}^{N_T \times N_S}$ to the $N_S$-dimensional data symbol vector $\mathbf{a}_k(t)$ intended for \ac{UT}~$k$.
-Defining the compound precoder $\mathbf{F}(t) = [\mathbf{F}_1(t) \;\cdots\; \mathbf{F}_K(t)] \in \mathbb{C}^{N_T \times KN_S}$ and the stacked symbol vector $\mathbf{a}(t) = [\mathbf{a}_1^T(t) \;\cdots\; \mathbf{a}_K^T(t)]^T$, the received signal at \ac{UT}~$k$ is
+Defining the compound precoder $\mathbf{F}(t) = [\mathbf{F}_1(t) \;\cdots\; \mathbf{F}_K(t)] \in \mathbb{C}^{N_T \times KN_S}$ and the stacked symbol vector $\mathbf{a}(t) = [\mathbf{a}_1^T(t) \;\cdots\; \mathbf{a}_K^T(t)]^T$, the received signal at \ac{UT}~$k$ is expressed as
 \begin{equation}
 \label{eq:received_signal}
     \mathbf{y}_k(t) = \mathbf{H}_k(t)\,\mathbf{F}(t)\,\mathbf{a}(t) + \mathbf{n}_k(t),
@@ -102,7 +102,8 @@ Its entries are modeled as \acs{i.i.d.} \ac{CS} zero-mean unit-variance complex 
 \label{eq:acf}
     S_{h^{\mathrm{NLoS}}}(f) = \frac{1}{\pi f_D \sqrt{1 - (f/f_D)^2}}, \quad |f| < f_D,
 \end{equation}
-where $f_D = vf_c/c$ is the maximum Doppler frequency, set by the \ac{UT} velocity~$v$, the carrier frequency~$f_c$, and the speed of light~$c$. The corresponding autocorrelation function is equal to the zero-order Bessel function of the first kind: $R_{h^{\mathrm{NLoS}}}(\tau) = J_0(2\pi f_D \tau)$.
+where $f_D = vf_c/c$ is the maximum Doppler frequency, set by the \ac{UT} velocity~$v$, the carrier frequency~$f_c$, and the speed of light~$c$. Since the satellite's trajectory is known with high accuracy, its Doppler shift is deterministic and can be pre-compensated~\cite{leo_satellite_doppler_compensation}, such that the fading process is effectively governed by the \ac{UT} mobility only.
+The corresponding autocorrelation function is equal to the zero-order Bessel function of the first kind: $R_{h^{\mathrm{NLoS}}}(\tau) = J_0(2\pi f_D \tau)$.
 
 % CSI feedback delay
 \textit{\acs*{CSI} Feedback Delay.}
@@ -143,7 +144,7 @@ However, when the channel directions are strongly correlated, the required chann
 
 \textit{Block Diagonalization Precoding}~\cite{BD}.
 \ac{BD} relaxes the \ac{ZF} constraint by suppressing only the inter-user interference.
-For each user, the precoder is restricted to the null space of the channel matrices of all other users, such that the multi-user channel is decomposed into parallel $K$ single-user \ac{MIMO} subchannels.
+For each user, the precoder is restricted to the null space of the channel matrices of all other users, such that the multi-user channel is decomposed into $K$ parallel single-user \ac{MIMO} subchannels.
 Each effective \ac{SU} channel is then diagonalized by means of its \ac{SVD}, after which waterfilling is applied across the resulting eigenmodes.
 Compared with \ac{ZF}, \ac{BD} exploits the receive-side spatial processing more efficiently and achieves a higher sum rate, especially when each user is equipped with multiple receive antennas.
 
@@ -201,7 +202,6 @@ Three idealizations underlie the proposed scheme.
 First, channel-estimation errors at the \acp{UT} are neglected.
 Second, each \ac{UT} is assumed to know the second-order statistics of its channel, which here reduces to knowledge of $f_D$.
 Third, the pilot period $T_p$ is treated as a free design variable rather than being constrained by a pilot-overhead budget.
-
 
 \section{Simulation Results}
 \label{section:simulation_results}
@@ -290,8 +290,7 @@ For feedback delays up to about one coherence period of the \ac{NLoS} component,
 Even for more severe delay values, the prediction remains clearly beneficial and suppresses much of the high-\ac{SNR} degradation observed without compensation.
 
 A practical example illustrates the relevance of these results.
-Consider an \ac{MSS} forward link in the $L$-band at $f_c = 1.5~\mathrm{GHz}$, with a \acs{LEO} satellite at an altitude of $550~\mathrm{km}$ and a \ac{UT} velocity of $20~\mathrm{km/h}$.
-Since the satellite's trajectory is known with high accuracy, its Doppler shift is deterministic and can be pre-compensated~\cite{leo_satellite_doppler_compensation}.
+Consider an \ac{MSS} forward link in the $L$-band ($f_c = 1.5~\mathrm{GHz}$), with a \acs{LEO} satellite at an altitude of $550~\mathrm{km}$ and a \ac{UT} velocity of $20~\mathrm{km/h}$.
 Under the model adopted in this work, the resulting total \ac{CSI} feedback delay is approximately $\tau_{\mathrm{CSI}} = 7.34~\mathrm{ms}$, while the coherence time of the \ac{NLoS} component is about $T_c^{\mathrm{NLoS}} = 8.71~\mathrm{ms}$.
 This yields a ratio of $\tau_{\mathrm{CSI}}/T_c^{\mathrm{NLoS}} \approx 0.84$, which lies in the regime where the proposed predictor is most effective.
 

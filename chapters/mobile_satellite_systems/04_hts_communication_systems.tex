@@ -1,7 +1,7 @@
 \chapter{High-Throughput Satellite Communication Systems}
 \label{chapter:hts_communication_systems}
 
-The preceding chapters developed the theory of linear precoding for generic \ac{SU}- and \ac{MU}-\ac{MIMO} systems. Before turning to the specific problem addressed by this work, the present chapter situates these results within the context of satellite communications.
+The preceding chapters developed the theory and subsequently evaluated the performance of linear precoding for generic \ac{SU}- and \ac{MU}-\ac{MIMO} systems. Before turning to the specific problem addressed by this work, the present chapter situates these results within the context of satellite communications.
 We first motivate the use of precoding in modern \acf{HTS} systems and describe the system architecture considered in the remainder of this work. We then discuss the channel features and modeling assumptions that distinguish the satellite setting from the terrestrial \ac{MU}-\ac{MIMO} scenario of Chapter~\ref{chapter:mu_mimo_precoding}. Finally, we review the main families of precoding techniques proposed in the literature and identify the specific category that is relevant for our work.
 
 
@@ -44,7 +44,8 @@ Throughout this work, we focus on the forward link of a multi-beam \ac{HTS} syst
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.8\textwidth]{figures/mobile_satellite_systems/05_hts_communication_systems/multibeam_satcom_annotated_big.png}
-    \caption[Multibeam HTS communication system architecture]{Schematic view of the multibeam HTS communication system architecture.}
+    \caption[Architecture of a Multibeam HTS communication system]
+    {Schematic view of the multibeam HTS communication system architecture.}
     \label{fig:multibeam_satellite_architecture}
 \end{figure}
 
@@ -123,8 +124,8 @@ At the end of the following chapter, we therefore describe how this model can be
 
 A large number of precoding techniques have been proposed for satellite communications. These techniques differ in the assumptions they make about the system and in the design objectives they pursue. A comprehensive survey can be found in~\cite{3_precoding_for_satellites_survey}. The objective of this section is not to reproduce this overview, but rather to position the present work within the broader landscape and to identify the techniques that are most closely related.
 
-\subsection{A Taxonomy of Precoding Techniques}
-% --------------------------------------------
+\subsection{A Taxonomy of Satellite Precoding Techniques}
+% -------------------------------------------------------
 
 Besides the distinction between linear and nonlinear techniques, existing satellite precoding methods can be classified along several other non-exclusive axes. For each axis we briefly recall the main alternatives and indicate the choice made in this work.
 

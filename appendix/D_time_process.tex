@@ -1,11 +1,11 @@
-\chapter[Computer Simulation of Time--Correlated Processes]{Computer Simulation of Time--Correlated Random Processes}
+\chapter[Computer Simulation of Time-Correlated Processes]{Computer Simulation of Time-Correlated Random Processes}
 \label{appendix:time_correlated_processes}
 
 When generating channel realizations for a time-varying channel, it is necessary to simulate a zero-mean complex Gaussian random process with a prescribed correlation in time.
-This appendix presents two practical methods for simulating time--correlated random processes on a computer.
+This appendix presents two practical methods for simulating time-correlated random processes on a computer.
 The first method uses the autocorrelation function as input and is based on the Cholesky decomposition of the covariance matrix.
 The second method uses the power spectral density as input and is based on filtering a white Gaussian process with a linear time-invariant system.
-In the simulation framework developed for this dissertation, both methods are employed to generate time--correlated channel realizations.
+In the simulation framework developed for this dissertation, both methods are employed to generate time-correlated channel realizations.
 
 
 \section{Cholesky Decomposition Method}

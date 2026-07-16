@@ -26,18 +26,18 @@
 Linear precoding has become a cornerstone of \acs*{MIMO} communications, as it enables spatial multiplexing gains that translate directly into higher spectral efficiency.
 These benefits are particularly valuable in multi-beam high-throughput satellite systems, where aggressive frequency reuse across the narrow spot beams turns the forward link into an interference-limited \acs*{MU}-\acs*{MIMO} channel. 
 In this environment, precoding is crucial for mitigating inter-beam interference.
-In mobile satellite scenarios, however, the combination of long propagation delays and time-varying channels induced by user mobility introduce complications.
-More specific, the \acs*{CSI} available during the precoder computation is generally outdated with respect to the channel experienced at the time of transmission.
+In mobile satellite scenarios, however, the combination of long propagation delays and time-varying channels induced by user mobility introduces complications.
+More specific, the \ac*{CSI} available during the precoder computation is generally outdated with respect to the channel experienced at the time of transmission.
 This work investigates the performance degradation caused by this \acs*{CSI} mismatch and proposes a low-complexity compensation strategy.
 
 \textbf{Part I} reviews the theoretical foundations underlying this work. 
 After introducing the \acs*{SU}- and \acs*{MU}-\acs*{MIMO} system models, together with the most relevant information-theoretic concepts, a generalised \acs*{WMMSE} framework for joint optimisation of the precoder and combiner in a \acs*{SU} scenario is presented, and the capacity-achieving precoder is derived.
-For the \acs*{MU}-\acs*{MIMO} broadcast channel, we break down common linear precoding strategies and compare there performance.
+For the \acs*{MU}-\acs*{MIMO} broadcast channel, we break down common linear precoding strategies and compare their performance.
 Although these results are well established, they are revisited here in a unified notation and validated through Monte-Carlo simulations, so that they can serve as a consistent baseline for the satellite-specific analysis that follows.
 
 \textbf{Part II} applies this framework to the forward link of a multi-beam mobile satellite system.
 The impact of the \acs*{CSI} feedback delay on the system performance is quantified, revealing a substantial performance loss.
-To counter this degradation, a low-complexity prediction strategy based is proposed.
+To counter this degradation, a low-complexity prediction strategy is proposed.
 Numerical results show that this scheme recovers a significant fraction of the performance loss under the considered channel model.
 
 \vspace{0.4cm}

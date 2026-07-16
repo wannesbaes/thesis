@@ -36,7 +36,7 @@ The precoder satisfies the total transmit-power constraint $\mathrm{tr}\big(\mat
 
 In practice, the channel must first be estimated at the \acp{UT} and fed back to the \ac{GW}, before it can be used to design the precoder.
 Denoting the aggregate elapsed time by the \ac{CSI} feedback delay~$\tau_{\mathrm{CSI}}$, the precoder applied at time $t$ is necessarily based on the outdated channel state $\mathbf{H}(t - \tau_{\mathrm{CSI}})$.
-How severely this mismatch degrades performance depends on how much the channel has evolved during $\tau_{\mathrm{CSI}}$.
+How severely this mismatch degrades performance depends on how much the channel has evolved during the feedback delay $\tau_{\mathrm{CSI}}$.
 
 The temporal variability of the channel is characterised through the normalised autocorrelation function of its \ac{NLoS} component, denoted by $R_h(\tau)$.
 It is shown in Appendix~\ref{appendix_section:doppler_spectrum} that, under Jakes' model, the autocorrelation between two channel realizations separated by a lag $\tau$ equals the zeroth-order Bessel function of the first kind, evaluated in $2\pi f_D \tau$.
@@ -66,7 +66,7 @@ All three precoders are very sensitive to outdated \ac{CSI}. Even a delay of onl
 The loss with respect to instantaneous \ac{CSI} grows monotonically with $\tau_{\mathrm{CSI}}/T_c$, confirming the intuition that the more outdated the \ac{CSI}, the worse the performance.
 Once the \ac{CSI} feedback delay surpasses the coherence time of the \ac{NLoS} component, the system becomes essentially unusable.
 This aligns with the definition of $T_c$.
-Beyond the point $\tau_{\mathrm{CSI}} \geq T_c$, the channel available at the \ac{GW} and the channel actually experienced by the \acp{UT} are only weakly correlated such that the precoder is in effect designed for a channel that bears little resemblance to the true one.
+Beyond the point $\tau_{\mathrm{CSI}} = T_c$, the channel available at the \ac{GW} and the channel actually experienced by the \acp{UT} are only weakly correlated such that the precoder is in effect designed for a channel that bears little resemblance to the true one.
 As a consequence, the precoder fails to exploit the spatial dimension of the channel and the sum-rate collapses.
 
 % ZF and BD
@@ -91,7 +91,7 @@ Therefore, the \ac{SINR} saturates and the achievable rate converges to a finite
         \caption{\acs{BD} Precoding}
         \label{fig:impact_outdated_csi_achievable_rate_bd}
     \end{subfigure}
-    \caption[Impact of outdated \acs{CSI} on the achievable sum-rate (\acs{ZF} and \acs{BD} precoding)]{
+    \caption[Impact of outdated \acs{CSI} on the achievable \acs*{SR} (\acs{ZF} and \acs{BD} precoding)]{
         The achievable sum-rate of a  $8 \times \{2, 2, 2, 2\} $ \acs{MU}-\acs{MIMO} system as a function of the \acs{SNR}, for \acs{ZF} and \acs{BD} precoding.
         The different curves correspond to different values of the \acs{CSI} feedback delay $\tau_{\mathrm{CSI}}$, expressed as a fraction of the coherence time $T_c$.
     }
@@ -109,7 +109,7 @@ The \ac{ZF}-type precoders do not exhibit this behaviour because they steer in t
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.65\textwidth]{figures/mobile_satellite_systems/06_precoding_under_outdated_csi/rician_channel/impact_outdated_csi/achievable_rate_wmmse.png}
-    \caption[Impact of outdated \acs{CSI} on the achievable sum-rate (\acs{WMMSE} precoding)]{
+    \caption[Impact of outdated \acs{CSI} on the achievable \acs*{SR} (\acs{WMMSE} precoding)]{
         Similar figure as Fig.~\ref{fig:impact_outdated_csi_achievable_rate_zf_bd}, but for \acs{WMMSE} precoding.
     }
     \label{fig:impact_outdated_csi_achievable_rate_wmmse}
@@ -143,8 +143,10 @@ The performance gain introduced by this strategy will again be evaluated by mean
 % ----------------------------------
 
 % strategy philosophy: AR-model
-Among the many possible prediction methods, a linear \acf{AR} model is adopted here as a simple and tractable baseline. It leads to a closed-form predictor, requires only knowledge of the autocorrelation function, and entails a very limited computational complexity.
+Among the many possible prediction methods, a linear \acf{AR} model (see Appendix~\ref{appendix:ar_models}) is adopted here as a simple and tractable baseline. It leads to a closed-form predictor, requires only knowledge of the autocorrelation function, and entails a very limited computational complexity.
 The prediction is performed locally at each \ac{UT}, while the \ac{GW} continues to compute the precoder exactly as in Chapter~\ref{chapter:mu_mimo_precoding}. From the perspective of the \ac{GW}, the precoding procedure is therefore unchanged. Only the channel information on which it relies is replaced by a prediction of the future channel state. As a result, the additional complexity introduced by the compensation strategy is borne entirely by the \acp{UT}.
+Merk op dat men evenwel kan kiezen om de kanaalvoorspelling volledig uit te voeren at the \ac{GW}. 
+De keuze hangt af van de beschikbare rekenkracht van de toestellen en de gewenste architectuur van het systeem.
 
 % AR-model mechanism
 Under the simplified channel model of Chapter~\ref{chapter:hts_communication_systems}, the temporal variation is entirely contained in the \ac{NLoS} component. Moreover, spatial correlation within the \ac{NLoS} component is neglected, so that the entries of $\mathbf{H}_k^{\mathrm{NLoS}}(t)$ evolve independently and share the same temporal correlation function. Therefore, we choose to carry out the prediction element-wise, using the same scalar predictor for each channel coefficient. 
@@ -155,12 +157,12 @@ Let $\hat{h}_{k, \,(i, j)}[n]$ denote the estimate of the $(i,j)$-th entry of th
 \end{equation}
 The prediction horizon $\Delta$ is chosen such that the predicted sample corresponds to the actual transmission time, that is, $\Delta \, T_p = \tau_{\mathrm{CSI}}$, where $T_p$ denotes the pilot period.
 
-The predictor coefficients $\{\alpha_m\}_{m=1}^{p}$ are obtained from the Yule--Walker equations associated with the autocorrelation function $R_h(\tau)$ of the channel process:
+The predictor coefficients $\{\alpha_m\}_{m=1}^{p}$ are obtained from the Yule-Walker equations associated with the autocorrelation function $R_h(\tau)$ of the channel process:
 \begin{equation}
 \label{eq:yule_walker_equations}
     \begin{bmatrix} R_h(0) & R_h(T_p) & \cdots & R_h((p-1)T_p) \\ R_h(T_p) & R_h(0) & \cdots & R_h((p-2)T_p) \\ \vdots & \vdots & \ddots & \vdots \\ R_h((p-1)T_p) & R_h((p-2)T_p) & \cdots & R_h(0) \end{bmatrix} \; \begin{bmatrix} \alpha_1 \\ \alpha_2 \\ \vdots \\ \alpha_p \end{bmatrix} = \begin{bmatrix} R_h(\Delta T_p) \\ R_h((\Delta+1)T_p) \\ \vdots \\ R_h((\Delta+p-1)T_p) \end{bmatrix}.
 \end{equation}
-Since the autocorrelation function is fully specified by the assumed channel model, these coefficients can be computed offline once the predictor order $p$, the pilot period $T_p$, and the delay $\tau_{\mathrm{CSI}}$ have been fixed.
+Since the autocorrelation function is fully specified by the assumed channel model, these coefficients can be computed offline once the predictor order $p$, the pilot period $T_p$, and the delay $\tau_{\mathrm{CSI}}$ are determined.
 
 % assumptions
 Three assumptions underlie the proposed compensation strategy.
@@ -189,7 +191,7 @@ Both optimisations are evaluated for the $8 \times \{2, 2, 2, 2\}$ system using 
 \begin{figure}[!b]
     \centering
     \includegraphics[width=0.65\textwidth]{figures/mobile_satellite_systems/06_precoding_under_outdated_csi/rician_channel/ar_model_parameter_choice/pilot_rate_wmmse.png}
-    \caption[Impact of the pilot rate on the achievable sum-rate with \acs{AR}-based compensation]{
+    \caption[Impact of the pilot rate on the achievable \acs*{SR} with \acs{AR}-based compensation]{
         The achievable sum-rate plotted as a function of the pilot rate.
         The $8 \times \{2, 2, 2, 2\}$ system uses a \acs{WMMSE} precoder and \acs{AR}-based channel prediction model at the \acs{UT}, and operates at a \ac{SNR} equal to $20~\mathrm{dB}$.
         The context window length is fixed to $2\,T_c$.
@@ -199,7 +201,7 @@ Both optimisations are evaluated for the $8 \times \{2, 2, 2, 2\}$ system using 
 \end{figure}
 
 % pilot rate
-For the first sweep, the context window length fixed at $2\,T_c$. This is a generous choice, made to ensure that no potentially useful information would be excluded.
+For the first sweep, the context window length is fixed at $2\,T_c$. This is a generous choice, made to ensure that no potentially useful information would be excluded.
 Figure~\ref{fig:parameter_pilot_rate} shows the achievable sum-rate as a function of the pilot rate for four values of the \ac{CSI} feedback delay.
 The achievable sum-rate increases steadily as the pilot rate grows, reflecting the improvement in temporal resolution available to the predictor. 
 When too few samples are available within the temporal correlation window to capture the channel dynamics accurately, the achievable sum-rate drops rapidly, especially for the larger feedback delays.
@@ -219,7 +221,7 @@ A context window length of one coherence period is therefore adopted for all sub
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.65\textwidth]{figures/mobile_satellite_systems/06_precoding_under_outdated_csi/rician_channel/ar_model_parameter_choice/context_window_length_wmmse.png}
-    \caption[Impact of the window length on the achievable sum-rate with \acs{AR}-based compensation]{
+    \caption[Impact of the window length on the achievable \acs*{SR} with \acs{AR}-based compensation]{
         The achievable sum-rate plotted as a function of the context window length.
         The pilot rate is set to $6$ messages per coherence period. 
         Other than that, the system operates under the exact same configurations in Fig.~\ref{fig:parameter_pilot_rate}.
@@ -255,7 +257,8 @@ Figure~\ref{fig:impact_compensation_achievable_rate_zf_bd} shows the achievable 
         \caption{\acs{BD} Precoding}
         \label{fig:impact_compensation_achievable_rate_bd}
     \end{subfigure}
-    \caption[Impact of the proposed compensation technique on achievable sum-rate (\acs{ZF} and \acs{BD})]{
+    \caption[Impact of the AR-based compensation on achievable \acs*{SR} (\acs{ZF} and \acs{BD} precoding)]
+    {
         The achievable sum-rate as a function of the \acs{SNR} for \acs{ZF} and \acs{BD} precoding with \acs{AR}-based channel prediction at the \acp{UT}. 
         The predictor uses the parameter pair selected in Section~\ref{subsection:compensation_parameter_optimization}.
         The different curves correspond to different \acs{CSI} feedback delays, from no delay up to a delay equal to $2$ coherence periods of the \acs{NLoS} component.
@@ -274,7 +277,7 @@ The compensation strategy remains beneficial in this regime, but the residual mi
 % disappearance of ceiling / peak-and-decrease
 A remarkable difference between Figure~\ref{fig:impact_outdated_csi_achievable_rate_zf_bd} and Figures~\ref{fig:impact_compensation_achievable_rate_zf_bd} is the disappearance of the rate ceiling.
 The compensation strategy restores the growth of the achievable sum-rate with increasing \ac{SNR} for almost all considered \ac{CSI} feedback delays.
-Only when $\tau_{\mathrm{CSI}}$ approaches $2\,T_c$, the residual prediction error is large enough to reintroduce an interference floor, and the familiar saturation behaviour of §\ref{section:outdated_csi_impact} reappears.
+Only when $\tau_{\mathrm{CSI}}$ approaches $2\,T_c$, the residual prediction error is large enough to reintroduce an interference floor, and the familiar saturation behaviour as described in Section~\ref{section:outdated_csi_impact} reappears.
 A similar observation can be made for \ac{WMMSE} precoding.
 Only for feedback delays well above $T_c$, the sum-rate exhibits the peak-and-decrease behaviour identified in Section~\ref{section:outdated_csi_impact}.
 
@@ -293,25 +296,25 @@ The largest performance gains are obtained when the feedback delay is on the ord
             \begin{subfigure}{0.245\textwidth}
                 \centering
                 \includegraphics[width=\textwidth]{figures/mobile_satellite_systems/06_precoding_under_outdated_csi/rician_channel/impact_compensation/comparisons/wmmse/1on4.png}
-                \caption{$\tau_{\mathrm{CSI}} = \frac{1}{4} T_c$}
+                \caption{$\tau_{\mathrm{CSI}} = \frac{1}{4} T^{\mathrm{NLoS}}_c$}
             \end{subfigure}
             \hfill
             \begin{subfigure}{0.245\textwidth}
                 \centering
                 \includegraphics[width=\textwidth]{figures/mobile_satellite_systems/06_precoding_under_outdated_csi/rician_channel/impact_compensation/comparisons/wmmse/2on4.png}
-                \caption{$\tau_{\mathrm{CSI}} = \frac{2}{4} T_c$}
+                \caption{$\tau_{\mathrm{CSI}} = \frac{2}{4} T^{\mathrm{NLoS}}_c$}
             \end{subfigure}
             \hfill
             \begin{subfigure}{0.245\textwidth}
                 \centering
                 \includegraphics[width=\textwidth]{figures/mobile_satellite_systems/06_precoding_under_outdated_csi/rician_channel/impact_compensation/comparisons/wmmse/3on4.png}
-                \caption{$\tau_{\mathrm{CSI}} = \frac{3}{4} T_c$}
+                \caption{$\tau_{\mathrm{CSI}} = \frac{3}{4} T^{\mathrm{NLoS}}_c$}
             \end{subfigure}
             \hfill
             \begin{subfigure}{0.245\textwidth}
                 \centering
                 \includegraphics[width=\textwidth]{figures/mobile_satellite_systems/06_precoding_under_outdated_csi/rician_channel/impact_compensation/comparisons/wmmse/4on4.png}
-                \caption{$\tau_{\mathrm{CSI}} = \frac{4}{4} T_c$}
+                \caption{$\tau_{\mathrm{CSI}} = \frac{4}{4} T^{\mathrm{NLoS}}_c$}
             \end{subfigure}
 
             \vspace{0.5cm}
@@ -320,33 +323,34 @@ The largest performance gains are obtained when the feedback delay is on the ord
             \begin{subfigure}{0.245\textwidth}
                 \centering
                 \includegraphics[width=\textwidth]{figures/mobile_satellite_systems/06_precoding_under_outdated_csi/rician_channel/impact_compensation/comparisons/wmmse/5on4.png}
-                \caption{$\tau_{\mathrm{CSI}} = \frac{5}{4} T_c$}
+                \caption{$\tau_{\mathrm{CSI}} = \frac{5}{4} T^{\mathrm{NLoS}}_c$}
             \end{subfigure}
             \hfill
             \begin{subfigure}{0.245\textwidth}
                 \centering
                 \includegraphics[width=\textwidth]{figures/mobile_satellite_systems/06_precoding_under_outdated_csi/rician_channel/impact_compensation/comparisons/wmmse/6on4.png}
-                \caption{$\tau_{\mathrm{CSI}} = \frac{6}{4} T_c$}
+                \caption{$\tau_{\mathrm{CSI}} = \frac{6}{4} T^{\mathrm{NLoS}}_c$}
             \end{subfigure}
             \hfill
             \begin{subfigure}{0.245\textwidth}
                 \centering
                 \includegraphics[width=\textwidth]{figures/mobile_satellite_systems/06_precoding_under_outdated_csi/rician_channel/impact_compensation/comparisons/wmmse/7on4.png}
-                \caption{$\tau_{\mathrm{CSI}} = \frac{7}{4} T_c$}
+                \caption{$\tau_{\mathrm{CSI}} = \frac{7}{4} T^{\mathrm{NLoS}}_c$}
             \end{subfigure}
             \hfill
             \begin{subfigure}{0.245\textwidth}
                 \centering
                 \includegraphics[width=\textwidth]{figures/mobile_satellite_systems/06_precoding_under_outdated_csi/rician_channel/impact_compensation/comparisons/wmmse/8on4.png}
-                \caption{$\tau_{\mathrm{CSI}} = \frac{8}{4} T_c$}
+                \caption{$\tau_{\mathrm{CSI}} = \frac{8}{4} T^{\mathrm{NLoS}}_c$}
             \end{subfigure}
 
         \end{minipage}
     }
 
-    \caption[Comparison of perfect, outdated and compensated \acs{CSI} for \acs{WMMSE} precoding]{
+    \caption[Impact of the AR-based compensation on achievable \acs*{SR} (\acs*{WMMSE} precoding)]
+    {
         A comparison of the \acs{WMMSE} precoding performance under perfect \acs{CSI}, outdated \acs{CSI}, and compensated \acs{CSI} obtained through \acs{AR}-based prediction at the \acp{UT}. 
-        The compensation gain is strongest for $\tau_{\mathrm{CSI}} \leq T_c$ and decreases progressively as the feedback delay exceeds the channel coherence time.
+        The compensation gain is strongest for $\tau_{\mathrm{CSI}} \leq T^{\mathrm{NLoS}}_c$ and decreases progressively as the feedback delay exceeds the channel coherence time.
     }
     \label{fig:impact_compensation_achievable_rate_wmmse}
 \end{figure}
@@ -412,7 +416,7 @@ The \ac{LoS} gain $\alpha_k^{\mathrm{LoS}}(t)$ incorporates the Doppler shift in
 \end{equation}
 where $\psi_k \sim \mathcal{U}(0, 2\pi)$ is a random initial phase and $\nu_k^{\mathrm{LoS}} = f_D \, \cos(\pi/2 - \theta^{\mathrm{sat}}_k)$ is the Doppler frequency of the \ac{LoS} path.
 Here, $f_D = v_{\mathrm{UT}} \, f_c / c$ is the maximum Doppler frequency, determined by the carrier frequency $f_c$, the \ac{UT} velocity $v_{\mathrm{UT}}$, and the speed of light $c$.
-The factor $\sin\theta^{\mathrm{sat}}_k$ accounts for the projection of the \ac{UT}'s horizontal velocity onto the satellite-to-user direction.
+The factor $\sin(\theta^{\mathrm{sat}}_k)$ accounts for the projection of the \ac{UT}'s horizontal velocity onto the satellite-to-user direction.
 Unlike the simplified model of~\eqref{eq:rician_channel_model}, the \ac{LoS} component is no longer time-invariant. It rotates in phase at a rate that depends on the \ac{UT}'s velocity and elevation angle.
 
 % NLoS component
@@ -444,7 +448,7 @@ Because the purpose of this section is not to study this rank limitation itself,
 
 A second distinction from the simplified model concerns the spatial structure of the channel.
 Under the ray-based model of~\eqref{eq:satellite_channel_model}, the entries of the channel matrix for \ac{UT}~$k$ are no longer spatially independent.
-In principle, a predictor that exploits this spatial correlation jointly with the temporal one could yield more accurate predictions than the element-wise approach of Section~\ref{subsection:compensation_strategy}.
+In principle, a predictor that exploits this spatial correlation jointly with the temporal correlation could yield more accurate predictions than the element-wise approach of Section~\ref{subsection:compensation_strategy}.
 However, developing such a predictor would significantly increase the complexity at each \ac{UT}.
 To maintain a fair and direct comparison with the results of Section~\ref{section:outdated_csi_compensation}, the same element-wise \ac{AR} predictor is applied here without modification, with the same parameter values established in Section~\ref{subsection:compensation_parameter_optimization}.
 
@@ -489,11 +493,10 @@ A thorough parameter study, an investigation of the spatial and temporal correla
         \caption{Predicted \acs{CSI}}
         \label{fig:satellite_channel_impact_compensation_ber_zf}
     \end{subfigure}
-    \caption[Impact of Outdated and Predicted \acs{CSI} on the \acs{BER} (\acs{ZF} precoding)]{
-        A comparison of the total \acs*{BER} in a $8 \times \{1,1,1,1\}$ system using a \ac{ZF} precoder.
-        The \acs*{BS} transmits a single $16$--\acs*{QAM} data stream to each \acs*{UT}.
-        The different colored curves correspond to different \acs*{CSI} feedback delays.
-    }
+    \caption[Impact of Outdated \acs{CSI} and Predicted \acs{CSI} on the \acs{BER} (\acs{ZF} precoding)]
+    {A comparison of the total \acs*{BER} in a $8 \times \{1,1,1,1\}$ system using a \ac{ZF} precoder.
+    The \acs*{BS} transmits a single $16$--\acs*{QAM} data stream to each \acs*{UT}.
+    The different colored curves correspond to different \acs*{CSI} feedback delays.}
     \label{fig:satellite_channel_performance}
 \end{figure}
 
@@ -520,7 +523,7 @@ The additional limitation caused by the user channel being rank-deficient was av
 
 Finally, let us map the normalized-delay results to representative \ac{MSS} operating points to provide a more practical insight.
 The total \ac{CSI} feedback delay is modelled as four times the one-way propagation delay between the \ac{UT} and the satellite. This factor of four accounts for the downlink pilot transmission to the \acp{UT}, the transmission of the estimated or predicted channel over the return link from the \ac{UT} to the \ac{GW} through the satellite, and finally the transmission of the precoder matrix over the forward feeder link back to the satellite.
-\ac{MSS} typically operate in the $L$-band~\cite{1_signal_processing_for_satellites}, with carrier frequencies between $1$ and $2~\mathrm{GHz}$, and corresponding wavelengths ranging from $15$ to $30~\mathrm{cm}$.
+\acp{MSS} typically operate in the $L$-band~\cite{1_signal_processing_for_satellites}, with carrier frequencies between $1$ and $2~\mathrm{GHz}$, and corresponding wavelengths ranging from $15$ to $30~\mathrm{cm}$.
 Table~\ref{tab:coherence_times} summarizes the maximum Doppler frequency and the \ac{NLoS} coherence time for different \ac{UT} velocities.
 \begin{table}[!htb]
     \centering
@@ -529,10 +532,10 @@ Table~\ref{tab:coherence_times} summarizes the maximum Doppler frequency and the
 
     \begin{tabular}{>{\centering\arraybackslash}m{3.2cm}|>{\centering\arraybackslash}m{2.8cm}>{\centering\arraybackslash}m{2.8cm}}
         \hline
-        \textbf{UT velocity} & $f_D$ & $T_c^{\mathrm{NLoS}}$ \\
+        $\text{UT velocity}$ & $f_D$ & $T_c^{\mathrm{NLoS}}$ \\
         \hline
         $5~\mathrm{km/h}$  & $6.95~\mathrm{Hz}$  & $34.84~\mathrm{ms}$ \\
-        $15~\mathrm{km/h}$ & $20.85~\mathrm{Hz}$ & $11.61~\mathrm{ms}$ \\
+        %$15~\mathrm{km/h}$ & $20.85~\mathrm{Hz}$ & $11.61~\mathrm{ms}$ \\
         $20~\mathrm{km/h}$ & $27.80~\mathrm{Hz}$ & $8.71~\mathrm{ms}$  \\
         $30~\mathrm{km/h}$ & $41.70~\mathrm{Hz}$ & $5.81~\mathrm{ms}$  \\
         $40~\mathrm{km/h}$ & $55.59~\mathrm{Hz}$ & $4.36~\mathrm{ms}$  \\

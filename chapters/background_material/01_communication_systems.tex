@@ -5,6 +5,7 @@ This chapter establishes the system models and information-theoretic framework t
 We begin by describing the general architecture of a digital communication system and then specialize to the system model adopted in this work.
 Finally, we review the fundamental information-theoretic concepts required to analyze the performance of these systems.
 
+
 \section{Digital Communication Systems}
 \label{section:digital_communication_systems}
 
@@ -79,12 +80,12 @@ The data symbols are assumed to be zero-mean, mutually uncorrelated, and normali
 Throughout this work, the power allocation is assumed to be incorporated into the precoding matrix, unless explicitly stated otherwise. Under this convention, the total transmit power is constrained by
 \begin{equation}
 \label{eq:su_mimo_power_constraint}
-    \mathbb{E}\!\left[\|\mathbf{x}\|^2\right] = \mathrm{tr}\!\left(\mathbf{F}^{\mathsf{H}} \, \mathbf{F}\right) \leq P_t.
+    \mathbb{E}\!\left[\|\mathbf{x}\|^2\right] = \mathrm{tr}\!\left(\mathbf{F}^{\mathsf{H}} \, \mathbf{F}\right) \leq P_T.
 \end{equation}
 \begin{comment}
 \begin{subequations}
 \begin{align}
-    P_t
+    P_T
     &\geq \mathbb{E}\!\left[ \left\|\mathbf{x}\right\|^2 \right] \\
     &= \mathbb{E}\!\left[ \mathbf{x}^{\mathsf{H}} \mathbf{x} \right] \\
     &= \mathbb{E}\!\left[ \left(\mathbf{F} \mathbf{a}\right)^{\mathsf{H}} \left(\mathbf{F} \mathbf{a}\right) \right] \\
@@ -155,12 +156,12 @@ The transmitted signal vector $\mathbf{x} \in \mathbb{C}^{N_T}$ is now a functio
 Since the data symbols intended for different \acp{UT} are assumed to be uncorrelated, the total transmit power constraint can now be formulated as
 \begin{equation}
 \label{eq:mu_mimo_power_constraint}
-    \mathbb{E}\!\left[\|\mathbf{x}\|^2\right] = \sum_{k=1}^{K} \mathrm{tr}\!\left(\mathbf{F}_k^{\mathsf{H}} \, \mathbf{F}_k\right) \leq P_t.
+    \mathbb{E}\!\left[\|\mathbf{x}\|^2\right] = \sum_{k=1}^{K} \mathrm{tr}\!\left(\mathbf{F}_k^{\mathsf{H}} \, \mathbf{F}_k\right) \leq P_T.
 \end{equation}
 \begin{comment}
 \begin{subequations}
 \begin{align}
-    P_t
+    P_T
     &\geq \mathbb{E}\!\left[ \left\|\mathbf{x}\right\|^2 \right] \\
     &= \mathbb{E}\!\left[ \mathbf{x}^{\mathsf{H}} \mathbf{x} \right] \\
     &= \mathbb{E}\!\left[ \left(\sum_{k=1}^{K} \mathbf{F}_k \mathbf{a}_k\right)^{\mathsf{H}} \left(\sum_{k'=1}^{K} \mathbf{F}_{k'} \mathbf{a}_{k'}\right) \right] \\
@@ -250,7 +251,7 @@ The capacity then results from maximizing \eqref{eq:mi_su_mimo_gaussian_channel}
 \label{eq:capacity_su_mimo_gaussian_channel_optimization_problem}
 \begin{aligned}
     & C = \max_{\mathbf{C}_{\mathrm{x}}} \; \log_2\left(\det\left(\mathbf{I}_{N_R} + \mathbf{C}_{\mathrm{n}}^{-1} \; \mathbf{H}\,\mathbf{C}_{\mathrm{x}}\,\mathbf{H}^\mathsf{H} \right)\right) \\
-    & \text{s.t.} \quad \mathbf{C}_{\mathrm{x}} \succeq 0, \quad \mathrm{tr}\!\left(\mathbf{C}_{\mathrm{x}}\right) \leq P_t.
+    & \text{s.t.} \quad \mathbf{C}_{\mathrm{x}} \succeq 0, \quad \mathrm{tr}\!\left(\mathbf{C}_{\mathrm{x}}\right) \leq P_T.
 \end{aligned}
 \end{equation}
 
@@ -288,12 +289,12 @@ More generally, we define the \ac{WSR} as
 \end{equation}
 where $w_k \geq 0$ is the weight assigned to \ac{UT}\textsubscript{k}.
 The full boundary of the rate region can then be traced by maximizing the \ac{WSR} over all achievable rate tuples for varying weight vectors $\mathbf{w} = (w_1, \ldots, w_K)$.
-The sum capacity corresponds to the special case where all weights are equal to one. The maximization in both cases is typically subject to the total transmit power constraint \eqref{eq:mu_mimo_power_constraint}.
+The sum capacity corresponds to the special case where all weights are equal to one. The maximization in both cases is typically subject to the total transmit power constraint, as formulated in \eqref{eq:mu_mimo_power_constraint}.
 
 In~\cite{viswanath_2002, viswanath_2003, yu_2004}, the sum capacity of the \ac{MU}-\ac{MIMO} Gaussian channel is derived by exploiting the uplink--downlink duality: the downlink broadcast channel and the uplink multiple-access channel yield
 the same rate region under the same total transmit power constraint. It therefore suffices to solve the uplink problem, which is more tractable.
 
-In the uplink channel, all $K$ \acp{UT} transmit simultaneously, with \ac{UT}\textsubscript{k} sending a vector $\mathbf{x}_k^{\text{up}} \in \mathbb{C}^{N_R}$ to the \ac{BS}.
+In the uplink channel, all $K$ \acp{UT} transmit simultaneously, with \ac{UT}~$k$ sending a vector $\mathbf{x}_k^{\text{up}} \in \mathbb{C}^{N_R}$ to the \ac{BS}.
 The \ac{MI} between the transmitted vectors $\mathbf{x}_1^{\text{up}}, \dots, \mathbf{x}_K^{\text{up}}$ and the received vector $\mathbf{y}$, given input covariance matrices $\mathbf{C}_{\mathrm{x},k}$, is defined as
 \begin{equation}
 \label{eq:mutual_information_mu_mimo_uplink}
@@ -312,6 +313,6 @@ The uplink \ac{SR} is achievable if and only if the sum of the \ac{IBR}s of all 
 \label{eq:sum_capacity_mu_mimo_gaussian_channel}
 \begin{aligned}
     & C_{\text{sum}} = \max_{\mathbf{C}_{\mathrm{x},\,1}^{\text{up}}, \dots, \mathbf{C}_{\mathrm{x},\,K}^{\text{up}}} \; \log_2\!\left(\det\!\left(\mathbf{I}_{N_T} + \mathbf{C}_{\mathrm{n}}^{-1} \sum_{k=1}^{K} \mathbf{H}_k\,\mathbf{C}_{\mathrm{x},\, k}^{\text{up}}\,\mathbf{H}_k^\mathsf{H} \right)\right) \\
-    &\text{s.t.} \quad \sum_{k=1}^{K} \mathrm{tr}\!\left(\mathbf{C}_{\mathrm{x},\, k}^{\text{up}}\right) \leq P_t \quad \text{and} \quad \mathbf{C}_{\mathrm{x},\, k}^{\text{up}} \succeq 0 \quad \forall k = 1, \dots, K.
+    &\text{s.t.} \quad \sum_{k=1}^{K} \mathrm{tr}\!\left(\mathbf{C}_{\mathrm{x},\, k}^{\text{up}}\right) \leq P_T \quad \text{and} \quad \mathbf{C}_{\mathrm{x},\, k}^{\text{up}} \succeq 0 \quad \forall k = 1, \dots, K.
 \end{aligned}
 \end{equation}

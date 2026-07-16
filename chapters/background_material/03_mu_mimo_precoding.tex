@@ -1,7 +1,7 @@
 \chapter{Precoding for MU-MIMO systems}
 \label{chapter:mu_mimo_precoding}
 
-Consider the downlink \ac{MU}-\ac{MIMO} system introduced in Section~\ref{subsection:mu_mimo_system_model}.
+In this chapter, we consider the downlink \ac{MU}-\ac{MIMO} system introduced in Section~\ref{subsection:mu_mimo_system_model}.
 The key difference from the \ac{SU}-\ac{MIMO} system of the previous chapter is the presence of inter-user interference: the signal intended for one user leaks into the receive antennas of the other users.
 
 The preceding chapter restricted attention to linear precoding, in which the transmitted signal is obtained by applying a linear transformation, represented by a matrix, to the data symbol vector.
@@ -19,6 +19,7 @@ The following sections present four commonly used linear precoding strategies fo
 The presentation begins with three precoding techniques related to \acs{ZF}, and concludes with the state-of-the-art \acs{WMMSE} precoder.
 At the end of this chapter, their performance is compared through numerical simulations for different system configurations.
 In line with the previous chapter, the design is focused on maximizing the total \acf{SR} of the system.
+
 
 \section{Zero-Forcing Precoding}
 \label{subsection:mu_mimo_zf_precoding}
@@ -62,7 +63,7 @@ where $\mu_{k, i}$ is the weight assigned to the $i$th data stream intended for 
 Substituting the \ac{ZF} precoder into the transmit power constraint~\eqref{eq:mu_mimo_power_constraint} yields %(see Appendix~\ref{appendix:calculations})
 \begin{equation}
 \label{eq:zf_power_constraint}
-    \sum_{k=1}^{K} \sum_{i=1}^{N_S} \, q_{k, i} \, \big((\mathbf{H} \mathbf{H}^{\mathsf{H}})^{-1}\big)_{n,\,n} \leq P_t \qquad \text{with} \quad n = (k-1)\,N_S + i.
+    \sum_{k=1}^{K} \sum_{i=1}^{N_S} \, q_{k, i} \, \big((\mathbf{H} \mathbf{H}^{\mathsf{H}})^{-1}\big)_{n,\,n} \leq P_T \qquad \text{with} \quad n = (k-1)\,N_S + i.
 \end{equation}
 Let us introduce the substitution
 \begin{equation}
@@ -72,7 +73,7 @@ such that we can write the \ac{WSR} maximization problem as follows:
 \begin{equation}
 \begin{aligned}
     &\underset{\{p_n\}}{\max} \;\; \sum_{n=1}^{K\, N_S} \, \alpha_n \, \log_2\big(1 + \frac{\gamma_n}{N_0} \, p_n \big) \\
-    &\mathrm{s. t.} \;\;\; \sum_{n=1}^{K\, N_S} \, p_n \leq P_t
+    &\mathrm{s. t.} \;\;\; \sum_{n=1}^{K\, N_S} \, p_n \leq P_T
 \end{aligned}
 \end{equation}
 This is exactly the optimization problem handled in Appendix~\ref{appendix:waterfilling}.
@@ -91,13 +92,13 @@ To summarize, the steps required for computing the \ac{ZF} compound precoder mat
     
     \Require 
     \Statex \hspace{-\algorithmicindent} \textbullet \, The compound channel matrix $\mathbf{H}$;
-    \Statex \hspace{-\algorithmicindent} \textbullet \, The total transmit power $P_t$ and the received noise power $N_0$.
+    \Statex \hspace{-\algorithmicindent} \textbullet \, The total transmit power $P_T$ and the received noise power $N_0$.
     
     \Ensure  The compound precoder matrix $\mathbf{F}$.
 
     \medskip
     \State Compute $p_i$ for $i = 1, \dots, K\,N_S$ using the waterfilling algorithm (Alg.~\ref{alg:waterfilling}) with inputs
-    \Statex $P_t = P_t, \quad \alpha_n = 1, \quad \text{and} \quad  \gamma_n = \big(N_0 \, \big((\mathbf{H} \mathbf{H}^{\mathsf{H}})^{-1}\big)_{n,\,n}\big)^{-1}.$
+    \Statex $P_T = P_T, \quad \alpha_n = 1, \quad \text{and} \quad  \gamma_n = \big(N_0 \, \big((\mathbf{H} \mathbf{H}^{\mathsf{H}})^{-1}\big)_{n,\,n}\big)^{-1}.$
     
     \vspace{0.4\baselineskip}
     \State Compute the entries of the scaling matrix as
@@ -144,8 +145,8 @@ With a fixed total transmit power in practice, this translates directly into low
         \caption{unfavorable channel conditions}
         \label{fig:mu_mimo_zf_precoding_2x2_unfav}
     \end{subfigure}
-    \caption[Visualization of \acs{ZF} precoding ($2$-antenna \acs{BS} and $2$ single-antenna \acsp{UT})]
-    {Visualization of \acs{ZF} precoder for a \acs{MU}-\acs{MIMO} system with $2$ single-antenna \acsp{UT} and a $2$-antenna \acs{BS} under (a) favorable and (b) unfavorable channel conditions.
+    \caption[Visualization of \acs{ZF} precoding (dual-antenna \acs{BS} \& two single-antenna \acsp{UT})]
+    {Visualization of \acs{ZF} precoder for a \acs{MU}-\acs{MIMO} system with two single-antenna \acsp{UT} and a dual-antenna \acs{BS} under (a) favorable and (b) unfavorable channel conditions.
     For both scenarios, the channel vectors are normalized and the precoding vectors are scaled such that the effective channel gain for each data stream is equal to 1.
     Note the much larger norm of the precoding vectors in the unfavorable scenario compared to the favorable scenario, which illustrates that a lot more power is required to achieve the same effective channel gain when the channel vectors of the \acsp{UT} are strongly correlated.
     }
@@ -174,13 +175,14 @@ This maximizes the effective channel gain for each data stream, since it allows 
         \includegraphics[width=\textwidth]{figures/background_material/04_mu_mimo_precoding/zf_precoder_visualization/legend_3x2.png}
         \label{fig:mu_mimo_zf_precoding_legend_3x2}
     \end{subfigure}
-    \caption[Visualization of \acs{ZF} precoding ($3$-antenna \acs{BS} and $2$ single-antenna \acsp{UT})]
-    {Visualization of \acs{ZF} precoder for a \acs{MU}-\acs{MIMO} system with $2$ single-antenna \acsp{UT} and a $3$-antenna \acs{BS}.
+    \caption[Visualization of \acs{ZF} precoding (triple-antenna \acs{BS} \& two single-antenna \acsp{UT})]
+    {Visualization of \acs{ZF} precoder for a \acs{MU}-\acs{MIMO} system with two single-antenna \acsp{UT} and a triple-antenna \acs{BS}.
     The channel vectors are normalized and the precoding vectors are scaled such that the effective channel gain for each data stream is equal to 1.
     With three transmit antennas, the null space orthogonal to each user's channel direction is two-dimensional.
     The \acs{ZF} precoding vector is chosen as the projection of the intended user's channel direction onto this plane, which minimizes the deviation from the desired channel direction while preserving the zero-forcing constraint.}
     \label{fig:mu_mimo_zf_precoding_3x2}
 \end{figure}
+
 
 \section{Zero-Forcing Precoding with a Heuristic LSV Combiner}
 \label{section:mu_mimo_zf_lsv_precoding}
@@ -189,8 +191,8 @@ This maximizes the effective channel gain for each data stream, since it allows 
 % =================================================
 
 Pure \ac{ZF} precoding is clearly suboptimal because it does not exploit receiver-side combining at the \acp{UT}.
-A practical extension is therefore to equip each \ac{UT} with a heuristic \acf{LSV} combiner, while keeping the \ac{BS} precoder design based on \ac{ZF}.
-The key idea is to improve the effective channel gains seen without increasing the signaling overhead.
+A practical extension is therefore to equip each \ac{UT} with a heuristic \acf{LSV} combiner, while keeping the precoder design at the \ac{BS} based on \ac{ZF}.
+The key idea is to improve the virtual channel gains seen by the \ac{BS} without increasing the signaling overhead.
 Unlike coordinated designs, where the \ac{BS} jointly computes the compound precoder and the combiners and then broadcasts the combiners to the \acp{UT}, this approach is non-coordinated: each \ac{UT} computes its own combiner locally.
 
 The procedure is as follows.
@@ -208,7 +210,7 @@ The complete procedure is summarized in Algorithm~\ref{alg:zf_lsv_precoding}.
     
     \Require 
     \Statex \hspace{-\algorithmicindent} \textbullet \, The compound channel matrix $\mathbf{H}$;
-    \Statex \hspace{-\algorithmicindent} \textbullet \, The total transmit power $P_t$ and the received noise power $N_0$.
+    \Statex \hspace{-\algorithmicindent} \textbullet \, The total transmit power $P_T$ and the received noise power $N_0$.
     
     \Ensure  The compound precoder matrix $\mathbf{F}$ and the combiner matrices $\mathbf{G}_k$ for each \ac{UT}.
 
@@ -218,7 +220,7 @@ The complete procedure is summarized in Algorithm~\ref{alg:zf_lsv_precoding}.
 
     \vspace{0.4\baselineskip}
     \State Compute the compound precoder matrix $\mathbf{F}$ using the \ac{ZF} algorithm (Alg.~\ref{alg:zf_precoding}) with inputs
-    \Statex $\mathbf{H} = (\mathbf{G}\mathbf{H}), \quad P_t = P_t, \quad N_0 = N_0.$
+    \Statex $\mathbf{H} = (\mathbf{G}\mathbf{H}), \quad P_T = P_T, \quad N_0 = N_0.$
     
     \medskip
     \Statex \hspace{-\algorithmicindent}\textbf{Return} \; $\mathbf{F}$, \; $\mathbf{G}_k$ for $k=1, \dots, K$
@@ -232,6 +234,7 @@ The complete procedure is summarized in Algorithm~\ref{alg:zf_lsv_precoding}.
 % comparison with ZF without LSV combiner distributions of gamma!
 % BER to confirm that the SNR distribution is indeed improved by the LSV combiner
 
+
 \section{Block Diagonalization Precoding}
 \label{section:mu_mimo_bd_precoding}
 % =================================================
@@ -244,7 +247,7 @@ As a result, the compound transfer matrix is no longer required to be diagonal, 
 The downlink \ac{MU}-\ac{MIMO} channel is thereby decomposed into $K$ parallel \ac{SU}-\ac{MIMO} channels.
 Once this first step is completed, the \ac{SU}-\ac{MIMO} precoding and combining techniques developed in Chapter~\ref{chapter:su_mimo_precoding} can be applied independently to each subsystem.
 
-The zero inter-user interference condition requires that the precoder $\mathbf{F}_k$ intended for \ac{UT} $k$ lie in the null space of the channel matrices of all other users.
+The zero inter-user interference condition requires that the precoder $\mathbf{F}_k$ intended for \ac{UT} $k$ is located in the null space of the channel matrices of all other users.
 This leads to the constraints
 \begin{equation}
 \label{eq:bd_constraint}
@@ -285,7 +288,7 @@ While this is not necessary for \ac{BD}, it would result in a higher rank of $(\
     
     \Require 
     \Statex \hspace{-\algorithmicindent} \textbullet \, The compound channel matrix $\mathbf{H}$;
-    \Statex \hspace{-\algorithmicindent} \textbullet \, The total transmit power $P_t$ and the received noise power $N_0$.
+    \Statex \hspace{-\algorithmicindent} \textbullet \, The total transmit power $P_T$ and the received noise power $N_0$.
     
     \Ensure  The compound precoder matrix $\mathbf{F}$ and the combiner matrices $\mathbf{G}_k$ for each \ac{UT}.
 
@@ -307,7 +310,7 @@ While this is not necessary for \ac{BD}, it would result in a higher rank of $(\
 
     \vspace{0.4\baselineskip}
     \State Compute the optimal power allocation $p_i$ using the waterfilling algorithm (Alg.~\ref{alg:waterfilling}) with inputs
-    \Statex $P_t = P_t, \quad \alpha_n = 1, \quad \text{and} \quad  \gamma_n = \sigma_n^2 / N_0.$
+    \Statex $P_T = P_T, \quad \alpha_n = 1, \quad \text{and} \quad  \gamma_n = \sigma_n^2 / N_0.$
 
     \vspace{0.4\baselineskip}
     \State Form the compound precoder matrix as
@@ -346,7 +349,7 @@ The rates are averaged over $1000$ \ac{i.i.d.} Rayleigh channel realizations.
     \caption[Comparison between \acs{BD} precoding for \acs{MU} and \acs{SVD} precoding for \acs{SU} scenarios]
     {Comparison between the achievable rate of a $6 \times 2$ \acs{SU}-\acs{MIMO} system using \acs{SVD} precoding and the achievable rates of both \acp{UT} in an $8 \times \{2,2\}$ \acs{MU}-\acs{MIMO} system using \acs{BD} precoding.
     Results are averaged over $1000$ i.i.d. Rayleigh channel realizations.
-    The \acs{SNR} is defined as the ratio between the total transmit power $P_t$ at the \acs{BS} and the noise power per receive antenna $N_0$.}
+    The \acs{SNR} is defined as the ratio between the total transmit power $P_T$ at the \acs{BS} and the noise power per receive antenna $N_0$.}
     \label{fig:BD_vs_SVD}
 \end{figure}
 
@@ -357,6 +360,7 @@ The two users in the \ac{MU} scenario achieve nearly identical rates, which is e
 This comparison indicates that, on average, adding two transmit antennas at the \ac{BS} and switching from \ac{SVD} precoding in \ac{SU}-\ac{MIMO} to \ac{BD} precoding in \ac{MU}-\ac{MIMO} enables serving an additional two-stream user at the same reliability and with only a minor per-user throughput penalty.
 From a system-design perspective, this highlights the practical spatial multiplexing capability of \ac{BD} precoding.
 More generally, as more \acp{UT} are served simultaneously, the slope of the total \ac{SR} versus \ac{SNR} increases, at the cost of a modest reduction in the achievable rate of each individual \ac{UT}.
+
 
 \section{Weighted Minimum Mean Square Error Precoding}
 \label{section:mu_mimo_wmmse_precoding}
@@ -372,14 +376,14 @@ In this section, we present a precoding technique with the explicit goal of maxi
 Consider the \ac{WSR} maximization problem:
 \begin{equation}
 \label{eq:mu_mimo_wsr_problem}
-    \underset{\{\mathbf{F}_k\}}{\max} \;\; \sum_{k=1}^{K} w_k \, R_k \qquad \text{s.t.} \quad \sum_{k=1}^{K} \mathrm{tr}\!\left(\mathbf{F}_k \mathbf{F}_k^{\mathsf{H}}\right) \leq P_t.
+    \underset{\{\mathbf{F}_k\}}{\max} \;\; \sum_{k=1}^{K} w_k \, R_k \qquad \text{s.t.} \quad \sum_{k=1}^{K} \mathrm{tr}\!\left(\mathbf{F}_k \mathbf{F}_k^{\mathsf{H}}\right) \leq P_T.
 \end{equation}
 Unlike its single-user counterpart in Chapter~\ref{chapter:su_mimo_precoding}, problem~\eqref{eq:mu_mimo_wsr_problem} is non-convex in $\{\mathbf{F}_k\}$ and admits no closed-form solution.
 The state-of-the-art approach, proposed by the authors of~\cite{WMMSE_precoding}, is to recast it as an equivalent \ac{WMMSE} problem and to solve the latter by alternating optimization.
 \medskip
 
 Consider the system input--output relation for \ac{UT}~$k$ from~\eqref{eq:mu_mimo_precoding_combining_io}.
-The signals intended for the other users act, under Gaussian signaling, as additional Gaussian noise with covariance matrix
+The signals intended for the other users act, under Gaussian signaling, as additional Gaussian noise, such that
 \begin{equation}
 \label{eq:effective_noise_covariance}
     \mathbf{C}_{\tilde{n}_k} = N_0 \, \mathbf{I}_{N_R} + \sum_{k' \neq k} \mathbf{H}_k \mathbf{F}_{k'} \mathbf{F}_{k'}^{\mathsf{H}} \mathbf{H}_k^{\mathsf{H}}.
@@ -389,7 +393,7 @@ Consequently, the achievable rate of \ac{UT}~$k$ can be written similarly to the
 \label{eq:mu_mimo_wmmse_rate}
     R_k = \log_2 \det\!\Big(\mathbf{I}_{N_S} + \mathbf{F}_k^{\mathsf{H}} \mathbf{H}_k^{\mathsf{H}} \mathbf{C}_{\tilde{n}_k}^{-1} \mathbf{H}_k \mathbf{F}_k\Big).
 \end{equation}
-For a given set of precoders, the \acf{MMSE} combiner of \ac{UT} $k$ is the Wiener filter that minimizes the mean--square estimation error in the presence of inter--user interference and noise, and is given by~\cite{MMSE_receive_filter}:
+For a given set of precoders, the \acf{MMSE} combiner of \ac{UT} $k$ is the Wiener filter that minimizes the mean-square estimation error in the presence of inter-user interference and noise, and is given by~\cite{MMSE_receive_filter}:
 \begin{equation}
 \label{eq:mu_mimo_mmse_combiner}
     \mathbf{G}_k^{\mathrm{MMSE}} = \mathbf{F}_k^{\mathsf{H}} \mathbf{H}_k^{\mathsf{H}} \big(\mathbf{H}_k \mathbf{F}_k \mathbf{F}_k^{\mathsf{H}} \mathbf{H}_k^{\mathsf{H}} + \mathbf{C}_{\tilde{n}_k}\big)^{-1}.
@@ -401,7 +405,7 @@ The corresponding \ac{MSE} matrix, defined as in Section~\ref{section:generalize
     = \mathbb{E}\!\left[(\mathbf{a}_k - \mathbf{z}_k)(\mathbf{a}_k - \mathbf{z}_k)^{\mathsf{H}}\right]
     = \big(\mathbf{I}_{N_S} + \mathbf{F}_k^{\mathsf{H}} \mathbf{H}_k^{\mathsf{H}} \mathbf{C}_{\tilde{n}_k}^{-1} \mathbf{H}_k \mathbf{F}_k\big)^{-1}.
 \end{equation}
-Comparing~\eqref{eq:mu_mimo_wmmse_rate} and~\eqref{eq:mu_mimo_mse_matrix}, the achievable rate of \ac{UT}~$k$ can be expressed directly in terms of its \ac{MMSE} matrix as~\cite{WMMSE_precoding}
+Comparing~\eqref{eq:mu_mimo_wmmse_rate} and~\eqref{eq:mu_mimo_mse_matrix}, the achievable rate of \ac{UT}~$k$ can be expressed directly in terms of its \ac{MSE} matrix as~\cite{WMMSE_precoding}
 \begin{equation}
 \label{eq:mu_mimo_rate_mse_relation}
     R_k = \log_2 \det\!\big(\mathbf{E}_k^{-1}\big).
@@ -413,9 +417,9 @@ It is the multi-user analog of the rate--MSE link already established in the gen
 Define the \ac{WMMSE} optimization problem, in analogy to its \ac{SU} counterpart in~\eqref{eq:su_mimo_WMMSE_optimization_problem}, as
 \begin{equation}
 \label{eq:mu_mimo_wmmse_problem}
-    \min_{\{\mathbf{F}_k\}} \; \sum_{k=1}^{K} \mathrm{tr}(\mathbf{W}_{\mathrm{e}, \,k} \, \mathbf{E}_k) \qquad \mathrm{s.\,t.} \quad \sum_{k=1}^{K} \mathrm{tr}(\mathbf{F}_k \mathbf{F}_k^{\mathsf{H}}) \leq P_t,
+    \min_{\{\mathbf{F}_k\}} \; \sum_{k=1}^{K} \mathrm{tr}(\mathbf{W}_{\mathrm{e}, \,k} \, \mathbf{E}_k) \qquad \mathrm{s.\,t.} \quad \sum_{k=1}^{K} \mathrm{tr}(\mathbf{F}_k \mathbf{F}_k^{\mathsf{H}}) \leq P_T,
 \end{equation}
-where each $\mathbf{W}_{\mathrm{e}, k} \in \mathbb{C}^{N_S \times N_S}$ is a positive-definite weight matrix associated with \ac{UT}~$k$ and $\mathbf{E}_k$ is the \ac{MMSE} matrix in~\eqref{eq:mu_mimo_mse_matrix}.
+where each $\mathbf{W}_{\mathrm{e}, k} \in \mathbb{C}^{N_S \times N_S}$ is a positive-definite weight matrix associated with \ac{UT}~$k$ and $\mathbf{E}_k$ is the \ac{MSE} matrix in~\eqref{eq:mu_mimo_mse_matrix}.
 Whereas in the \ac{SU} case the weight matrix could be chosen a priori so as to recover the maximum-information-rate design (cf. Section~\ref{section:maximum_information_rate_design}), the \ac{MU} setting is more involved.
 Comparing the gradients of the Lagrangians of optimization problems~\eqref{eq:mu_mimo_wsr_problem} and~\eqref{eq:mu_mimo_wmmse_problem} with respect to $\mathbf{F}_k$ shows that they coincide whenever~\cite{WMMSE_precoding}
 \begin{equation}
@@ -434,9 +438,9 @@ Second, the weights are updated according to~\eqref{eq:mu_mimo_wmmse_weight_upda
 Third, the compound precoder update solves the \ac{WMMSE} problem~\eqref{eq:mu_mimo_wmmse_problem} for fixed combiners and weights, which admits the closed-form solution~\cite{WMMSE_precoding_ref18}
 \begin{equation}
 \label{eq:mu_mimo_wmmse_precoder_update}
-    \bar{\mathbf{F}} = \Big(\mathbf{H}^{\mathsf{H}} \mathbf{G}^{\mathsf{H}} \mathbf{W} \mathbf{G} \mathbf{H} + \mathrm{tr}(\mathbf{W} \mathbf{G} \mathbf{G}^{\mathsf{H}}) \, \frac{N_0}{P_t} \, \mathbf{I}_{N_T}\Big)^{-1} \mathbf{H}^{\mathsf{H}} \mathbf{G}^{\mathsf{H}} \mathbf{W},
+    \bar{\mathbf{F}} = \Big(\mathbf{H}^{\mathsf{H}} \mathbf{G}^{\mathsf{H}} \mathbf{W} \mathbf{G} \mathbf{H} + \mathrm{tr}(\mathbf{W} \mathbf{G} \mathbf{G}^{\mathsf{H}}) \, \frac{N_0}{P_T} \, \mathbf{I}_{N_T}\Big)^{-1} \mathbf{H}^{\mathsf{H}} \mathbf{G}^{\mathsf{H}} \mathbf{W},
 \end{equation}
-followed by the rescaling $\mathbf{F} = \beta \, \bar{\mathbf{F}}$ with $\beta^2 = P_t / \mathrm{tr}(\bar{\mathbf{F}} \bar{\mathbf{F}}^{\mathsf{H}})$ to enforce the total power constraint with equality.
+followed by the rescaling $\mathbf{F} = \beta \, \bar{\mathbf{F}}$ with $\beta^2 = P_T / \mathrm{tr}(\bar{\mathbf{F}} \bar{\mathbf{F}}^{\mathsf{H}})$ to enforce the total power constraint with equality.
 The full procedure is summarized in Algorithm~\ref{alg:wmmse_precoding}.
 
 \begin{algorithm}[!htbp]
@@ -446,29 +450,34 @@ The full procedure is summarized in Algorithm~\ref{alg:wmmse_precoding}.
 
     \Require
     \Statex \hspace{-\algorithmicindent} \textbullet \, The compound channel matrix $\mathbf{H}$;
-    \Statex \hspace{-\algorithmicindent} \textbullet \, The total transmit power $P_t$ and the received noise power $N_0$.
+    \Statex \hspace{-\algorithmicindent} \textbullet \, The total transmit power $P_T$ and the received noise power $N_0$.
 
     \Ensure The compound precoder matrix $\mathbf{F}$ and the combiner matrices $\mathbf{G}_k$ for each \ac{UT}.
 
     \medskip
-    \State Initialize the precoders as
+    \State Initialize the precoders:
     \Statex $\mathbf{F}_k = \mathbf{F}_k^{(0)} \quad \text{with} \quad \mathbf{F}_k^{(0)} \sim \mathcal{CN}(\mathbf{0}, \mathbf{I}) \quad \text{for} \quad k = 1, \dots, K$.
 
     \vspace{0.2\baselineskip}
     \Repeat
         
         \vspace{0.2\baselineskip}
-        \State Update the combiners as
-        \Statex \hspace{\algorithmicindent} $\mathbf{G}_k = \mathbf{F}_k^{\mathsf{H}} \mathbf{H}_k^{\mathsf{H}} \big(\mathbf{H}_k \mathbf{F}_k \mathbf{F}_k^{\mathsf{H}} \mathbf{H}_k^{\mathsf{H}} + \mathbf{C}_{\tilde{n}_k}\big)^{-1} \quad \text{for} \quad k = 1, \dots, K.$
+        \State Update the combiners:
+        \Statex \hspace{\algorithmicindent}
+        $\mathbf{G}_k = \mathbf{F}_k^{\mathsf{H}} \mathbf{H}_k^{\mathsf{H}} \big(\mathbf{H}_k \mathbf{F}_k \mathbf{F}_k^{\mathsf{H}} \mathbf{H}_k^{\mathsf{H}} + \mathbf{C}_{\tilde{n}_k}\big)^{-1}$ 
+        \hspace{0.1cm} with $\mathbf{C}_{\tilde{n}_k}$ from~\eqref{eq:effective_noise_covariance}, 
+        \hspace{0.05cm} for $k = 1, \dots, K.$
 
         \vspace{0.2\baselineskip}
-        \State Update the weights as
-        \Statex \hspace{\algorithmicindent} $\mathbf{W}_k = \mathbf{E}_k^{-1} \quad \text{for} \quad k = 1, \dots, K.$
+        \State Update the weights:
+        \Statex \hspace{\algorithmicindent} $\mathbf{W}_k = \mathbf{E}_k^{-1}$
+        \hspace{0.1cm} with $\mathbf{E}_k$ from~\eqref{eq:mu_mimo_mse_matrix} and $\mathbf{C}_{\tilde{n}_k}$ from~\eqref{eq:effective_noise_covariance},
+        \hspace{0.05cm} for $k = 1, \dots, K$.
 
         \vspace{0.2\baselineskip}
-        \State Update the precoder as
-        \Statex \hspace{\algorithmicindent} $\bar{\mathbf{F}} = \Big(\mathbf{H}^{\mathsf{H}} \mathbf{G}^{\mathsf{H}} \mathbf{W} \mathbf{G} \mathbf{H} + \mathrm{tr}(\mathbf{W} \mathbf{G} \mathbf{G}^{\mathsf{H}}) \, \frac{N_0}{P_t} \, \mathbf{I}_{N_T}\Big)^{-1} \mathbf{H}^{\mathsf{H}} \mathbf{G}^{\mathsf{H}} \mathbf{W}$
-        \Statex \hspace{\algorithmicindent} $\mathbf{F} = \beta \, \bar{\mathbf{F}} \quad \text{with} \quad \beta^2 = P_t / \mathrm{tr}(\bar{\mathbf{F}} \bar{\mathbf{F}}^{\mathsf{H}})$
+        \State Update the compound precoder:
+        \Statex \hspace{\algorithmicindent} $\bar{\mathbf{F}} = \Big(\mathbf{H}^{\mathsf{H}} \mathbf{G}^{\mathsf{H}} \mathbf{W} \mathbf{G} \mathbf{H} + \mathrm{tr}(\mathbf{W} \mathbf{G} \mathbf{G}^{\mathsf{H}}) \, \frac{N_0}{P_T} \, \mathbf{I}_{N_T}\Big)^{-1} \mathbf{H}^{\mathsf{H}} \mathbf{G}^{\mathsf{H}} \mathbf{W}$
+        \Statex \hspace{\algorithmicindent} $\mathbf{F} = \beta \, \bar{\mathbf{F}} \quad \text{with} \quad \beta^2 = P_T / \mathrm{tr}(\bar{\mathbf{F}} \bar{\mathbf{F}}^{\mathsf{H}})$
 
     \vspace{0.2\baselineskip}
     \Until convergence
@@ -485,6 +494,7 @@ Furthermore, the authors pointed out that for any set of precoders, a rate-equiv
 This justifies the restriction of the weight update to the diagonal elements, and implies that each \ac{UT} can detect its $N_S$ data streams independently.
 The implementation used throughout this work is this diagonal-restricted version. It runs $10$ iterations for $2$ different random initializations and retains the precoder that yields the highest \ac{WSR}.
 
+
 \section{Performance Evaluation}
 \label{section:mu_mimo_performance_evaluation}
 % =============================
@@ -493,7 +503,7 @@ The implementation used throughout this work is this diagonal-restricted version
 
 The previous sections derived linear transceiver designs for downlink \ac{MU}-\ac{MIMO} sum-rate maximization under different structural constraints.
 This section evaluates their behavior through Monte Carlo simulations.
-First, the three \ac{ZF}--type methods are compared through the statistics of their effective subchannel gains.
+First, the three \ac{ZF}-type methods are compared through the statistics of their effective subchannel gains.
 Second, the achievable \ac{SR} of all four linear precoding techniques is compared for two different system configurations.
 
 The simulations are conducted under the same assumptions as in Chapter~\ref{chapter:su_mimo_precoding}: 
@@ -505,7 +515,7 @@ the channel is modeled as an \ac{i.i.d.} Rayleigh block fading channel (see Appe
 %    Comparison of the ZF Precoders
 % ======================================
 
-This subsection compares the three \ac{ZF}--type designs under the maximum-information-rate criterion: pure \ac{ZF}, \ac{ZF} with heuristic \ac{LSV} combining, and \ac{BD}.
+This subsection compares the three \ac{ZF}-type designs under the maximum-information-rate criterion: pure \ac{ZF}, \ac{ZF} with heuristic \ac{LSV} combining, and \ac{BD}.
 In all three cases, the end-to-end processing transforms the original \ac{MU}-\ac{MIMO} channel into parallel scalar Gaussian subchannels, as illustrated in Figure~\ref{fig:mu_mimo_channel_decomposition}.
 Hence, for a fixed power budget and waterfilling policy, performance is completely determined by the statistics of the effective subchannel gains $g_n$.
 The stronger these effective channel gains, the better the overall system performance.
@@ -525,7 +535,8 @@ The stronger these effective channel gains, the better the overall system perfor
         \caption{}
         \label{fig:mu_mimo_decoupled_channel}
     \end{subfigure}
-    \caption[Channel decomposition of a \acs*{MU}-\acs*{MIMO} system]{A block diagram of the original \acs*{MU}-\acs*{MIMO} channel (a) and its decomposition into parallel Gaussian \acs*{SISO} subchannels (b), as achieved by the \acs*{ZF}--type precoding techniques.}
+    \caption[Channel decomposition of a \acs*{MU}-\acs*{MIMO} system]
+    {A block diagram of the original \acs*{MU}-\acs*{MIMO} channel (a) and its decomposition into parallel Gaussian \acs*{SISO} subchannels (b), as achieved by the \acs*{ZF}-type precoding techniques.}
     \label{fig:mu_mimo_channel_decomposition}
 \end{figure}
 
@@ -559,8 +570,9 @@ For \ac{ZF} with a heuristic \ac{LSV} combiner and for \ac{BD} precoding, no ana
             \label{fig:mu_mimo_eff_subchannel_gain_distributions_bd_8x2x4}
         \end{subfigure}
     }
-    \caption[\acs{pdf} of the effective subchannel gains in a $8 \times \{2, 2, 2, 2\} \;$ \ac{MU}-\ac{MIMO} system]{The marginal \acsp{pdf} of the effective subchannel gains for a single \ac{UT} in a $8 \times \{2, 2, 2, 2\} \;$ \ac{MU}-\ac{MIMO} system, compared between the different \acs{ZF}--type precoding techniques.
-    The expected value is indicated by a vertical dashed line, and the shaded area around the expected value corresponds to the standard deviation.}
+    \caption[\acs{pdf} of the effective subchannel gains in a $8 \times \{2, 2, 2, 2\} \;$ \acs*{MU}-\acs*{MIMO} system]
+    {The marginal \acsp{pdf} of the effective subchannel gains for a single \ac{UT} in a $8 \times \{2, 2, 2, 2\} \;$ \ac{MU}-\ac{MIMO} system, compared between the different \acs{ZF}-type precoding techniques.
+    The expected value is indicated by a vertical dashed line, and the shaded area around the expected value corresponds to one standard deviation.}
     \label{fig:mu_mimo_eff_subchannel_gain_distributions_8x2x4}
 \end{figure}
 \begin{comment}
@@ -625,7 +637,7 @@ The two configurations differ only in how the receive antennas are distributed a
         \caption{$8 \times \{4, 4\}$ \ac{MU}-\ac{MIMO}}
         \label{fig:mu_mimo_sum_rate_comparison_8x4x2}
     \end{subfigure}
-    \caption[Achievable \acs{SR} comparison of the different precoders in two \acs{MU}-\acs{MIMO} systems]
+    \caption[Achievable \acs{SR} comparison for the different precoders]
     {Comparison of the achievable sum rate for the considered \acs{MU} linear precoding techniques in two fully loaded \acs{MU}-\acs{MIMO} systems.
     The results are averaged over at least $1000$ \acs{i.i.d.} Rayleigh channel realizations.}
     \label{fig:mu_mimo_sum_rate_comparison}
@@ -646,11 +658,11 @@ A notable exception to the above ranking occurs at very high \ac{SNR} in the $8 
 This crossover arises because \ac{BD} approaches the globally optimal solution for the maximum-information-rate criterion as \ac{SNR} grows~\cite{BD_precoding_0}, while \ac{WMMSE} may converge to a suboptimal local optimum in this regime.
 
 Comparing the two configurations also reveals how the distribution of receive antennas affects performance.
-For pure \ac{ZF}, the two curves are virtually identical: since no receiver combining is applied and the total number of receive antennas is the same, the achievable \ac{SR} depends only on the compound channel and is unaffected by how the antennas are grouped across \acp{UT}.
+For pure \ac{ZF}, the two curves are identical: since no receiver combining is applied and the total number of receive antennas is the same, the achievable \ac{SR} depends only on the compound channel and is unaffected by how the antennas are grouped across \acp{UT}.
 For \ac{ZF} with \ac{LSV} combining, \ac{BD} and \ac{WMMSE}, concentrating the receive antennas on fewer \acp{UT} yields a consistently higher \ac{SR}.
-The benefit of concentrating antennas is more pronounced for \ac{BD} than for \ac{ZF}+\ac{LSV}, which reflects the fact that the coordinated \ac{BD} design makes fuller use of the per-user spatial degrees of freedom than the non-coordinated \ac{LSV} heuristic.
+The benefit of concentrating antennas is more pronounced for \ac{BD} than for \ac{ZF}+\ac{LSV}, which reflects the fact that the coordinated \ac{BD} design makes better use of the per-user spatial degrees of freedom than the non-coordinated \ac{LSV} heuristic.
 
 The simulation results confirm the position of \ac{WMMSE} as the state-of-the-art linear \ac{MU}-\ac{MIMO} precoding technique under the maximum-\ac{SR} criterion.
 \ac{BD} provides a close-to-optimal coordinated alternative that does not require iterative optimization, while \ac{ZF}+\ac{LSV} offers a low-overhead non-coordinated baseline.
 The choice between these techniques in practice therefore involves a trade-off between achievable \ac{SR}, computational complexity, and signaling overhead.
-In the next chapters, performance evaluations are carried out using the \ac{WMMSE} precoder.
+In the next chapters, performance evaluations are carried out using the \ac{ZF}, \ac{BD} and \ac{WMMSE} precoder.

@@ -23,10 +23,10 @@ Consider the following general optimization problem:
     & \underset{\{p_n\}}{\text{max}}
     & & \sum_{n=1}^{N} \, \alpha_n \log_2 \left( 1 + \gamma_n \, p_n \right) \\
     & \text{s. t.}
-    & & \sum_{n=1}^{N} p_n = P_t \quad \text{and} \quad p_n \geq 0 \quad \forall n = 1, \dots, N
+    & & \sum_{n=1}^{N} p_n = P_T \quad \text{and} \quad p_n \geq 0 \quad \forall n = 1, \dots, N
 \end{aligned}
 \end{equation}
-where $p_n$ denotes the power allocated to channel $n$, and $P_t$ denotes the total available transmit power. 
+where $p_n$ denotes the power allocated to channel $n$, and $P_T$ denotes the total available transmit power. 
 The coefficients $\alpha_n$ are non-negative weighting factors that allow different channels to be prioritized unequally, whereas $\gamma_n > 0$ denotes the ratio between the channel gain and the noise power of channel $n$.
 
 To solve the constrained optimization problem in~\eqref{eq:optimal_power_allocation_optimization_problem}, the method of Lagrange multipliers is employed.
@@ -37,7 +37,7 @@ Since the optimization problem in~\eqref{eq:optimal_power_allocation_optimizatio
 Equality constraints enter with an unconstrained multiplier $\mu \in \mathbb{R}$, whereas inequality constraints of the form $p_n \geq 0$ are rewritten as $-p_n \leq 0$ and enter with a non-negative multiplier $\lambda_n \geq 0$, ensuring that the penalty is only active when the constraint is binding.
 The resulting Lagrangian is
 \begin{equation}
-    \mathcal{L}(\mathbf{p}, \mu, \boldsymbol{\lambda}) = \sum_{n=1}^{N} \alpha_n \log_2 \left( 1 + \gamma_n \, p_n \right) - \mu \left(\sum_{n=1}^{N} p_n - P_t \right) + \sum_{n=1}^{N} \lambda_n p_n
+    \mathcal{L}(\mathbf{p}, \mu, \boldsymbol{\lambda}) = \sum_{n=1}^{N} \alpha_n \log_2 \left( 1 + \gamma_n \, p_n \right) - \mu \left(\sum_{n=1}^{N} p_n - P_T \right) + \sum_{n=1}^{N} \lambda_n p_n
 \end{equation}
 where $\mu$ is the Lagrange multiplier associated with the total power constraint, and $\lambda_n$ are the multipliers associated with the non-negativity constraints on the individual power allocations.
 
@@ -48,7 +48,7 @@ These conditions are given by
 \label{eq:KKT_conditions}
 \begin{align}
     & \text{1. Stationarity:}               && \nabla_{\mathbf{p}} \, \mathcal{L}(\mathbf{p}, \mu, \boldsymbol{\lambda}) = 0 \\
-    & \text{2. Primal feasibility:}         && p_n \geq 0  \quad \text{and} \quad \sum_{n=1}^{N} p_n = P_t \\
+    & \text{2. Primal feasibility:}         && p_n \geq 0  \quad \text{and} \quad \sum_{n=1}^{N} p_n = P_T \\
     & \text{3. Dual feasibility:}           && \lambda_n \geq 0 \\
     & \text{4. Complementary slackness:}    && \begin{cases} p_n > 0 \implies \lambda_n = 0 \\ p_n = 0 \implies \lambda_n \geq 0 \end{cases}
 \end{align}
@@ -79,10 +79,10 @@ The primal feasibility condition enforces the non-negativity of the power alloca
     p_n = \left( \frac{\alpha_n}{\mu \ln(2)} - \frac{1}{\gamma_n} \right)_{+}
 \end{equation}
 
-Finally, the primal feasibility condition also requires the total allocated power to equal the available transmit power $P_t$. By substituting the expression for $p_n$ from~\eqref{eq:KKT_primal_feasibility_condition1} into the total power constraint, we obtain an implicit equation for the Lagrangian multiplier $\mu$:
+Finally, the primal feasibility condition also requires the total allocated power to equal the available transmit power $P_T$. By substituting the expression for $p_n$ from~\eqref{eq:KKT_primal_feasibility_condition1} into the total power constraint, we obtain an implicit equation for the Lagrangian multiplier $\mu$:
 \begin{equation}
 \label{eq:KKT_primal_feasibility_condition2}
-    \sum_{n=1}^{N} \left( \frac{\alpha_n}{\mu \ln(2)} - \frac{1}{\gamma_n} \right)_{+} = P_t
+    \sum_{n=1}^{N} \left( \frac{\alpha_n}{\mu \ln(2)} - \frac{1}{\gamma_n} \right)_{+} = P_T
 \end{equation}
 
 Since $\mu$ cannot be obtained in closed form, it is determined iteratively such that the total allocated power satisfies~\eqref{eq:KKT_primal_feasibility_condition2}. Owing to the monotonic relationship between $\mu$ and the total allocated power, a bisection method is typically employed to compute the optimal value of $\mu$ numerically.
@@ -96,7 +96,7 @@ Since $\mu$ cannot be obtained in closed form, it is determined iteratively such
 
 A more efficient alternative to the bisection method exploits the geometric structure of~\eqref{eq:KKT_primal_feasibility_condition2}.
 Associate with each channel $n$ a container of width $\alpha_n$ and floor height $1/(\alpha_n \gamma_n)$.
-The total available transmit power $P_t$ is represented as water that is poured simultaneously into all containers.
+The total available transmit power $P_T$ is represented as water that is poured simultaneously into all containers.
 Because all containers share a common water level, channels with a lower floor and a wider container receive more water.
 A container remains empty if its floor height lies above the common water level, meaning no power is allocated to that channel.
 The water volume in each channel container is exactly equal to the power allocated to that channel under the optimal solution~\cite{geometric_waterfilling}.
@@ -115,7 +115,7 @@ The complete procedure for determining the water level and the corresponding pow
 \begin{algorithmic}[1]
     
     \Require 
-    \Statex \hspace{-\algorithmicindent} \textbullet \, The total transmit power: $P_t$;
+    \Statex \hspace{-\algorithmicindent} \textbullet \, The total transmit power: $P_T$;
     \Statex \hspace{-\algorithmicindent} \textbullet \, The weight factor of each channel: $\alpha_n$ for $n = 1, \dots, N$;
     \Statex \hspace{-\algorithmicindent} \textbullet \, The ratios between channel gain and noise power: $\gamma_n = g^2_n / N_0$ for $n = 1, \dots, N$.
     
@@ -136,7 +136,7 @@ The complete procedure for determining the water level and the corresponding pow
         \Statex \hspace{\algorithmicindent/2} Compute the minimum power required to activate $N^{\mathrm{iter}}$ channels:
         \State  $P_{\mathrm{min}} \leftarrow \textstyle\sum_{i=1}^{N^{\mathrm{iter}}} w_i \left( h_{N^{\mathrm{iter}}} - h_i \right)$
         \Statex \hspace{\algorithmicindent/2} Update the bound on the number of active channels:
-        \State  \textbf{if} $P_{\mathrm{min}} < P_t$ \textbf{then} $N^{\mathrm{LB}} \leftarrow N^{\mathrm{iter}}$ \textbf{else} $N^{\mathrm{UB}} \leftarrow N^{\mathrm{iter}}$
+        \State  \textbf{if} $P_{\mathrm{min}} < P_T$ \textbf{then} $N^{\mathrm{LB}} \leftarrow N^{\mathrm{iter}}$ \textbf{else} $N^{\mathrm{UB}} \leftarrow N^{\mathrm{iter}}$
     \EndWhile
     
     \medskip
@@ -144,7 +144,7 @@ The complete procedure for determining the water level and the corresponding pow
     \Statex \hspace{-\algorithmicindent} Fill the $N^{\mathrm{LB}}$ active stream containers:
     \State $p_i \leftarrow w_i \left(h_{N^{\mathrm{LB}}} - h_i\right)$ \quad for $i = 1, \dots, N^{\mathrm{LB}}$
     \Statex \hspace{-\algorithmicindent} Distribute the remaining power among the active channels according to their weight:
-    \State $p_i \leftarrow p_i + (w_i / \textstyle\sum_{i'=1}^{N^{\mathrm{LB}}} w_{i'}) \cdot (P_t - \textstyle\sum_{i'=1}^{N^{\mathrm{LB}}} p_{i'})$ \quad for $i = 1, \dots, N^{\mathrm{LB}}$
+    \State $p_i \leftarrow p_i + (w_i / \textstyle\sum_{i'=1}^{N^{\mathrm{LB}}} w_{i'}) \cdot (P_T - \textstyle\sum_{i'=1}^{N^{\mathrm{LB}}} p_{i'})$ \quad for $i = 1, \dots, N^{\mathrm{LB}}$
     \Statex \hspace{-\algorithmicindent} Set the power of the inactive channels to zero:
     \State $p_i \leftarrow 0$ \quad for $i = N^{\mathrm{LB}} + 1, \dots, N$
     \Statex \hspace{-\algorithmicindent} Use the inverse permutation $\mathcal{P}^{-1}$ to map the allocated power back to the original index $n$.
@@ -174,14 +174,14 @@ The capacity of this channel can then be written as
 \begin{align}
     C
     &= \max_{|S(f)|^2} \int_f \log_2 \left( 1 + \frac{|H(f)|^2}{N_0} |S(f)|^2 \right) df
-    \qquad \text{s.t.} \quad \int_f |S(f)|^2 df \leq P_t
+    \qquad \text{s.t.} \quad \int_f |S(f)|^2 df \leq P_T
     \label{eq:capacity_piecewise_frequency_selective_channel_1} \\
     &= \max_{|S(f)|^2} \sum_{n=1}^{N} \int_{B_{n-1}}^{B_n}
     \log_2 \left( 1 + \frac{g_n}{N_0} |S(f)|^2 \right) df
-    \qquad \text{s.t.} \quad \int_f |S(f)|^2 df \leq P_t
+    \qquad \text{s.t.} \quad \int_f |S(f)|^2 df \leq P_T
     \label{eq:capacity_piecewise_frequency_selective_channel_2} \\
     &= \max_{p_n} \sum_{n=1}^{N} \beta_n \log_2 \left( 1 + \frac{g_n}{N_0} \frac{p_n}{\beta_n} \right)
-    \qquad \text{s.t.} \quad \sum_{n=1}^{N} p_n \leq P_t
+    \qquad \text{s.t.} \quad \sum_{n=1}^{N} p_n \leq P_T
     \label{eq:capacity_piecewise_frequency_selective_channel_3}
 \end{align}
 \end{subequations}
@@ -198,8 +198,8 @@ As shown in Section~\ref{subsection:su_mimo_capacity}, a \ac{SU}-\ac{MIMO} chann
 
 The capacity optimization problem takes the form
 \begin{equation*}
-    C = \, \max_{\{p_n\}} \sum_{n=1}^{N_s} \log_2 \!\left( 1 + \frac{\sigma_n}{N_0} \, p_n \right)
-    \qquad \text{s.t.} \quad \sum_{n=1}^{N_s} p_n \leq P_t,
+    C = \, \max_{\{p_n\}} \sum_{n=1}^{N_S} \log_2 \!\left( 1 + \frac{\sigma_n}{N_0} \, p_n \right)
+    \qquad \text{s.t.} \quad \sum_{n=1}^{N_S} p_n \leq P_T,
 \end{equation*}
 where $p_n$ is the power allocated to the $n$-th eigen subchannel with channel gain $\sigma_n$ and $N_0$ is the noise power on each receive antenna.
 

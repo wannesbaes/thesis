@@ -13,14 +13,14 @@ In both cases, the power allocation is assumed to be incorporated into the preco
 Consider the \ac{SU}-\ac{MIMO} system model as described in Section~\ref{subsection:su_mimo_system_model}.
 The total transmit power is constraint is given by:
 \begin{equation*}
-    \mathbb{E}\!\left[\|\mathbf{x}\|^2\right] = \mathrm{tr}\!\left(\mathbf{F}^H \mathbf{F}\right) \leq P_t.
+    \mathbb{E}\!\left[\|\mathbf{x}\|^2\right] = \mathrm{tr}\!\left(\mathbf{F}^H \mathbf{F}\right) \leq P_T.
 \end{equation*}
 
 \textbf{Calculation:}
 \begin{fleqn}[2.5em]
 \begin{subequations}
 \begin{align*}
-    P_t
+    P_T
     &\geq \mathbb{E}\!\left[ \left\|\mathbf{x}\right\|^2 \right]
     = \mathbb{E}\!\left[ \mathbf{x}^H \mathbf{x} \right]
     = \mathbb{E}\!\left[ \left(\mathbf{F} \mathbf{a}\right)^H \left(\mathbf{F} \mathbf{a}\right) \right]
@@ -38,14 +38,14 @@ The total transmit power is constraint is given by:
 Consider the \ac{MU}-\ac{MIMO} system model as described in Section~\ref{subsection:mu_mimo_system_model}.
 The total transmit power is constraint is given by:
 \begin{equation*}
-    \mathbb{E}\!\left[\|\mathbf{x}\|^2\right] = \sum_{k=1}^{K} \mathrm{tr}\!\left(\mathbf{F}_k^H \mathbf{F}_k\right) \leq P_t.
+    \mathbb{E}\!\left[\|\mathbf{x}\|^2\right] = \sum_{k=1}^{K} \mathrm{tr}\!\left(\mathbf{F}_k^H \mathbf{F}_k\right) \leq P_T.
 \end{equation*}
 
 \textbf{Calculation:}
 \begin{fleqn}[2.5em]
 \begin{subequations}
 \begin{align*}
-    P_t
+    P_T
     &\geq \mathbb{E}\!\left[ \left\|\mathbf{x}\right\|^2 \right]
     = \mathbb{E}\!\left[ \mathbf{x}^H \mathbf{x} \right]
     = \mathbb{E}\!\left[ \left(\sum_{k=1}^{K} \mathbf{F}_k \mathbf{a}_k\right)^H \left(\sum_{k'=1}^{K} \mathbf{F}_{k'} \mathbf{a}_{k'}\right) \right] \\
