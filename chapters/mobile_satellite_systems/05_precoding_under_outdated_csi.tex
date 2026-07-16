@@ -170,6 +170,8 @@ First, channel-estimation errors are neglected, so that the channel estimates av
 Second, each \ac{UT} is assumed to know the second-order statistics of its channel. In the present model, this amounts to knowing the autocorrelation function $R_h(\tau)$, which under Jakes' model is fully determined by the maximum Doppler frequency $f_D$. This is a reasonable assumption, since $f_D$ can be estimated locally from the carrier frequency and the \ac{UT} velocity.
 Third, the pilot period $T_p$ is treated as a free design parameter and is not constrained by a pilot-overhead budget. This idealization makes it possible to characterize the intrinsic potential of the compensation strategy independently of the resource limitations of a specific system implementation.
 
+Verder veronderstelt het kannalmodel ook dat het kanaal stationairy is, d.w.z. dat de statistieken van het kanaal niet veranderen in de tijd. Omdat de UT's beweeglijk zijn, kan deze aanname in de prijktijk niet altijd worden gegarandeerd. In dit geval wordt het AR-model vervangen door een adaptief AR-model (see Appendix~\ref{appendix:adaptive_ar_models}).
+
 \subsection{Parameter Optimization}
 \label{subsection:compensation_parameter_optimization}
 % ----------------------------------------------------
